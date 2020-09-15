@@ -1,7 +1,7 @@
 # -------------------------------------------------------------------------------------------------------------------
 # Template Script Data Mining
 # -------------------------------------------------------------------------------------------------------------------
-# Plantilla con la estructura principal para un script en R para an醠isis de data mining / data science
+# Plantilla con la estructura principal para un script en R para an谩lisis de data mining / data science
 # Sep 2020
 # @jaimehmol
 # -------------------------------------------------------------------------------------------------------------------
@@ -30,19 +30,19 @@ import
 # -------------------
 script             =  "data_exploring.py"
 algoritmo            =  ""
-busqueda             =  "" # B鷖queda hiperpar醡etros
-estimacion           =  "" # Estimaci髇 de rendimiento del modelo clasificador
+busqueda             =  "" # B煤squeda hiperpar谩metros
+estimacion           =  "" # Estimaci贸n de rendimiento del modelo clasificador
 prob_training        =  0.7
 prob_testing         =  1 - prob_training
-semilla              =  777677 # Para generaci髇 de aleatoriedad
+semilla              =  777677 # Para generaci贸n de aleatoriedad
 
-# TODO: Mejor la asignaci髇 de los nombres y rutas a utilizar
+# TODO: Mejor la asignaci贸n de los nombres y rutas a utilizar
 archivo_entrada      =  ""
 archivo_salida       =  ""
 archivo_auxiliar     =  ""
 separador            =  "|" #" "  ";"  "," 
 decimal              =  "."             
-campo_id             =  "" #(identificador 鷑ico de cada fila)
+campo_id             =  "" #(identificador 煤nico de cada fila)
 campos_a_borrar      =  [] #Variables (columnas) a borrar
 
 
@@ -75,26 +75,26 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 
 
 # ===================================================================================================================
-# Exploraci髇 de variables (columnas)
+# Exploraci贸n de variables (columnas)
 # ===================================================================================================================
 
 # ----------------------------------------------------------------
-# Descripci髇 cuantitativa del data set de entrada y sus variables
+# Descripci贸n cuantitativa del data set de entrada y sus variables
 # ----------------------------------------------------------------
 
 
 # --------------------------------
-# Descripci髇 gr醘ica de variables
+# Descripci贸n gr谩fica de variables
 # --------------------------------
 
 
 # ---------------------
-# An醠isis de Outliers
+# An谩lisis de Outliers
 # ---------------------
 
 
 # -------------------------------------------------------------
-# An醠isis de distribuci髇 (Normalidad, Homocedasticidad, etc)
+# An谩lisis de distribuci贸n (Normalidad, Homocedasticidad, etc)
 # -------------------------------------------------------------
 
 
@@ -117,7 +117,7 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 
 
 # ===================================================================================================================
-# Integraci髇, agregaci髇 y enriquecimiento
+# Integraci贸n, agregaci贸n y enriquecimiento
 # ===================================================================================================================
 
 
@@ -127,33 +127,32 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 # ===================================================================================================================
 
 # ---------------------------------------------------------------------------
-# Construcci髇 metodolog韆 de validaci髇 (Train-Test, CrossValidation, etc.)
+# Construcci贸n metodolog铆a de validaci贸n (Train-Test, CrossValidation, etc.)
 # ---------------------------------------------------------------------------
 
 
 
 # --------------------------------------------------------------------------
-# B鷖queda de hiperpar醡etros (par醡etros 髉timos) del modelo a implementar
+# B煤squeda de hiperpar谩metros (par谩metros 贸ptimos) del modelo a implementar
 # --------------------------------------------------------------------------
 
 # Escribir el encabezado del archivo de salida
-if( !file.exists(archivo_salida) )
-{
-  cat( "Id ejecuci髇", 
-       "tiempo_promedio",
-       "parametro1", 
-       "parametro2",
-       "fecha", 
-       "dataset", 
-       "clase", 
-       "programa", 
-       "algoritmo", 
-       "busqueda" , 
-       "estimacion",
-       "\n", sep="\t", file=archivo_salida, fill=FALSE, append=FALSE )
-}
-lineas_archivo <-  length( readLines(archivo_salida) )  - 1
-linea <- 1
+if not file.exists(archivo_salida):
+  cat( "Id ejecucion", 
+        "tiempo_promedio",
+        "parametro1", 
+        "parametro2",
+        "fecha", 
+        "dataset", 
+        "clase", 
+        "programa", 
+        "algoritmo", 
+        "busqueda" , 
+        "estimacion",
+        "\n", sep="\t", file=archivo_salida, fill=FALSE, append=FALSE )
+
+lineas_archivo =  len( readLines(archivo_salida) ) - 1
+linea = 1
 
 
 
@@ -162,9 +161,9 @@ linea <- 1
 
 
 # ----------------------------------------
-# Construcci髇 y entrenamiento del modelo
+# Construcci贸n y entrenamiento del modelo
 # ----------------------------------------
-# Ejecuci髇
+# Ejecuci贸n
 
 
 linea = linea + 1
@@ -176,29 +175,29 @@ linea = linea + 1
 
 
 # ------------------------
-# Resultados y evaluaci髇
+# Resultados y evaluaci贸n
 # ------------------------
 # TODO: 
-# Llamar a funci髇 propia que haga 
-#   1. M閠ricas de los resultados
-#     1.1. Tabla de confusi髇
-#     1.2. 羠ea bajo la curva ROC
+# Llamar a funci贸n propia que haga 
+#   1. M茅tricas de los resultados
+#     1.1. Tabla de confusi贸n
+#     1.2. 脕rea bajo la curva ROC
 #     1.3. Accuracy
-#   2. Gr醘icas de resultados
+#   2. Gr谩ficas de resultados
 #     2.1. Curvas ROC
 # Entrada: Data frame con dataset de Test (inicial)
-#          Objeto con el modelo a aplicar (con sus respectivos par醡etros) 
+#          Objeto con el modelo a aplicar (con sus respectivos par谩metros) 
 # Salida: Data frame con resultados ordenados
-#         Gr醘icos
+#         Gr谩ficos
 
 
 
 # ===================================================================================================================
-# Finalizaci髇
+# Finalizaci贸n
 # ===================================================================================================================
 
 # ------------------------------
-# C醠culo de tiempo de ejecuci髇 
+# C谩lculo de tiempo de ejecuci贸n 
 # ------------------------------
 
 
@@ -213,7 +212,7 @@ linea = linea + 1
 # -------------------------------------------------------------------------------------------------------------------
 # -------------------------------------------------------------------------------------------------------------------
 # # -------------------------------------------------------------------------------------------------------------------
-# # Aplicaci髇 de tests
+# # Aplicaci贸n de tests
 # # -------------------------------------------------------------------------------------------------------------------
 # # ******************************** UNIVARIADO DOS MUESTRAS ***************************************
 # # Test de normalidad de Kolmogorov-Smirnof
@@ -222,13 +221,13 @@ linea = linea + 1
 # lillie.test(ejerc1DF$tpos2)
 # # Evaluar el valor p y comparar con alfa
 # 
-# # Box-cox para buscar exponente de transformaci髇 a distribuci髇 normal en caso de que no la tengan
+# # Box-cox para buscar exponente de transformaci贸n a distribuci贸n normal en caso de que no la tengan
 # boxcoxTpos1 <- boxcox(ejerc1DF$tpos1~1,plotit=T)
 # boxcoxTpos2 <- boxcox(ejerc1DF$tpos2~1,plotit=T)
 # # Busqueda del exponente para transformar a normal
 # exponenteTpos1 <- boxcoxTpos1$x[which(boxcoxTpos1$y == max(boxcoxTpos1$y))]
 # exponenteTpos2 <- boxcoxTpos2$x[which(boxcoxTpos2$y == max(boxcoxTpos2$y))]
-# # Aplica transformaci髇 con exponenete a hallado en box cox
+# # Aplica transformaci贸n con exponenete a hallado en box cox
 # tpos1Transf <- ejerc1DF$tpos1^(exponenteTpos1)
 # tpos2Transf <- ejerc1DF$tpos2^(exponenteTpos2)
 # 
@@ -247,22 +246,22 @@ linea = linea + 1
 # lillie.test(tpos2Transf)
 # # Evaluar el valor p y comparar con alfa
 # 
-# # Test t de diferencia de medias param閠rico
+# # Test t de diferencia de medias param茅trico
 # testT <- t.test(tpos1Transf,tpos2Transf)
 # print(testT)
 # # Evaluar el valor p y comparar con alfa
 # 
-# # Test de diferencia de medias NO param閠rico: Wilcoxon - Man - Whitney
+# # Test de diferencia de medias NO param茅trico: Wilcoxon - Man - Whitney
 # wilcox.test(ejerc1DF$tpos1,ejerc1DF$tpos2)
-# # Evaluar el valor p y comparar con alfa. Si estamos seguros que las dos muestras tienen la misma distribuci髇
-# # denota diferencia de las medianas (posicional), si no estamos seguros sobre la igualdad de distribuci髇
+# # Evaluar el valor p y comparar con alfa. Si estamos seguros que las dos muestras tienen la misma distribuci贸n
+# # denota diferencia de las medianas (posicional), si no estamos seguros sobre la igualdad de distribuci贸n
 # # solo denota que las distribuciones son diferentes
 # 
 # 
 # 
-# # ******************************** UNIVARIADO M罶 DE DOS MUESTRAS ********************************
+# # ******************************** UNIVARIADO M脕S DE DOS MUESTRAS ********************************
 # 
-# # Exploraci髇 inicial (gr醘ica y num閞ica) de datos
+# # Exploraci贸n inicial (gr谩fica y num茅rica) de datos
 # # --------------------------------------------------------------.  
 # boxplot(dfSource[,])
 # boxplotInfo <- boxplot(dfSource[,])
@@ -270,7 +269,7 @@ linea = linea + 1
 # stat.desc(dfSource[,]) 
 # 
 # 
-# # Aplicaci髇 de anova multivariado
+# # Aplicaci贸n de anova multivariado
 # # --------------------------------------------------------------.
 # attach(dfSource)
 # casos <- c(An1,An2,An3,An4)
@@ -283,7 +282,7 @@ linea = linea + 1
 # # Evaluar el valor p y comparar con alfa
 # 
 # 
-# # Verificaci髇 de supuestos 
+# # Verificaci贸n de supuestos 
 # # --------------------------------------------------------------.
 # # Normalidad
 # 
@@ -294,7 +293,7 @@ linea = linea + 1
 # shapiro.test(residuos) #Sobre los residuos para no tener que hacer el test de shapiro para cada muestra
 # # Evaluar el valor p y comparar con alfa
 # 
-# # NO APLICA, TAMA袿 DE MUESTRAS MUY PEQUE袿
+# # NO APLICA, TAMA脩O DE MUESTRAS MUY PEQUE脩O
 # lillie.test(An1)
 # lillie.test(An2)
 # lillie.test(An3)
@@ -302,7 +301,7 @@ linea = linea + 1
 # lillie.test(residuos) #Sobre los residuos para no tener que hacer el test de shapiro para cada muestra
 # # Evaluar el valor p y comparar con alfa
 # 
-# # NO APLICA, TAMA袿 DE MUESTRAS MUY PEQUE袿
+# # NO APLICA, TAMA脩O DE MUESTRAS MUY PEQUE脩O
 # agostino.test(An1)
 # agostino.test(An2)
 # agostino.test(An3)
@@ -323,15 +322,15 @@ linea = linea + 1
 # # usado para el ANOVA
 # TukeyHSD(anovaMarcas, conf.level = 0.95)
 # # Evaluar el valor p y comparar con alfa en los casos donde el rango inferior y superior contenga el cero
-# # esto nos indicar韆 que el par de muestras tienen media similar
+# # esto nos indicar谩 a que el par de muestras tienen media similar
 # 
-# # NO USAR MODELO PARAM蒚RICO, SI LA MUESTRA ES MUY PEQUE袮
+# # NO USAR MODELO PARAM脡TRICO, SI LA MUESTRA ES MUY PEQUE脩A
 # 
 # 
 # 
-# # Analisis de la varianza multivariado no param閠rico (KRUSKAL WALLIS)
+# # Analisis de la varianza multivariado no param茅trico (KRUSKAL WALLIS)
 # # --------------------------------------------------------------------.
-# gruposFact <- as.factor(grupos) #OJO: para este test se requiere que la variable de clasificaci髇 sea tipo factor
+# gruposFact <- as.factor(grupos) #OJO: para este test se requiere que la variable de clasificaci贸n sea tipo factor
 # kruskal.test(casos ~ gruposFact)
 # # Evaluar el valor p y comparar con alfa
 # -----------------------------------------------------------------------
