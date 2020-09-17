@@ -18,17 +18,30 @@
 # ------------------
 # Imports
 # ------------------
-import
+import pandas as pd
+import os
+from pathlib import Path
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+from scipy.stats import norm
+from sklearn.preprocessing import StandardScaler
+from scipy import stats
+# import warnings
+# warnings.filterwarnings('ignore')
+# %matplotlib inline
+
 
 # -------------------------
 # Imports propios
 # -------------------------
-import
+
 
 # -------------------
 # Constantes globales
 # -------------------
-script             =  "data_exploring.py"
+working_directory    =  Path(os.getcwd())
+script               =  "data_exploring.py"
 algoritmo            =  ""
 busqueda             =  "" # Búsqueda hiperparámetros
 estimacion           =  "" # Estimación de rendimiento del modelo clasificador
@@ -37,7 +50,7 @@ prob_testing         =  1 - prob_training
 semilla              =  777677 # Para generación de aleatoriedad
 
 # TODO: Mejor la asignación de los nombres y rutas a utilizar
-archivo_entrada      =  ""
+archivo_entrada      =  working_directory / "2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
 archivo_salida       =  ""
 archivo_auxiliar     =  ""
 separador            =  "|" #" "  ";"  "," 
@@ -66,6 +79,7 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 
 # CSV que tiene cada muestra como  una columna
 #dfSource <- data.frame(read.csv2(file=archivo_entrada, sep=separador,  dec=decimal,  stringsAsFactors=FALSE))
+dfSource = pd.read_csv(archivo_entrada)
 
 # ARCHIVO PLANO en general # HINT: Con algunos files me ha fallado
 # dfSource <- read.table(archivo_entrada, sep=separador, dec=decimal, header=TRUE)
@@ -81,11 +95,48 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 # ----------------------------------------------------------------
 # Descripción cuantitativa del data set de entrada y sus variables
 # ----------------------------------------------------------------
+dfSource["Salario mensual BRUTO (en tu moneda local)"].describe()
 
 
 # --------------------------------
 # Descripción gráfica de variables
 # --------------------------------
+# Histogram
+sns.distplot(dfSource["Salario mensual BRUTO (en tu moneda local)"])
+
+# Scatter plot
+var = "Años de experiencia"
+data = pd.concat([dfSource["Salario mensual BRUTO (en tu moneda local)"], dfSource[var]], axis=1)
+data.plot.scatter(x=var, y="Salario bruto", ylim=(0,800000))
+
+# Box plot 
+var = "Años de experiencia"
+data = pd.concat([dfSource["Salario mensual BRUTO (en tu moneda local)"], dfSource[var]], axis=1)
+f, ax = plt.subplots(figsize=(8, 6))
+fig = sns.boxplot(x=var, y="Salario mensual BRUTO (en tu moneda local)", data=data)
+fig.axis(ymin=0, ymax=800000)
+
+var = "Me identifico"
+data = pd.concat([dfSource["Salario mensual BRUTO (en tu moneda local)"], dfSource[var]], axis=1)
+f, ax = plt.subplots(figsize=(8, 6))
+fig = sns.boxplot(x=var, y="Me identifico", data=data)
+fig.axis(ymin=0, ymax=800000)
+
+# Correlation matrix
+corrmat = dfSource.corr()
+f, ax = plt.subplots(figsize=(12, 9))
+sns.heatmap(corrmat, vmax=.8, square=True)
+
+# Matrix scatterplot
+sns.set()
+cols = ["Salario mensual BRUTO (en tu moneda local)", 
+  "Años de experiencia", "Años en la empresa actual", 
+  "Tengo", "Cantidad de empleados", 
+  "¿La recomendás como un buen lugar para trabajar?"]
+sns.pairplot(dfSource[cols], size = 2.5)
+plt.show()
+
+
 
 
 # ---------------------
@@ -107,12 +158,18 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 # ----------------------------------------
 # Valores faltantes (Missings, NA, Nulos)
 # ----------------------------------------
+total = dfSource.isnull().sum().sort_values(ascending=False)
+percent = (dfSource.isnull().sum()/dfSource.isnull().count()).sort_values(ascending=False)
+missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
+missing_data.head(20)
 
 
 
-# ------------------------------------------------------------------------------------------------
-# Transformaciones de datos (Formateos, Conversiones, Ajustes, Reemplazos, Expresiones Regulares)
-# ------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------------------------------------
+# Transformaciones de datos (Formateos, Conversiones, Ajustes, Reemplazos, Variables dummy, Expresiones Regulares)
+# ----------------------------------------------------------------------------------------------------------------
+# Convert categorical variable into dummy
+# dfSource = pd.get_dummies(dfSource)
 
 
 
