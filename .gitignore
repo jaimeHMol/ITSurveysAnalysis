@@ -127,3 +127,19 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Mac
+*.DS_*
+
+# Atom
+*.tags
+
+# Visual Studio Code
+*.vscode
+
+# Custom ignores for machine learning projects
+data/
+model/
+
+# Numpy files
+*.npy
