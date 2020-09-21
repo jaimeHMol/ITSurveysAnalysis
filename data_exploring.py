@@ -40,7 +40,7 @@ from scipy import stats
 # -------------------
 # Constantes globales
 # -------------------
-working_directory    =  Path(os.getcwd())
+project_path         =  Path(os.getcwd())
 script               =  "data_exploring.py"
 algoritmo            =  ""
 busqueda             =  "" # Búsqueda hiperparámetros
@@ -50,7 +50,7 @@ prob_testing         =  1 - prob_training
 semilla              =  777677 # Para generación de aleatoriedad
 
 # TODO: Mejor la asignación de los nombres y rutas a utilizar
-archivo_entrada      =  working_directory / "2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
+archivo_entrada      =  project_path / "data/raw/2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
 archivo_salida       =  ""
 archivo_auxiliar     =  ""
 separador            =  "|" #" "  ";"  "," 
@@ -92,6 +92,7 @@ dfSource = pd.read_csv(archivo_entrada)
 # Exploración de variables (columnas)
 # ===================================================================================================================
 
+# TODO: Change number visualization from exponential to whole number or mak 10^3
 # ----------------------------------------------------------------
 # Descripción cuantitativa del data set de entrada y sus variables
 # ----------------------------------------------------------------
@@ -107,7 +108,7 @@ sns.distplot(dfSource["Salario mensual BRUTO (en tu moneda local)"])
 # Scatter plot
 var = "Años de experiencia"
 data = pd.concat([dfSource["Salario mensual BRUTO (en tu moneda local)"], dfSource[var]], axis=1)
-data.plot.scatter(x=var, y="Salario bruto", ylim=(0,800000))
+data.plot.scatter(x=var, y="Salario mensual BRUTO (en tu moneda local)", ylim=(0,800000))
 
 # Box plot 
 var = "Años de experiencia"
@@ -116,6 +117,7 @@ f, ax = plt.subplots(figsize=(8, 6))
 fig = sns.boxplot(x=var, y="Salario mensual BRUTO (en tu moneda local)", data=data)
 fig.axis(ymin=0, ymax=800000)
 
+# TOFIX
 var = "Me identifico"
 data = pd.concat([dfSource["Salario mensual BRUTO (en tu moneda local)"], dfSource[var]], axis=1)
 f, ax = plt.subplots(figsize=(8, 6))
