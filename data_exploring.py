@@ -50,7 +50,8 @@ prob_testing         =  1 - prob_training
 semilla              =  777677 # Para generación de aleatoriedad
 
 # TODO: Mejor la asignación de los nombres y rutas a utilizar
-archivo_entrada      =  project_path / "data/raw/2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
+sysarmy_survey       =  project_path / "data/raw/2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
+stackoverflow_survey =  project_path / "data/raw/survey_results_public.csv"
 archivo_salida       =  ""
 archivo_auxiliar     =  ""
 separador            =  "|" #" "  ";"  "," 
@@ -79,7 +80,8 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 
 # CSV que tiene cada muestra como  una columna
 #dfSource <- data.frame(read.csv2(file=archivo_entrada, sep=separador,  dec=decimal,  stringsAsFactors=FALSE))
-dfSource = pd.read_csv(archivo_entrada)
+dfSourceSysArmy = pd.read_csv(sysarmy_survey)
+dfSourceStackOverflow = pd.read_csv(stackoverflow_survey)
 
 # ARCHIVO PLANO en general # HINT: Con algunos files me ha fallado
 # dfSource <- read.table(archivo_entrada, sep=separador, dec=decimal, header=TRUE)
@@ -92,40 +94,41 @@ dfSource = pd.read_csv(archivo_entrada)
 # Exploración de variables (columnas)
 # ===================================================================================================================
 
-# TODO: Change number visualization from exponential to whole number or mak 10^3
-# ----------------------------------------------------------------
+# TODO: Change number visualization from exponential to whole number or max 10^3
+
+
+# SYSARMY SURVEY
+# --------------
 # Descripción cuantitativa del data set de entrada y sus variables
 # ----------------------------------------------------------------
-dfSource["Salario mensual BRUTO (en tu moneda local)"].describe()
+dfSourceSysArmy["Salario mensual BRUTO (en tu moneda local)"].describe()
 
-
-# --------------------------------
 # Descripción gráfica de variables
 # --------------------------------
 # Histogram
-sns.distplot(dfSource["Salario mensual BRUTO (en tu moneda local)"])
+sns.distplot(dfSourceSysArmy["Salario mensual BRUTO (en tu moneda local)"])
 
 # Scatter plot
 var = "Años de experiencia"
-data = pd.concat([dfSource["Salario mensual BRUTO (en tu moneda local)"], dfSource[var]], axis=1)
+data = pd.concat([dfSourceSysArmy["Salario mensual BRUTO (en tu moneda local)"], dfSourceSysArmy[var]], axis=1)
 data.plot.scatter(x=var, y="Salario mensual BRUTO (en tu moneda local)", ylim=(0,800000))
 
 # Box plot 
 var = "Años de experiencia"
-data = pd.concat([dfSource["Salario mensual BRUTO (en tu moneda local)"], dfSource[var]], axis=1)
+data = pd.concat([dfSourceSysArmy["Salario mensual BRUTO (en tu moneda local)"], dfSourceSysArmy[var]], axis=1)
 f, ax = plt.subplots(figsize=(8, 6))
 fig = sns.boxplot(x=var, y="Salario mensual BRUTO (en tu moneda local)", data=data)
 fig.axis(ymin=0, ymax=800000)
 
 # TOFIX
 var = "Me identifico"
-data = pd.concat([dfSource["Salario mensual BRUTO (en tu moneda local)"], dfSource[var]], axis=1)
+data = pd.concat([dfSourceSysArmy["Salario mensual BRUTO (en tu moneda local)"], dfSourceSysArmy[var]], axis=1)
 f, ax = plt.subplots(figsize=(8, 6))
 fig = sns.boxplot(x=var, y="Me identifico", data=data)
 fig.axis(ymin=0, ymax=800000)
 
 # Correlation matrix
-corrmat = dfSource.corr()
+corrmat = dfSourceSysArmy.corr()
 f, ax = plt.subplots(figsize=(12, 9))
 sns.heatmap(corrmat, vmax=.8, square=True)
 
@@ -135,8 +138,58 @@ cols = ["Salario mensual BRUTO (en tu moneda local)",
   "Años de experiencia", "Años en la empresa actual", 
   "Tengo", "Cantidad de empleados", 
   "¿La recomendás como un buen lugar para trabajar?"]
-sns.pairplot(dfSource[cols], size = 2.5)
+sns.pairplot(dfSourceSysArmy[cols], size = 2.5)
 plt.show()
+
+
+
+# STACKOVERFLOW SURVEY
+# --------------------
+# Descripción cuantitativa del data set de entrada y sus variables
+# ----------------------------------------------------------------
+dfSourceStackOverflow["ConvertedComp"].describe()
+
+# Descripción gráfica de variables
+# --------------------------------
+# Histogram
+sns.distplot(dfSourceStackOverflow["ConvertedComp"])
+
+# TOFIX
+# Scatter plot
+var = "YearsCodePro"
+data = pd.concat([dfSourceStackOverflow["ConvertedComp"], dfSourceStackOverflow[var]], axis=1)
+data.plot.scatter(x=var, y="ConvertedComp", ylim=(0,800000))
+
+# Box plot 
+var = "YearsCodePro"
+data = pd.concat([dfSourceStackOverflow["ConvertedComp"], dfSourceStackOverflow[var]], axis=1)
+f, ax = plt.subplots(figsize=(8, 6))
+fig = sns.boxplot(x=var, y="ConvertedComp", data=data)
+fig.axis(ymin=0, ymax=800000)
+
+# TOFIX
+var = "Gender"
+data = pd.concat([dfSourceStackOverflow["ConvertedComp"], dfSourceStackOverflow[var]], axis=1)
+f, ax = plt.subplots(figsize=(8, 6))
+fig = sns.boxplot(x=var, y="Gender", data=data)
+fig.axis(ymin=0, ymax=800000)
+
+# Correlation matrix
+corrmat = dfSourceStackOverflow.corr()
+f, ax = plt.subplots(figsize=(12, 9))
+sns.heatmap(corrmat, vmax=.8, square=True)
+
+# Matrix scatterplot
+sns.set()
+cols = ["ConvertedComp", 
+  "YearsCodePro", 
+  "Age", "OrgSize", 
+  "JobSat"]
+sns.pairplot(dfSourceStackOverflow[cols], size = 2.5)
+plt.show()
+
+
+
 
 
 
@@ -160,8 +213,8 @@ plt.show()
 # ----------------------------------------
 # Valores faltantes (Missings, NA, Nulos)
 # ----------------------------------------
-total = dfSource.isnull().sum().sort_values(ascending=False)
-percent = (dfSource.isnull().sum()/dfSource.isnull().count()).sort_values(ascending=False)
+total = dfSourceSysArmy.isnull().sum().sort_values(ascending=False)
+percent = (dfSourceSysArmy.isnull().sum()/dfSourceSysArmy.isnull().count()).sort_values(ascending=False)
 missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
 missing_data.head(20)
 
