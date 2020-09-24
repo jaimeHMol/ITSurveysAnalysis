@@ -101,7 +101,13 @@ dfSourceStackOverflow = pd.read_csv(stackoverflow_survey)
 # --------------
 # Descripción cuantitativa del data set de entrada y sus variables
 # ----------------------------------------------------------------
-dfSourceSysArmy["Salario mensual BRUTO (en tu moneda local)"].describe()
+for col in dfSourceSysArmy.columns:
+  print("="*27)
+  print(col)
+  print("="*27)
+  print(dfSourceSysArmy[col].describe())
+  print("")
+
 
 # Descripción gráfica de variables
 # --------------------------------
@@ -147,7 +153,13 @@ plt.show()
 # --------------------
 # Descripción cuantitativa del data set de entrada y sus variables
 # ----------------------------------------------------------------
-dfSourceStackOverflow["ConvertedComp"].describe()
+for col in dfSourceStackOverflow.columns:
+  print("="*27)
+  print(col)
+  print("="*27)
+  print(dfSourceStackOverflow[col].describe())
+  print("")
+
 
 # Descripción gráfica de variables
 # --------------------------------
