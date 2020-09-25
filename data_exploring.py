@@ -26,6 +26,7 @@ import seaborn as sns
 import numpy as np
 from scipy.stats import norm
 from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 from scipy import stats
 # import warnings
 # warnings.filterwarnings('ignore')
@@ -202,10 +203,6 @@ plt.show()
 
 
 
-
-
-
-
 # ---------------------
 # Análisis de Outliers
 # ---------------------
@@ -229,6 +226,26 @@ total = dfSourceSysArmy.isnull().sum().sort_values(ascending=False)
 percent = (dfSourceSysArmy.isnull().sum()/dfSourceSysArmy.isnull().count()).sort_values(ascending=False)
 missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
 missing_data.head(20)
+
+
+
+# --------------------------------------------------------------------
+# Análisis y reducción de dimensionalidad (PCA) - StackOverflow Survey
+# --------------------------------------------------------------------
+# PCA is affected by scale so we first standardize values first
+
+features = ['WorkWeekHrs', 'CompTotal', 'Age', 'Respondent']
+# Separating out the features
+x = dfSourceStackOverflow.loc[:, features].values
+# Separating out the target
+# y = dfSourceStackOverflow.loc[:,['target']].values
+# Standardizing the features
+x = StandardScaler().fit_transform(x)
+
+pca = PCA(n_components=2)
+principalComponents = pca.fit_transform(x)
+principalDf = pd.DataFrame(data = principalComponents
+             , columns = ['principal component 1', 'principal component 2'])
 
 
 
