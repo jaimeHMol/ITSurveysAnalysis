@@ -76,6 +76,14 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 # Cargar datos fuente
 # -------------------
 
+# MANUALMENTE INGRESADO.
+# invoices = {'invoice': [1, 2, 3, 4, 5, 6],
+#             'client': [4, 1, 3, 1, 2, 6],
+#             'units': [3, 2, 1, 2, 1, 1],
+#             'price': [27.76, 21.13, 29.82, 29.96, 21.11, 23.97],
+#             'total': [83.28, 42.26, 29.82, 59.92, 21.11, 23.97]}
+# dfSource = pd.DataFrame(invoices)
+
 # DESDE LA WEB. Requiere acceso a internet
 #dfSource <- read.csv("http://astrostatistics.psu.edu/datasets/COMBO17.csv", header=T, stringsAsFactors=F)
 
@@ -208,6 +216,16 @@ plt.show()
 # ---------------------
 
 
+# Remover valores de sueldos exageradamente altos (en campo CompTotal)
+# Selección de filas con outliers (20 veces mayores al tercer cuartil de la distribución
+# de valores de la muestra)
+dfSourceStackOverflow.loc[dfSourceStackOverflow['CompTotal'] > 30000000]
+
+# Índices a borrar
+rowsToRemove = dfSourceStackOverflow.loc[dfSourceStackOverflow['CompTotal'] > 30000000].index
+dfSourceStackOverflow = dfSourceStackOverflow.drop(rowsToRemove, axis=0)
+
+
 # -------------------------------------------------------------
 # Análisis de distribución (Normalidad, Homocedasticidad, etc)
 # -------------------------------------------------------------
@@ -227,6 +245,9 @@ percent = (dfSourceSysArmy.isnull().sum()/dfSourceSysArmy.isnull().count()).sort
 missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
 missing_data.head(20)
 
+# Quitar filas con valores faltantes
+dfSourceStackOverflow = dfSourceStackOverflow.dropna(axis=0)
+
 
 
 # --------------------------------------------------------------------
@@ -234,7 +255,7 @@ missing_data.head(20)
 # --------------------------------------------------------------------
 # PCA is affected by scale so we first standardize values first
 
-features = ['WorkWeekHrs', 'CompTotal', 'Age', 'Respondent']
+features = ['WorkWeekHrs', 'ConvertedComp', 'Age', 'Respondent']
 # Separating out the features
 x = dfSourceStackOverflow.loc[:, features].values
 # Separating out the target
@@ -246,6 +267,25 @@ pca = PCA(n_components=2)
 principalComponents = pca.fit_transform(x)
 principalDf = pd.DataFrame(data = principalComponents
              , columns = ['principal component 1', 'principal component 2'])
+
+pca.explained_variance_ratio_ # BAD!
+
+# Visualizar PCA
+fig = plt.figure(figsize = (8,8))
+ax = fig.add_subplot(1,1,1) 
+ax.set_xlabel('Principal Component 1', fontsize = 15)
+ax.set_ylabel('Principal Component 2', fontsize = 15)
+ax.set_title('2 component PCA', fontsize = 20)
+# targets = ['Iris-setosa', 'Iris-versicolor', 'Iris-virginica']
+# colors = ['r', 'g', 'b']
+# for target, color in zip(targets,colors):
+    # indicesToKeep = principalDf['target'] == target
+ax.scatter(principalDf['principal component 1']
+            , principalDf['principal component 2']
+            , s = 50)
+# ax.legend(targets)
+ax.grid()
+
 
 
 
