@@ -27,6 +27,7 @@ import numpy as np
 from scipy.stats import norm
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
 from scipy import stats
 # import warnings
 # warnings.filterwarnings('ignore')
@@ -307,10 +308,39 @@ ax.grid()
 # Modelado
 # ===================================================================================================================
 
+# Clustering - Kmeans
+kmeans = KMeans(
+    init="random",
+    n_clusters=3,
+    n_init=10,
+    max_iter=300,
+    random_state=42
+)
+kmeans.fit(principalDf)
+
+# The lowest SSE value
+kmeans.inertia_
+
+# Final locations of the centroid
+kmeans.cluster_centers_
+
+# The number of iterations required to converge
+kmeans.n_iter_
+
+# Quality of the clusters:
+# Elbow method
+
+
+# Silhouette coefficient
+
+
+
 # ---------------------------------------------------------------------------
 # Construcción metodología de validación (Train-Test, CrossValidation, etc.)
 # ---------------------------------------------------------------------------
-
+from sklearn.model_selection import train_test_split
+# test_size: what proportion of original data is used for test set
+train_img, test_img, train_lbl, test_lbl = train_test_split( mnist.data, mnist.target, test_size=1/7.0, random_state=0)
 
 
 # --------------------------------------------------------------------------
