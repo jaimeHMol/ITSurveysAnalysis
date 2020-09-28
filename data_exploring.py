@@ -29,6 +29,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from scipy import stats
+from kneed import KneeLocator
 # import warnings
 # warnings.filterwarnings('ignore')
 # %matplotlib inline
@@ -262,10 +263,10 @@ x = dfSourceStackOverflow.loc[:, features].values
 # Separating out the target
 # y = dfSourceStackOverflow.loc[:,['target']].values
 # Standardizing the features
-x = StandardScaler().fit_transform(x)
+standardized_features = StandardScaler().fit_transform(x)
 
 pca = PCA(n_components=2)
-principalComponents = pca.fit_transform(x)
+principalComponents = pca.fit_transform(standardized_features)
 principalDf = pd.DataFrame(data = principalComponents
              , columns = ['principal component 1', 'principal component 2'])
 
@@ -308,17 +309,17 @@ ax.grid()
 # Modelado
 # ===================================================================================================================
 
-# Clustering - Kmeans
+# Clustering - Kmeans (testing with 3 clusters)
 kmeans = KMeans(
     init="random",
     n_clusters=3,
     n_init=10,
     max_iter=300,
-    random_state=42
+    random_state=42,
 )
-kmeans.fit(principalDf)
+kmeans.fit(standardized_features)
 
-# The lowest SSE value
+# The lowest Sum of Squared Error (SSE) value
 kmeans.inertia_
 
 # Final locations of the centroid
@@ -327,8 +328,34 @@ kmeans.cluster_centers_
 # The number of iterations required to converge
 kmeans.n_iter_
 
-# Quality of the clusters:
-# Elbow method
+
+# How many clusters should be calculated?
+#   Using elbow method
+kmeans_kwargs  = {
+    "init": "random",
+    "n_init": 10,
+    "max_iter": 300,
+    "random_state": 42,
+}
+
+sse = []
+for k in range(1, 11):
+    kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
+    kmeans.fit(standardized_features)
+    sse.append(kmeans.inertia_)
+
+plt.style.use("fivethirtyeight")
+plt.plot(range(1, 11), sse)
+plt.xticks(range(1, 11))
+plt.xlabel("Number of Clusters")
+plt.ylabel("SSE")
+plt.show()
+
+kl = KneeLocator(
+        range(1, 11), sse, curve="convex", direction="decreasing"
+    )
+# Best number of clusters:
+kl.elbow
 
 
 # Silhouette coefficient
