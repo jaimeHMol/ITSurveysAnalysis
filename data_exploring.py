@@ -28,6 +28,7 @@ from scipy.stats import norm
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 from scipy import stats
 from kneed import KneeLocator
 # import warnings
@@ -358,7 +359,23 @@ kl = KneeLocator(
 kl.elbow
 
 
-# Silhouette coefficient
+# Silhouette coefficient (goes from -1 to 1, near to 1 is better)
+silhouette_coefficients = []
+for k in range(2, 11):
+    kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
+    kmeans.fit(standardized_features)
+    score = silhouette_score(standardized_features, kmeans.labels_)
+    silhouette_coefficients.append(score)
+
+plt.style.use("fivethirtyeight")
+plt.plot(range(2, 11), silhouette_coefficients)
+plt.xticks(range(2, 11))
+plt.xlabel("Number of Clusters")
+plt.ylabel("Silhouette Coefficient")
+plt.show()
+
+
+# Adjusted rand index (ARI)
 
 
 
