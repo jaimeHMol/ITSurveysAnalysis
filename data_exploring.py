@@ -28,6 +28,7 @@ from scipy.stats import norm
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+from sklearn.cluster import DBSCAN
 from sklearn.metrics import silhouette_score
 from scipy import stats
 from kneed import KneeLocator
@@ -375,8 +376,16 @@ plt.ylabel("Silhouette Coefficient")
 plt.show()
 
 
-# Adjusted rand index (ARI)
 
+# Clustering - DBScan
+dbscan = DBSCAN(eps=0.5)
+
+dbscan.fit(standardized_features)
+
+# Number of clusters (For the eps used as input parameter)
+len(set(dbscan.labels_))
+
+dbscan_silhouette = silhouette_score(standardized_features, dbscan.labels_)
 
 
 # ---------------------------------------------------------------------------
