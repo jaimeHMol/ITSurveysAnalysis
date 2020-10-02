@@ -361,20 +361,19 @@ kl.elbow
 
 
 # Silhouette coefficient (goes from -1 to 1, near to 1 is better)
-silhouette_coefficients = []
+kmeans_silhouette_coefficients = []
 for k in range(2, 11):
     kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
     kmeans.fit(standardized_features)
     score = silhouette_score(standardized_features, kmeans.labels_)
-    silhouette_coefficients.append(score)
+    kmeans_silhouette_coefficients.append(score)
 
 plt.style.use("fivethirtyeight")
-plt.plot(range(2, 11), silhouette_coefficients)
+plt.plot(range(2, 11), kmeans_silhouette_coefficients)
 plt.xticks(range(2, 11))
 plt.xlabel("Number of Clusters")
 plt.ylabel("Silhouette Coefficient")
 plt.show()
-
 
 
 # Clustering - DBScan
@@ -386,6 +385,29 @@ dbscan.fit(standardized_features)
 len(set(dbscan.labels_))
 
 dbscan_silhouette = silhouette_score(standardized_features, dbscan.labels_)
+
+# Finding best number of cluster (Choosing the correct eps)
+dbscan_silhouette_coefficients = []
+for eps in np.linspace(0.1,4,10):
+    dbscan = DBSCAN(eps=eps)
+    dbscan.fit(standardized_features)
+    score = silhouette_score(standardized_features, dbscan.labels_)
+    dbscan_silhouette_coefficients.append(score)
+
+plt.style.use("fivethirtyeight")
+plt.plot(np.linspace(0.1,4,10), dbscan_silhouette_coefficients)
+plt.xticks(np.linspace(0.1,4,10))
+plt.xlabel("eps")
+plt.ylabel("Silhouette Coefficient")
+plt.show()
+
+dbscan = DBSCAN(eps=1.8)
+dbscan.fit(standardized_features)
+# Best number of clusters according to the best Silhouette score over multiples eps.
+len(set(dbscan.labels_))
+
+
+
 
 
 # ---------------------------------------------------------------------------
