@@ -1,23 +1,18 @@
 # -------------------------------------------------------------------------------------------------------------------
-# Template Script Data Mining
-# -------------------------------------------------------------------------------------------------------------------
-# Plantilla con la estructura principal para un script en R para análisis de data mining / data science
+# Template script for a data science analysis
 # Sep 2020
 # @jaimehmol
 # -------------------------------------------------------------------------------------------------------------------
 
-# ===================================================================================================================
-# Inicio
-# ===================================================================================================================
 
-# -------------------------
-# Almacena tiempo de inicio
-# -------------------------
+# ---------------
+# Start date time
+# # -------------
 
 
-# ------------------
-# Imports
-# ------------------
+# ---------------
+# Imports general
+# ---------------
 import pandas as pd
 import os
 from pathlib import Path
@@ -37,14 +32,14 @@ from kneed import KneeLocator
 # %matplotlib inline
 
 
-# -------------------------
-# Imports propios
-# -------------------------
+# --------------
+# Imports owned
+# --------------
 
 
-# -------------------
-# Constantes globales
-# -------------------
+# ------------------------------
+# Global variables and constants
+# ------------------------------
 project_path         =  Path(os.getcwd())
 script               =  "data_exploring.py"
 algoritmo            =  ""
@@ -65,9 +60,9 @@ campo_id             =  "" #(identificador único de cada fila)
 campos_a_borrar      =  [] #Variables (columnas) a borrar
 
 
-# ------------------------
-# Configuraciones globales
-# ------------------------
+# -------------
+# Global setup
+# -------------
 # -- WORKING DIRECTORY
 #setwd("R:\\") # Mi directorio de trabajo
 #setwd('M:\\') # o apuntando a una unidad virtual creada (ideal para manejar rutas relativas)
@@ -76,11 +71,11 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 #Sys.setenv(R_USER="R:\\")
 
 
-# -------------------
-# Cargar datos fuente
-# -------------------
+# -----------------------
+# Loading source datasets
+# -----------------------
 
-# MANUALMENTE INGRESADO.
+# MANUAL INPUT.
 # invoices = {'invoice': [1, 2, 3, 4, 5, 6],
 #             'client': [4, 1, 3, 1, 2, 6],
 #             'units': [3, 2, 1, 2, 1, 1],
@@ -88,23 +83,21 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 #             'total': [83.28, 42.26, 29.82, 59.92, 21.11, 23.97]}
 # dfSource = pd.DataFrame(invoices)
 
-# DESDE LA WEB. Requiere acceso a internet
-#dfSource <- read.csv("http://astrostatistics.psu.edu/datasets/COMBO17.csv", header=T, stringsAsFactors=F)
+# FROM THE WEB. Requieres internet access
 
-# CSV que tiene cada muestra como  una columna
-#dfSource <- data.frame(read.csv2(file=archivo_entrada, sep=separador,  dec=decimal,  stringsAsFactors=FALSE))
+# CSV.
 dfSourceSysArmy = pd.read_csv(sysarmy_survey)
 dfSourceStackOverflow = pd.read_csv(stackoverflow_survey)
 
-# ARCHIVO PLANO en general # HINT: Con algunos files me ha fallado
-# dfSource <- read.table(archivo_entrada, sep=separador, dec=decimal, header=TRUE)
+# TEXT FLAT FILE.
 
-# EXCEL que tiene cada muestra como  una columna
-#dfSource <- read_excel(path=archivo_entrada, sheet=1)  
+
+# EXCEL.
+ 
 
 
 # ===================================================================================================================
-# Exploración de variables (columnas)
+# Data explorations (Columns)
 # ===================================================================================================================
 
 # TODO: Change number visualization from exponential to whole number or max 10^3
@@ -112,7 +105,7 @@ dfSourceStackOverflow = pd.read_csv(stackoverflow_survey)
 
 # SYSARMY SURVEY
 # --------------
-# Descripción cuantitativa del data set de entrada y sus variables
+# Quantitative description  of the input dataset and its variables
 # ----------------------------------------------------------------
 for col in dfSourceSysArmy.columns:
   print("="*27)
@@ -122,8 +115,8 @@ for col in dfSourceSysArmy.columns:
   print("")
 
 
-# Descripción gráfica de variables
-# --------------------------------
+# Graphic description of the variables
+# ------------------------------------
 # Histogram
 sns.distplot(dfSourceSysArmy["Salario mensual BRUTO (en tu moneda local)"])
 
@@ -164,7 +157,7 @@ plt.show()
 
 # STACKOVERFLOW SURVEY
 # --------------------
-# Descripción cuantitativa del data set de entrada y sus variables
+# Quantitative description  of the input dataset and its variables
 # ----------------------------------------------------------------
 for col in dfSourceStackOverflow.columns:
   print("="*27)
@@ -174,8 +167,8 @@ for col in dfSourceStackOverflow.columns:
   print("")
 
 
-# Descripción gráfica de variables
-# --------------------------------
+# Graphic description of the variables
+# ------------------------------------
 # Histogram
 sns.distplot(dfSourceStackOverflow["ConvertedComp"])
 
@@ -216,33 +209,33 @@ plt.show()
 
 
 # ---------------------
-# Análisis de Outliers
+# Outliers analysis
 # ---------------------
 
 
-# Remover valores de sueldos exageradamente altos (en campo CompTotal)
-# Selección de filas con outliers (20 veces mayores al tercer cuartil de la distribución
-# de valores de la muestra)
+# Removing salary values to much high (in the field CompTotal)
+# Selecting the rows with outliers (values 20 times bigger than the third quartile of the
+# values distribution of the dataset)
 dfSourceStackOverflow.loc[dfSourceStackOverflow['CompTotal'] > 30000000]
 
-# Índices a borrar
+# Index to delete
 rowsToRemove = dfSourceStackOverflow.loc[dfSourceStackOverflow['CompTotal'] > 30000000].index
 dfSourceStackOverflow = dfSourceStackOverflow.drop(rowsToRemove, axis=0)
 
 
 # -------------------------------------------------------------
-# Análisis de distribución (Normalidad, Homocedasticidad, etc)
+# Distribution analysis (Normality, homoscedasticity, etc)
 # -------------------------------------------------------------
 
 
 
 
 # ===================================================================================================================
-# Calidad y limpieza de variables (columnas)
+# Data qualty and cleaning (columns)
 # ===================================================================================================================
 
 # ----------------------------------------
-# Valores faltantes (Missings, NA, Nulos)
+# Missing values (Missings, NA, Nulls)
 # ----------------------------------------
 total = dfSourceSysArmy.isnull().sum().sort_values(ascending=False)
 percent = (dfSourceSysArmy.isnull().sum()/dfSourceSysArmy.isnull().count()).sort_values(ascending=False)
@@ -255,7 +248,7 @@ dfSourceStackOverflow = dfSourceStackOverflow.dropna(axis=0)
 
 
 # --------------------------------------------------------------------
-# Análisis y reducción de dimensionalidad (PCA) - StackOverflow Survey
+# Dimensionality analys and reduction (PCA) - StackOverflow Survey
 # --------------------------------------------------------------------
 # PCA is affected by scale so we first standardize values first
 
@@ -293,22 +286,22 @@ ax.grid()
 
 
 
-# ----------------------------------------------------------------------------------------------------------------
-# Transformaciones de datos (Formateos, Conversiones, Ajustes, Reemplazos, Variables dummy, Expresiones Regulares)
-# ----------------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------
+# Data transformation (Format, conversions, adjustments, replaces, dummy variables, regular expresions)
+# -----------------------------------------------------------------------------------------------------
 # Convert categorical variable into dummy
 # dfSource = pd.get_dummies(dfSource)
 
 
 
 # ===================================================================================================================
-# Integración, agregación y enriquecimiento
+# Integration, agregation and enrichment
 # ===================================================================================================================
 
 
 
 # ===================================================================================================================
-# Modelado
+# Modeling
 # ===================================================================================================================
 
 # Clustering - Kmeans (testing with 3 clusters)
@@ -410,59 +403,35 @@ len(set(dbscan.labels_))
 
 
 
-# ---------------------------------------------------------------------------
-# Construcción metodología de validación (Train-Test, CrossValidation, etc.)
-# ---------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+# Building data model validation structure (Train-Test, CrossValidation, etc.)
+# ----------------------------------------------------------------------------
 from sklearn.model_selection import train_test_split
 # test_size: what proportion of original data is used for test set
 train_img, test_img, train_lbl, test_lbl = train_test_split( mnist.data, mnist.target, test_size=1/7.0, random_state=0)
 
 
-# --------------------------------------------------------------------------
-# Búsqueda de hiperparámetros (parámetros óptimos) del modelo a implementar
-# --------------------------------------------------------------------------
 
-# Escribir el encabezado del archivo de salida
-if not file.exists(archivo_salida):
-  cat( "Id ejecucion", 
-        "tiempo_promedio",
-        "parametro1", 
-        "parametro2",
-        "fecha", 
-        "dataset", 
-        "clase", 
-        "programa", 
-        "algoritmo", 
-        "busqueda" , 
-        "estimacion",
-        "\n", sep="\t", file=archivo_salida, fill=FALSE, append=FALSE )
-
-lineas_archivo =  len( readLines(archivo_salida) ) - 1
-linea = 1
-
-
-
-# Proceso de escritura de archivo de salida
-
-
-
-# ----------------------------------------
-# Construcción y entrenamiento del modelo
-# ----------------------------------------
-# Ejecución
+# ------------------------------------
+# Build, train and test the data model
+# ------------------------------------
 
 
 linea = linea + 1
 
 
-# Fin ejecuciones
 
 
 
 
-# ------------------------
-# Resultados y evaluación
-# ------------------------
+
+
+
+
+
+# ----------------------
+# Evaluation and results
+# ----------------------
 # TODO: 
 # Llamar a función propia que haga 
 #   1. Métricas de los resultados
@@ -479,16 +448,16 @@ linea = linea + 1
 
 
 # ===================================================================================================================
-# Finalización
+# Ending
 # ===================================================================================================================
 
-# ------------------------------
-# Cálculo de tiempo de ejecución 
-# ------------------------------
+# ---------------------------------
+# Total execution time calculation  
+# ---------------------------------
 
 
 # ===================================================================================================================
-# Funciones locales
+# Local functions
 # ===================================================================================================================
 
 
