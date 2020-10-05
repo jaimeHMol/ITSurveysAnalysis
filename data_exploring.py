@@ -246,20 +246,23 @@ missing_data.head(20)
 dfSourceStackOverflow = dfSourceStackOverflow.dropna(axis=0)
 
 
-
-# --------------------------------------------------------------------
-# Dimensionality analys and reduction (PCA) - StackOverflow Survey
-# --------------------------------------------------------------------
-# PCA is affected by scale so we first standardize values first
-
+# Chosing features (variables) to work
 features = ['WorkWeekHrs', 'ConvertedComp', 'Age', 'Respondent']
 # Separating out the features
 x = dfSourceStackOverflow.loc[:, features].values
 # Separating out the target
 # y = dfSourceStackOverflow.loc[:,['target']].values
-# Standardizing the features
+
+# Standardizing the values using z-score
 standardized_features = StandardScaler().fit_transform(x)
 
+# TODO: Try standardizing the values transforming to 0 to 1 scale
+
+
+# --------------------------------------------------------------------
+# Dimensionality analys and reduction (PCA) - StackOverflow Survey
+# --------------------------------------------------------------------
+# PCA is affected by scale so we will use the standardized values
 pca = PCA(n_components=2)
 principalComponents = pca.fit_transform(standardized_features)
 principalDf = pd.DataFrame(data = principalComponents
@@ -369,6 +372,10 @@ plt.ylabel("Silhouette Coefficient")
 plt.show()
 
 
+# TODO: Clustering Kmedoids (PAM) (How different are the results compared to Kmeans?)
+
+
+
 # Clustering - DBScan
 dbscan = DBSCAN(eps=0.5)
 
@@ -398,7 +405,6 @@ dbscan = DBSCAN(eps=1.8)
 dbscan.fit(standardized_features)
 # Best number of clusters according to the best Silhouette score over multiples eps.
 len(set(dbscan.labels_))
-
 
 
 
