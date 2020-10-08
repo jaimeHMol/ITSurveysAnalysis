@@ -23,6 +23,7 @@ from scipy.stats import norm
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
+from sklearn_extra.cluster import KMedoids
 from sklearn.cluster import DBSCAN
 from sklearn.metrics import silhouette_score
 from scipy import stats
@@ -373,6 +374,23 @@ plt.show()
 
 
 # TODO: Clustering Kmedoids (PAM) (How different are the results compared to Kmeans?)
+kmedoids = KMedoids(
+    metric="euclidean",
+    n_clusters=3,
+)
+kmedoids.fit(standardized_features)
+
+# The lowest Sum of Squared Error (SSE) value
+kmedoids.inertia_
+
+# Final locations of the centroid
+kmedoids.cluster_centers_
+
+# The number of iterations required to converge
+kmedoids.n_iter_
+
+
+
 
 
 
