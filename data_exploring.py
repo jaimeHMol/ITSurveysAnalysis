@@ -7,7 +7,7 @@
 
 # ---------------
 # Start date time
-# # -------------
+# ---------------
 
 
 # ---------------
@@ -43,19 +43,16 @@ from kneed import KneeLocator
 # ------------------------------
 project_path         =  Path(os.getcwd())
 script               =  "data_exploring.py"
-algoritmo            =  ""
-busqueda             =  "" # Búsqueda hiperparámetros
-estimacion           =  "" # Estimación de rendimiento del modelo clasificador
 prob_training        =  0.7
 prob_testing         =  1 - prob_training
-semilla              =  777677 # Para generación de aleatoriedad
+seed                 =  777677 # Random seed
 
 # TODO: Mejor la asignación de los nombres y rutas a utilizar
 sysarmy_survey       =  project_path / "data/raw/2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
 stackoverflow_survey =  project_path / "data/raw/survey_results_public.csv"
-archivo_salida       =  ""
-archivo_auxiliar     =  ""
-separador            =  "|" #" "  ";"  "," 
+output_file          =  ""
+aux_file             =  ""
+separator            =  "|" #" "  ";"  "," 
 decimal              =  "."             
 campo_id             =  "" #(identificador único de cada fila)
 campos_a_borrar      =  [] #Variables (columnas) a borrar
@@ -64,12 +61,6 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 # -------------
 # Global setup
 # -------------
-# -- WORKING DIRECTORY
-#setwd("R:\\") # Mi directorio de trabajo
-#setwd('M:\\') # o apuntando a una unidad virtual creada (ideal para manejar rutas relativas)
-
-# -- HOME DIRECTORY
-#Sys.setenv(R_USER="R:\\")
 
 
 # -----------------------
@@ -601,7 +592,7 @@ linea = linea + 1
 # # usado para el ANOVA
 # TukeyHSD(anovaMarcas, conf.level = 0.95)
 # # Evaluar el valor p y comparar con alfa en los casos donde el rango inferior y superior contenga el cero
-# # esto nos indicará a que el par de muestras tienen media similar
+# # esto nos indicará que el par de muestras tienen media similar
 # 
 # # NO USAR MODELO PARAMÉTRICO, SI LA MUESTRA ES MUY PEQUEÑA
 # 
