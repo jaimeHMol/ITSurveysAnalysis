@@ -92,8 +92,6 @@ dfSourceStackOverflow = pd.read_csv(stackoverflow_survey)
 # Data explorations (Columns)
 # ===================================================================================================================
 
-# TODO: Change number visualization from exponential to whole number or max 10^3
-
 
 # SYSARMY SURVEY
 # --------------
@@ -106,6 +104,7 @@ for col in dfSourceSysArmy.columns:
   print(dfSourceSysArmy[col].describe())
   print("")
 
+dfSourceSysArmy.describe(include="all")
 
 # Graphic description of the variables
 # ------------------------------------
@@ -299,7 +298,7 @@ ax.grid()
 # Modeling
 # ===================================================================================================================
 
-# Clustering - Kmeans (testing with 3 clusters)
+# Clustering - Kmeans (initial approach with 3 clusters)
 kmeans = KMeans(
     init="random",
     n_clusters=3,
@@ -318,9 +317,11 @@ kmeans.cluster_centers_
 # The number of iterations required to converge
 kmeans.n_iter_
 
-
 # How many clusters should be calculated?
 #   Using elbow method
+print("="*27)
+print("Clustering using K-Means")
+print("="*27)
 kmeans_kwargs  = {
     "init": "random",
     "n_init": 10,
@@ -337,6 +338,7 @@ for k in range(1, 11):
 plt.style.use("fivethirtyeight")
 plt.plot(range(1, 11), sse)
 plt.xticks(range(1, 11))
+plt.title("K-Means")
 plt.xlabel("Number of Clusters")
 plt.ylabel("SSE")
 plt.show()
@@ -345,8 +347,8 @@ kl = KneeLocator(
         range(1, 11), sse, curve="convex", direction="decreasing"
     )
 # Best number of clusters:
-kl.elbow
-
+number_clusters_best = kl.elbow
+print(f"Best number of clusters using elbow method: {number_clusters_best}")
 
 # Silhouette coefficient (goes from -1 to 1, near to 1 is better)
 kmeans_silhouette_coefficients = []
@@ -359,12 +361,14 @@ for k in range(2, 11):
 plt.style.use("fivethirtyeight")
 plt.plot(range(2, 11), kmeans_silhouette_coefficients)
 plt.xticks(range(2, 11))
+plt.title("K-Means")
 plt.xlabel("Number of Clusters")
 plt.ylabel("Silhouette Coefficient")
 plt.show()
 
 
-# TODO: Clustering Kmedoids (PAM) (How different are the results compared to Kmeans?)
+
+# Clustering - Kmedoids (initial approach with 3 clusters)
 kmedoids = KMedoids(
     metric="euclidean",
     n_clusters=3,
@@ -380,12 +384,59 @@ kmedoids.cluster_centers_
 # The number of iterations required to converge
 kmedoids.n_iter_
 
+# How many clusters should be calculated?
+#   Using elbow method
+print("="*27)
+print("Clustering using K-Medoids")
+print("="*27)
 
+kmedoids_kwargs  = {
+    "metric": "euclidean",
+}
 
+sse = []
+for k in range(1, 11):
+    kmedoids = KMedoids(n_clusters=k, **kmedoids_kwargs)
+    kmedoids.fit(standardized_features)
+    sse.append(kmedoids.inertia_)
+
+plt.style.use("fivethirtyeight")
+plt.plot(range(1, 11), sse)
+plt.xticks(range(1, 11))
+plt.title("K-Medoids")
+plt.xlabel("Number of Clusters")
+plt.ylabel("SSE")
+plt.show()
+
+kl = KneeLocator(
+        range(1, 11), sse, curve="convex", direction="decreasing"
+    )
+# Best number of clusters:
+number_clusters_best = kl.elbow
+print(f"Best number of clusters using elbow method: {number_clusters_best}")
+
+# Silhouette coefficient (goes from -1 to 1, near to 1 is better)
+kmedoids_silhouette_coefficients = []
+for k in range(2, 11):
+    kmedoids = KMedoids(n_clusters=k, **kmedoids_kwargs)
+    kmedoids.fit(standardized_features)
+    score = silhouette_score(standardized_features, kmedoids.labels_)
+    kmedoids_silhouette_coefficients.append(score)
+
+plt.style.use("fivethirtyeight")
+plt.plot(range(2, 11), kmedoids_silhouette_coefficients)
+plt.xticks(range(2, 11))
+plt.title("K-Medoids")
+plt.xlabel("Number of Clusters")
+plt.ylabel("Silhouette Coefficient")
+plt.show()
 
 
 
 # Clustering - DBScan
+print("="*27)
+print("Clustering using DBScan")
+print("="*27)
 dbscan = DBSCAN(eps=0.5)
 
 dbscan.fit(standardized_features)
@@ -406,14 +457,18 @@ for eps in np.linspace(0.1,4,10):
 plt.style.use("fivethirtyeight")
 plt.plot(np.linspace(0.1,4,10), dbscan_silhouette_coefficients)
 plt.xticks(np.linspace(0.1,4,10))
+plt.title("DBScan")
 plt.xlabel("eps")
 plt.ylabel("Silhouette Coefficient")
 plt.show()
 
+# TODO: Detect this value programatically
 dbscan = DBSCAN(eps=1.8)
 dbscan.fit(standardized_features)
+
 # Best number of clusters according to the best Silhouette score over multiples eps.
-len(set(dbscan.labels_))
+number_clusters_best = len(set(dbscan.labels_))
+print(f"Best number of clusters using Silhouette over multiple eps: {number_clusters_best}")
 
 
 
