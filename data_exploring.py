@@ -228,14 +228,16 @@ dfSourceStackOverflow = dfSourceStackOverflow.drop(rowsToRemove, axis=0)
 # ----------------------------------------
 # Missing values (Missings, NA, Nulls)
 # ----------------------------------------
+# SysArmy
 total = dfSourceSysArmy.isnull().sum().sort_values(ascending=False)
 percent = (dfSourceSysArmy.isnull().sum()/dfSourceSysArmy.isnull().count()).sort_values(ascending=False)
 missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
 missing_data.head(20)
 
+
+# StackOverflow
 # Quitar filas con valores faltantes
 dfSourceStackOverflow = dfSourceStackOverflow.dropna(axis=0)
-
 
 # Chosing features (variables) to work
 features = ['WorkWeekHrs', 'ConvertedComp', 'Age', 'Respondent']
@@ -246,8 +248,11 @@ x = dfSourceStackOverflow.loc[:, features].values
 
 # Standardizing the values using z-score
 standardized_features = StandardScaler().fit_transform(x)
-
 # TODO: Try standardizing the values transforming to 0 to 1 scale
+
+
+# JetBrains
+
 
 
 # --------------------------------------------------------------------
