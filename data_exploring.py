@@ -88,6 +88,13 @@ dfSourceStackOverflow = pd.read_csv(stackoverflow_survey)
  
 
 
+# TODO: Create pipeline class.
+# Dataset as attribute
+# description()
+# exclude_col(list)
+# dim_reduction(method='pca', num_dims=2)
+# clustering(method='k_means')
+
 # ===================================================================================================================
 # Data explorations (Columns)
 # ===================================================================================================================
