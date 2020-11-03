@@ -1,29 +1,48 @@
-
+import pandas as pd
 
 class DataProcess(object):
-    """
-    docstring
+    """Class with all the methods required in a typical data science pipeline
     """
     
-    def __init__(self, dataset):
+    def __init__(self, path, format='csv'):
+        """ Constructor of the data process class.
+
+        Args:
+            path (pathlib/str): Full path where the input dataset is located.
+            format (str, optional): File format of the input dataset. Defaults to 'csv'.
+        """
+        dataset = pd.read_csv(path)
+
         self.dataset = dataset
         self.is_standardize = False
 
-        # TODO: Validate dataset is a panda object
         self.continuos_cols = 0 # Numerical (quantitative)
         self.discrete = 0       # Numerical (quantitative)
         self.categorical = 0    # Numerical or char (qualitative)
 
     def __str__(self):
         print("Position | Column name:")
-        for index, col in enumerate(self.dataset):
+        for index, col in enumerate(self.dataset.columns):
             print(f"{index} | {col}")
         print()
-        total_rows = 0
-        print(f"Total rows {total_rows}")
+        total_rows = len(self.dataset.index)
+        total_col = len(self.dataset.columns)
 
-    def describe(self, graph=False, verbose=False):
+        return f"Data frame with {total_col} columns and {total_rows} rows in total"
+
+    def save(self, path, format='csv'):
         pass
+
+    def describe(self, graph=False, compact=False):
+        if compact:
+            self.dataset.describe(include="all")
+        else:
+            for col in self.dataset.columns:
+                print("="*27)
+                print(col)
+                print("="*27)
+                print(self.dataset[col].describe())
+                print("")
     
     def remove_cols(self, cols_to_remove):
         pass
@@ -39,7 +58,7 @@ class DataProcess(object):
         self.is_standardize = True
         pass
 
-    def reduction_dims(self, method='PCA', cols):
+    def reduction_dims(self, cols, method='PCA'):
         if not is_standardize:
             raise ValueError("You should standardize your columns first.")
         pass

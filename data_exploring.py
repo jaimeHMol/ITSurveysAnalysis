@@ -28,6 +28,8 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics import silhouette_score
 from scipy import stats
 from kneed import KneeLocator
+
+from data_process import DataProcess
 # import warnings
 # warnings.filterwarnings('ignore')
 # %matplotlib inline
@@ -79,6 +81,9 @@ campos_a_borrar      =  [] #Variables (columnas) a borrar
 
 # CSV.
 dfSourceSysArmy = pd.read_csv(sysarmy_survey)
+sysarmy_analysis = DataProcess(sysarmy_survey, 'csv')
+print(sysarmy_analysis)
+
 dfSourceStackOverflow = pd.read_csv(stackoverflow_survey)
 
 # TEXT FLAT FILE.
@@ -86,6 +91,7 @@ dfSourceStackOverflow = pd.read_csv(stackoverflow_survey)
 
 # EXCEL.
  
+
 
 
 # TODO: Create pipeline class.
