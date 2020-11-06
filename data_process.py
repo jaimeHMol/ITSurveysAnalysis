@@ -11,7 +11,10 @@ class DataProcess(object):
             path (pathlib/str): Full path where the input dataset is located.
             format (str, optional): File format of the input dataset. Defaults to 'csv'.
         """
-        dataset = pd.read_csv(path)
+        if format == 'csv':
+            dataset = pd.read_csv(path)
+        else:
+            raise ValueError("Input file format not supported")
 
         self.dataset = dataset
         self.is_standardize = False
@@ -31,7 +34,14 @@ class DataProcess(object):
         return f"Data frame with {total_col} columns and {total_rows} rows in total"
 
     def save(self, path, format='csv'):
-        pass
+        if format == 'csv':
+            self.dataset.to_csv(path)
+        elif format == 'json':
+            self.dataset.to_json(path)
+        elif format == 'xlsx':
+            self.dataset.to_excel(path)
+        else:
+            raise ValueError("Output file format not supported")
 
     def describe(self, graph=False, compact=False):
         if compact:
@@ -45,7 +55,10 @@ class DataProcess(object):
                 print("")
     
     def remove_cols(self, cols_to_remove):
-        pass
+        if cols_to_remove is all numeric: # TODO: Finish this.
+            self.dataset.drop(self.dataset.columns[cols_to_remove], axis=1)
+        else:
+            self.dataset.drop(cols_to_remove, axis=1)
 
     def rename_cols(self, cols_to_rename):
         pass
