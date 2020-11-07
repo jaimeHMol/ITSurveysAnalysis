@@ -92,15 +92,6 @@ dfSourceStackOverflow = pd.read_csv(stackoverflow_survey)
 # EXCEL.
  
 
-
-
-# TODO: Create pipeline class.
-# Dataset as attribute
-# description()
-# exclude_col(list)
-# dim_reduction(method='pca', num_dims=2)
-# clustering(method='k_means')
-
 # ===================================================================================================================
 # Data explorations (Columns)
 # ===================================================================================================================
@@ -302,11 +293,12 @@ dfSourceStackOverflow = dfSourceStackOverflow.dropna(axis=0)
 features = ['WorkWeekHrs', 'ConvertedComp', 'Age', 'Respondent']
 # Separating out the features
 x = dfSourceStackOverflow.loc[:, features].values
+y = dfSourceStackOverflow.loc[:, features]
 # Separating out the target
 # y = dfSourceStackOverflow.loc[:,['target']].values
 
 # Standardizing the values using z-score
-standardized_features = StandardScaler().fit_transform(x)
+standardized_features = StandardScaler().fit_transform(y)
 # TODO: Try standardizing the values transforming to 0 to 1 scale
 
 

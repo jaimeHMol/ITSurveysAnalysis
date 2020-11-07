@@ -16,6 +16,7 @@ class DataProcess(object):
         else:
             raise ValueError("Input file format not supported")
 
+        self.dataset_raw = dataset
         self.dataset = dataset
         self.is_standardize = False
 
@@ -55,21 +56,29 @@ class DataProcess(object):
                 print("")
     
     def remove_cols(self, cols_to_remove):
-        if cols_to_remove is all numeric: # TODO: Finish this.
+        if all(isinstance(item, int) for item in cols_to_remove):
             self.dataset.drop(self.dataset.columns[cols_to_remove], axis=1)
         else:
             self.dataset.drop(cols_to_remove, axis=1)
 
     def rename_cols(self, cols_to_rename):
-        pass
+        self.dataset.rename(mapper=cols_to_rename, axis=1)
 
     def unify_format(self, cols, search_func, transform_func):
         pass
 
     def standardize(self, cols, method):
 
-        self.is_standardize = True
-        pass
+        if method == "z-score":
+            for col in self.dataset:
+                self.dataset[col] = (self.dataset[col] - self.dataset[col].mean() / self.dataset[col].std())
+            self.is_standardize = True            
+        elif method == "0-1":
+            # self.is_standardize = True
+            pass
+        else:
+            raise ValueError("Standardize method not supported")
+            
 
     def reduction_dims(self, cols, method='PCA'):
         if not is_standardize:
