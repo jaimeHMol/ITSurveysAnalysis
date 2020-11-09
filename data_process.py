@@ -16,10 +16,12 @@ class DataProcess(object):
         else:
             raise ValueError("Input file format not supported")
 
+        self.path = path
+        self.format = format
         self.dataset_raw = dataset
-        self.dataset = dataset
+        self.dataset = dataset_raw
+        
         self.is_standardize = False
-
         self.continuos_cols = 0 # Numerical (quantitative)
         self.discrete = 0       # Numerical (quantitative)
         self.categorical = 0    # Numerical or char (qualitative)
@@ -87,5 +89,8 @@ class DataProcess(object):
 
     def clusterization(self, method='k-means'):
         pass
+
+    def reset (self):
+        __init__(self.path, self.format)
 
     
