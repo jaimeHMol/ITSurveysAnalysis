@@ -1,4 +1,5 @@
 import pandas as pd
+from sklearn.decomposition import PCA
 
 class DataProcess(object):
     """Class with all the methods required in a typical data science pipeline
@@ -82,10 +83,29 @@ class DataProcess(object):
             raise ValueError("Standardize method not supported")
             
 
-    def reduction_dims(self, cols, method='PCA'):
+    def reduction_dims(self, cols, method='PCA', final_number_dims=2, visualize=True):
         if not is_standardize:
             raise ValueError("You should standardize your columns first.")
-        pass
+
+        pca = PCA(n_components=final_number_dims)
+        principal_components = pca.fit_transform(self.dataset)
+
+        for index in range(0, final_number_dims):
+            self.dataset[f"PC{index + 1}"] = principal_components[:,index]
+
+        print("Principal components analysis finished. Explained variance ratio:"
+        print(pca.explained_variance_ratio_)
+
+        if visualize and final_number_dims == 2:
+            fig = plt.figure(figsize = (8,8))
+            ax = fig.add_subplot(1,1,1) 
+            ax.set_xlabel('PC 1', fontsize = 15)
+            ax.set_ylabel('PC 2', fontsize = 15)
+            ax.set_title('2 component PCA', fontsize = 20)
+            ax.scatter(self.datset['PC 1']
+                        , self.dataset['PC 2']
+                        , s = 50)
+            ax.grid()
 
     def clusterization(self, method='k-means'):
         pass
