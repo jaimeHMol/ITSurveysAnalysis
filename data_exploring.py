@@ -19,14 +19,12 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-from scipy.stats import norm
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from sklearn_extra.cluster import KMedoids
 from sklearn.cluster import DBSCAN
 from sklearn.metrics import silhouette_score
-from scipy import stats
 from kneed import KneeLocator
 
 from data_process import DataProcess
