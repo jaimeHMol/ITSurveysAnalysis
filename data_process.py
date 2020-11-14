@@ -77,10 +77,15 @@ class DataProcess(object):
     def unify_format(self, cols, search_func, transform_func):
         pass
 
-    def standardize(self, cols, method):
+    def group_cols_by_type(self):
+        data_type = ''
+        cols = ''
+        return {data_type: cols}
 
-        if method == "z-score":
-            for col in self.dataset:
+    def standardize(self, cols, method='z_score'):
+
+        if method == "z_score":
+            for col in cols:
                 self.dataset[col] = (self.dataset[col] - self.dataset[col].mean() / self.dataset[col].std())
             self.is_standardize = True            
         elif method == "0-1":
@@ -115,7 +120,6 @@ class DataProcess(object):
                             , self.dataset['PC 2']
                             , s = 50)
                 ax.grid()
-
 
 
 
@@ -305,6 +309,6 @@ class DataProcess(object):
 
 
     def reset (self):
-        __init__(self.path, self.format)
+        self.__init__(self.path, self.format)
 
     

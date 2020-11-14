@@ -6,6 +6,7 @@ from data_process import DataProcess
 
 project_path = Path(os.getcwd())
 sysarmy_survey = project_path / "data/raw/2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
+output_path = project_path / "data/prepared/"
 
 sysarmy_analysis = DataProcess(sysarmy_survey, 'csv')
 print(sysarmy_analysis)
@@ -33,7 +34,10 @@ cols_to_rename = {
     'Me identifico': 'genero',
     'Tengo': 'edad',
     'Dónde estás trabajando': 'ubicacion',
+    'Años de experiencia': 'experiencia_anios',
+    'Años en la empresa actual': 'empresa_actual_anios',
     'Nivel de estudios alcanzado': 'max_nivel_estudios',
+    '¿Gente a cargo?': 'personas_a_cargo',
     'Estado': 'max_nivel_estudios_estado',
     'Realizaste cursos de especialización': 'cursos_especializacion',
     '¿Contribuís a proyectos open source?': 'contribucion_open_source',
@@ -54,3 +58,23 @@ cols_to_rename = {
 }
 sysarmy_analysis.rename_cols(cols_to_rename)
 print(sysarmy_analysis)
+
+cols_to_standard = [
+    'edad', 
+    'experiencia_anios' ,
+    'empresa_actual_anios', 
+    'personas_a_cargo',
+    'sueldo_mensual_bruto_ars',
+    'sueldo_ajuste_total_2020',
+    'recomendacion_laboral',
+    'politicas_diversidad'
+]
+sysarmy_analysis.standardize(cols_to_standard, 'z_score')
+
+# sysarmy_analysis.reset()
+# print(sysarmy_analysis)
+
+# sysarmy_analysis.save(output_path / 'sysarmy_survey_analysed.csv')
+# print(sysarmy_analysis)
+
+
