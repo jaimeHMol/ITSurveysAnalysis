@@ -23,11 +23,10 @@ class DataProcess(object):
             dataset = pd.read_csv(path)
         else:
             raise ValueError("Input file format not supported")
-
         self.path = path
         self.format = format
         self.dataset_raw = dataset
-        self.dataset = dataset_raw
+        self.dataset = self.dataset_raw
         
         self.is_standardize = False
         self.continuos_cols = 0 # Numerical (quantitative)
@@ -67,12 +66,13 @@ class DataProcess(object):
     
     def remove_cols(self, cols_to_remove):
         if all(isinstance(item, int) for item in cols_to_remove):
-            self.dataset.drop(self.dataset.columns[cols_to_remove], axis=1)
+            col_names = self.dataset.columns[cols_to_remove]
+            self.dataset = self.dataset.drop(col_names, axis=1)
         else:
-            self.dataset.drop(cols_to_remove, axis=1)
+            self.dataset = self.dataset.drop(cols_to_remove, axis=1)
 
     def rename_cols(self, cols_to_rename):
-        self.dataset.rename(mapper=cols_to_rename, axis=1)
+        self.dataset = self.dataset.rename(mapper=cols_to_rename, axis=1)
 
     def unify_format(self, cols, search_func, transform_func):
         pass
@@ -102,8 +102,8 @@ class DataProcess(object):
             for index in range(0, final_number_dims):
                 self.dataset[f"PC{index + 1}"] = principal_components[:,index]
 
-            print("Principal components analysis finished. Explained variance ratio:"
-            print(pca.explained_variance_ratio_)
+            print("Principal components analysis finished. Explained variance ratio:")
+            print(str(pca.explained_variance_ratio_))
 
             if visualize and final_number_dims == 2:
                 fig = plt.figure(figsize = (8,8))
@@ -121,45 +121,49 @@ class DataProcess(object):
 
 
     # TODO: Implement this using SOLID
-    def clusterization(self, method='k_means', visualize=True):
+    def clusterization(self, method='k_means', visualize=True, n_clusters=None):
+
+        if not is_standardize:
+            raise ValueError("You should standardize your columns first.")
 
         if method == 'k_means':
-            # Clustering - Kmeans (initial approach with 3 clusters)
-            kmeans = KMeans(
-                init="random",
-                n_clusters=3,
-                n_init=10,
-                max_iter=300,
-                random_state=42,
-            )
-            kmeans.fit(standardized_features)
-
-            # The lowest Sum of Squared Error (SSE) value
-            kmeans.inertia_
-
-            # Final locations of the centroid
-            kmeans.cluster_centers_
-
-            # The number of iterations required to converge
-            kmeans.n_iter_
-
-            # How many clusters should be calculated?
-            #   Using elbow method
             print("="*27)
             print("Clustering using K-Means")
             print("="*27)
+
+            if not n_clusters:
+                kmeans = KMeans(
+                    init="random",
+                    n_clusters=3,
+                    n_init=10,
+                    max_iter=300,
+                    random_state=42,
+                )
+                kmeans.fit(standardized_features)
+
+                print("The lowest Sum of Squared Error (SSE) value: ")
+                kmeans.inertia_
+
+                print("Final locations of the centroid")
+                kmeans.cluster_centers_
+
+                print("The number of iterations required to converge")
+                kmeans.n_iter_
+
             kmeans_kwargs  = {
                 "init": "random",
                 "n_init": 10,
                 "max_iter": 300,
                 "random_state": 42,
             }
-
             sse = []
+            kmeans_silhouette_coefficients = []
             for k in range(1, 11):
                 kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
-                kmeans.fit(standardized_features)
+                kmeans.fit(self.dataset)
                 sse.append(kmeans.inertia_)
+                score = silhouette_score(self.dataset, kmeans.labels_)
+                kmeans_silhouette_coefficients.append(score)
 
             if visualize:
                 plt.style.use("fivethirtyeight")
@@ -170,22 +174,6 @@ class DataProcess(object):
                 plt.ylabel("SSE")
                 plt.show()
 
-            kl = KneeLocator(
-                    range(1, 11), sse, curve="convex", direction="decreasing"
-                )
-            # Best number of clusters:
-            number_clusters_best = kl.elbow
-            print(f"Best number of clusters using elbow method: {number_clusters_best}")
-
-            # Silhouette coefficient (goes from -1 to 1, near to 1 is better)
-            kmeans_silhouette_coefficients = []
-            for k in range(2, 11):
-                kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
-                kmeans.fit(standardized_features)
-                score = silhouette_score(standardized_features, kmeans.labels_)
-                kmeans_silhouette_coefficients.append(score)
-
-            if visualize:
                 plt.style.use("fivethirtyeight")
                 plt.plot(range(2, 11), kmeans_silhouette_coefficients)
                 plt.xticks(range(2, 11))
@@ -193,6 +181,15 @@ class DataProcess(object):
                 plt.xlabel("Number of Clusters")
                 plt.ylabel("Silhouette Coefficient")
                 plt.show()
+
+            kl = KneeLocator(
+                    range(1, 11), sse, curve="convex", direction="decreasing"
+                )
+                
+            number_clusters_best = kl.elbow
+            print(f"Best number of clusters using elbow method: {number_clusters_best}")
+
+            print(f"Best number of clusters using silhouete coefficient: PENDING!!!!!")
 
 
         elif method == 'k_medoids':
@@ -262,7 +259,7 @@ class DataProcess(object):
                 plt.show()
 
 
-        elif method == 'dbscan';
+        elif method == 'dbscan':
             # Clustering - DBScan
             print("="*27)
             print("Clustering using DBScan")

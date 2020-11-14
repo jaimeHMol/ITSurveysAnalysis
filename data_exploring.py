@@ -163,6 +163,8 @@ cols_to_remove = [
     'Beneficios extra',   
     '¿Cuáles considerás que son las mejores empresas de IT para trabajar en este momento, en tu ciudad?',
 ]
+sysarmy_analysis.remove_cols(cols_to_remove)
+
 
 # TODO: Renaming columns
 # ----------------------------
@@ -189,6 +191,8 @@ cols_to_rename = {
     '¿La recomendás como un buen lugar para trabajar?': 'recomendacion_laboral',
     '¿Cómo calificás las políticas de diversidad e inclusión?': 'politicas_diversidad',
 }
+
+sysarmy_analysis.rename_cols(cols_to_rename)
 
 
 
