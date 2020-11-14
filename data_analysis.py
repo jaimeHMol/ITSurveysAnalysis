@@ -59,6 +59,15 @@ cols_to_rename = {
 sysarmy_analysis.rename_cols(cols_to_rename)
 print(sysarmy_analysis)
 
+
+numeric_types = ['int32', 'int64', 'float32', 'float64']
+group_cols_by_type = sysarmy_analysis.group_cols_by_type()
+all_cols_to_standard = []
+for key in numeric_types: 
+    if group_cols_by_type.get(key): 
+        all_cols_to_standard.extend(group_cols_by_type.get(key))
+
+
 cols_to_standard = [
     'edad', 
     'experiencia_anios' ,

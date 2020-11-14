@@ -78,9 +78,10 @@ class DataProcess(object):
         pass
 
     def group_cols_by_type(self):
-        data_type = ''
-        cols = ''
-        return {data_type: cols}
+        dataset_series = self.dataset.columns.to_series()
+        cols_by_type = dataset_series.groupby(self.dataset.dtypes).groups
+        cols_by_type = {str(key): list(value) for key, value in cols_by_type.items()}
+        return cols_by_type
 
     def standardize(self, cols, method='z_score'):
 
