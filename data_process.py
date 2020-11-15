@@ -63,6 +63,21 @@ class DataProcess(object):
                 print("="*27)
                 print(self.dataset[col].describe())
                 print("")
+        if graph:
+            numeric_types = ['int32', 'int64', 'float32', 'float64']
+            cols_by_type = self.group_cols_by_type()
+            cols_numeric = self.get_numeric_cols(cols_by_type, numeric_types)
+
+            cols_numeric_count = len(cols_numeric)
+            fig, axs = plt.subplots(cols_numeric_count, 1, figsize=(7, cols_numeric_count))
+            for index, col in enumerate(cols_numeric):
+                axs[index].set_title(col)
+                axs[index].boxplot(self.dataset[col], vert=False)
+                axs[index].get_xaxis().set_visible(False)
+                axs[index].get_yaxis().set_visible(False)
+            fig.tight_layout()
+            plt.show()
+
     
     def remove_cols(self, cols_to_remove):
         if all(isinstance(item, int) for item in cols_to_remove):
@@ -77,11 +92,18 @@ class DataProcess(object):
     def unify_format(self, cols, search_func, transform_func):
         pass
 
-    def group_cols_by_type(self):
+    def group_cols_by_type(self):        
         dataset_series = self.dataset.columns.to_series()
         cols_by_type = dataset_series.groupby(self.dataset.dtypes).groups
         cols_by_type = {str(key): list(value) for key, value in cols_by_type.items()}
         return cols_by_type
+
+    def get_numeric_cols(self, cols_by_type, numeric_types):
+        numeric_cols = []
+        for key in numeric_types: 
+            if cols_by_type.get(key): 
+                numeric_cols.extend(cols_by_type.get(key))
+        return numeric_cols
 
     def standardize(self, cols, method='z_score'):
 

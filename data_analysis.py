@@ -4,13 +4,16 @@ from pathlib import Path
 from data_process import DataProcess
 
 
+# Data load
 project_path = Path(os.getcwd())
 sysarmy_survey = project_path / "data/raw/2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
 output_path = project_path / "data/prepared/"
 
 sysarmy_analysis = DataProcess(sysarmy_survey, 'csv')
-print(sysarmy_analysis)
 
+
+# Data refine and exploration
+print(sysarmy_analysis)
 
 cols_to_remove = [
     'Estoy trabajando en',
@@ -28,7 +31,6 @@ cols_to_remove = [
 ]
 sysarmy_analysis.remove_cols(cols_to_remove)
 print(sysarmy_analysis)
-
 
 cols_to_rename = {
     'Me identifico': 'genero',
@@ -59,14 +61,17 @@ cols_to_rename = {
 sysarmy_analysis.rename_cols(cols_to_rename)
 print(sysarmy_analysis)
 
-
 numeric_types = ['int32', 'int64', 'float32', 'float64']
-group_cols_by_type = sysarmy_analysis.group_cols_by_type()
-all_cols_to_standard = []
-for key in numeric_types: 
-    if group_cols_by_type.get(key): 
-        all_cols_to_standard.extend(group_cols_by_type.get(key))
+cols_by_type = sysarmy_analysis.group_cols_by_type()
+cols_numeric = sysarmy_analysis.get_numeric_cols(cols_by_type, numeric_types)
 
+sysarmy_analysis.describe(graph=True)
+
+
+
+
+# Data processing
+all_cols_to_standard = cols_numeric
 
 cols_to_standard = [
     'edad', 
