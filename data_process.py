@@ -141,6 +141,23 @@ class DataProcess(object):
                 numeric_cols.extend(cols_by_type.get(key))
         return numeric_cols
 
+    def replace_missing(self, cols, method='mode')
+        """ Look for all NaN values (nulls, none, blanks) in the input columns and replace
+        them according to the method selected. If you define method = 'remove' all the 
+        rows with one or more NaN will be deleted from the dataset.
+        """
+        if method == 'mode':
+            pass
+        elif method == 'mean':
+            pass
+        elif method == 'median':
+            pass
+        elif method == 'remove':
+            print("Warning! XXX rows from total XXX were removed.")
+            pass
+        else:
+            ValueError("Replace missing values method not implemented.")
+
     def standardize(self, cols, method='z_score'):
 
         if method == "z_score":
