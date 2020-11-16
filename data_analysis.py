@@ -63,7 +63,7 @@ print(sysarmy_analysis)
 
 numeric_types = ['int32', 'int64', 'float32', 'float64']
 cols_by_type = sysarmy_analysis.group_cols_by_type()
-cols_numeric = sysarmy_analysis.get_numeric_cols(cols_by_type, numeric_types)
+cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
 
 sysarmy_analysis.describe(graph=True)
 

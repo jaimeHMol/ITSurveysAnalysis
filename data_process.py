@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import math
 
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
@@ -65,19 +66,54 @@ class DataProcess(object):
                 print("")
         if graph:
             numeric_types = ['int32', 'int64', 'float32', 'float64']
+            categoric_types = ['object']
             cols_by_type = self.group_cols_by_type()
-            cols_numeric = self.get_numeric_cols(cols_by_type, numeric_types)
+            cols_numeric = self.get_cols_by_type(cols_by_type, numeric_types)
+            cols_categoric = self.get_cols_by_type(cols_by_type, categoric_types)
 
-            cols_numeric_count = len(cols_numeric)
-            fig, axs = plt.subplots(cols_numeric_count, 1, figsize=(7, cols_numeric_count))
-            for index, col in enumerate(cols_numeric):
-                axs[index].set_title(col)
-                axs[index].boxplot(self.dataset[col], vert=False)
-                axs[index].get_xaxis().set_visible(False)
-                axs[index].get_yaxis().set_visible(False)
-            fig.tight_layout()
-            plt.show()
+            self.graph_numeric_cols(cols_numeric)
+            self.graph_categoric_cols(cols_categoric)
 
+    def graph_numeric_cols(self, cols_numeric):
+        cols_numeric_count = len(cols_numeric)
+        fig, axs = plt.subplots(cols_numeric_count, 1, figsize=(7, cols_numeric_count))
+        for index, col in enumerate(cols_numeric):
+            axs[index].set_title(f'{col} - type: {self.dataset[col].dtype}')
+            axs[index].boxplot(self.dataset[col], vert=False)
+            axs[index].get_xaxis().set_visible(False)
+            axs[index].get_yaxis().set_visible(False)
+        fig.tight_layout()
+        plt.show()           
+
+    def graph_categoric_cols(self, cols_categoric):
+        cols_categoric_count = len(cols_categoric)
+
+        ncols = 2
+        nrows = math.ceil(cols_categoric_count / ncols)
+        fig, axs = plt.subplots(nrows, ncols, squeeze=False, figsize=(7, 3*nrows))
+
+        x_index = 0
+        y_index = 0
+        for index, col in enumerate(cols_categoric):
+            if index % ncols == 0 and index > 0:
+                x_index = 0
+                y_index += 1
+
+            axs[y_index, x_index].set_title(col)
+
+            data = self.dataset[col].value_counts(dropna=False)
+            mapper_to_rename = {x: x if len(x)<10 else x[0:9]+'..' for x in data.index}
+            data_cat_renamed = data.rename(mapper_to_rename)
+
+            data_cat_renamed.plot(kind='bar', ax=axs[y_index, x_index])
+
+            if len(data_cat_renamed) > 6:
+                axs[y_index, x_index].get_xaxis().set_ticklabels([])
+                axs[y_index, x_index].get_yaxis().set_visible(False)
+            x_index += 1
+        axs[-1, -1].axis('off')
+        fig.tight_layout()
+        plt.show()           
     
     def remove_cols(self, cols_to_remove):
         if all(isinstance(item, int) for item in cols_to_remove):
@@ -98,9 +134,9 @@ class DataProcess(object):
         cols_by_type = {str(key): list(value) for key, value in cols_by_type.items()}
         return cols_by_type
 
-    def get_numeric_cols(self, cols_by_type, numeric_types):
+    def get_cols_by_type(self, cols_by_type, types):
         numeric_cols = []
-        for key in numeric_types: 
+        for key in types: 
             if cols_by_type.get(key): 
                 numeric_cols.extend(cols_by_type.get(key))
         return numeric_cols
