@@ -9,10 +9,13 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics import silhouette_score
 from kneed import KneeLocator
 
+# TOIMPROVE: Add optional argument 'cols' to all the method that do some process over the self.dataset
+
 class DataProcess(object):
     """Class with all the methods required in a typical data science pipeline
     """
-    
+    # pandas.options.mode.use_inf_as_na = True
+
     def __init__(self, path, format='csv'):
         """ Constructor of the data process class.
 
@@ -29,6 +32,7 @@ class DataProcess(object):
         self.dataset_raw = dataset
         self.dataset = self.dataset_raw
         
+        # TOIMPROVE: Fill this in a more comprehensive way.
         self.is_standardize = False
         self.continuos_cols = 0 # Numerical (quantitative)
         self.discrete = 0       # Numerical (quantitative)
@@ -141,22 +145,30 @@ class DataProcess(object):
                 numeric_cols.extend(cols_by_type.get(key))
         return numeric_cols
 
-    def replace_missing(self, cols, method='mode')
+    def replace_missing(self, cols, method='mode'):
         """ Look for all NaN values (nulls, none, blanks) in the input columns and replace
         them according to the method selected. If you define method = 'remove' all the 
         rows with one or more NaN will be deleted from the dataset.
         """
-        if method == 'mode':
-            pass
-        elif method == 'mean':
-            pass
-        elif method == 'median':
-            pass
-        elif method == 'remove':
-            print("Warning! XXX rows from total XXX were removed.")
-            pass
-        else:
-            ValueError("Replace missing values method not implemented.")
+        # HINT: Be careful with datetime columns, since they use NaT instead of NaN
+        
+        for col in cols:
+            count = self.dataset[col].isna().count()
+            if method == 'mode':
+                current_mode = self.dataset[col].mode(axis=1, dropna=True)
+                self.dataset[col] = self.dataset[col].fillna(current_mode)
+            elif method == 'mean':
+                current_mean = self.dataset[col].mean(axis=1, dropna=True)
+                self.dataset[col] = self.dataset[col].fillna(current_mean)
+            elif method == 'median':
+                current_median = self.dataset[col].median(axis=1, dropna=True)
+                self.dataset[col] = self.dataset[col].fillna(current_median)
+            elif method == 'remove':
+                self.dataset[col] = self.dataset[col].dropna(axis=1)
+            else:
+                ValueError("Replace missing values method not implemented.")
+
+            print(f"Warning! {count} rows removed in column {col}")
 
     def standardize(self, cols, method='z_score'):
 
@@ -173,7 +185,7 @@ class DataProcess(object):
     
     # TODO: Implement using SOLID.
     def reduction_dims(self, cols, method='pca', final_number_dims=2, visualize=True):
-        if not is_standardize:
+        if not self.is_standardize:
             raise ValueError("You should standardize your columns first.")
 
         if method == 'pca':
@@ -203,7 +215,7 @@ class DataProcess(object):
     # TODO: Implement this using SOLID
     def clusterization(self, method='k_means', visualize=True, n_clusters=None):
 
-        if not is_standardize:
+        if not self.is_standardize:
             raise ValueError("You should standardize your columns first.")
 
         if method == 'k_means':
