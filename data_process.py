@@ -132,6 +132,14 @@ class DataProcess(object):
     def unify_format(self, cols, search_func, transform_func):
         pass
 
+    def unify_cols(self, cols, new_col, chr_to_replace={';':'', '.':''}):
+        for col in cols:
+            self.dataset[col] = self.dataset[col].to_string(na_rep='').lower()
+            self.dataset[col].apply(lambda x: "".join([chr_to_replace.get(c, c) for c in x]))
+
+        self.dataset[new_col] = self.dataset[cols].agg(', '.join, axis=1)
+        
+
     def group_cols_by_type(self):        
         dataset_series = self.dataset.columns.to_series()
         cols_by_type = dataset_series.groupby(self.dataset.dtypes).groups
