@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import math
 
@@ -106,7 +107,7 @@ class DataProcess(object):
             axs[y_index, x_index].set_title(col)
 
             data = self.dataset[col].value_counts(dropna=False)
-            mapper_to_rename = {x: x if len(x)<10 else x[0:9]+'..' for x in data.index}
+            mapper_to_rename = {str(x): str(x) if len(str(x))<10 else str(x)[0:9]+'..' for x in data.index}
             data_cat_renamed = data.rename(mapper_to_rename)
 
             data_cat_renamed.plot(kind='bar', ax=axs[y_index, x_index])
@@ -134,7 +135,7 @@ class DataProcess(object):
 
     def unify_cols(self, cols, new_col, chr_to_replace={';':'', '.':''}):
         for col in cols:
-            self.dataset[col] = self.dataset[col].to_string(na_rep='').lower()
+            self.dataset[col] = self.dataset[col].replace(np.nan, '').str.lower()
             self.dataset[col].apply(lambda x: "".join([chr_to_replace.get(c, c) for c in x]))
 
         self.dataset[new_col] = self.dataset[cols].agg(', '.join, axis=1)

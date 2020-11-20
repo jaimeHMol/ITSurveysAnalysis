@@ -28,6 +28,7 @@ cols_to_remove = [
     '¿En qué mes fue el último ajuste?',
     'Beneficios extra',   
     '¿Cuáles considerás que son las mejores empresas de IT para trabajar en este momento, en tu ciudad?',
+    'QA / Testing',
 ]
 sysarmy_analysis.remove_cols(cols_to_remove)
 print(sysarmy_analysis)
@@ -60,12 +61,21 @@ cols_to_rename = {
 }
 sysarmy_analysis.rename_cols(cols_to_rename)
 print(sysarmy_analysis)
+sysarmy_analysis.describe(graph=True)
 
 numeric_types = ['int32', 'int64', 'float32', 'float64']
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
 
-sysarmy_analysis.describe(graph=True)
+cols_to_unify = [
+    'Plataformas',
+    'Lenguajes de programación', 
+    'Frameworks, herramientas y librerías',
+    'Bases de datos',
+    'IDEs'
+]
+chr_to_replace = {';':'', '.':'', 'ninguno':'', 'ninguna':''}
+sysarmy_analysis.unify_cols(cols_to_unify, 'tecnologies', chr_to_replace)
 
 
 
