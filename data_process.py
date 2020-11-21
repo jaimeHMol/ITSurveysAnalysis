@@ -39,6 +39,7 @@ class DataProcess(object):
         self.discrete = 0       # Numerical (quantitative)
         self.categorical = 0    # Numerical or char (qualitative)
 
+
     def __str__(self):
         print("Position | Column name:")
         for index, col in enumerate(self.dataset.columns):
@@ -49,6 +50,7 @@ class DataProcess(object):
 
         return f"Data frame with {total_col} columns and {total_rows} rows in total"
 
+
     def save(self, path, format='csv'):
         if format == 'csv':
             self.dataset.to_csv(path)
@@ -58,6 +60,7 @@ class DataProcess(object):
             self.dataset.to_excel(path)
         else:
             raise ValueError("Output file format not supported")
+
 
     def describe(self, graph=False, compact=False):
         if compact:
@@ -79,6 +82,7 @@ class DataProcess(object):
             self.graph_numeric_cols(cols_numeric)
             self.graph_categoric_cols(cols_categoric)
 
+
     def graph_numeric_cols(self, cols_numeric):
         cols_numeric_count = len(cols_numeric)
         fig, axs = plt.subplots(cols_numeric_count, 1, figsize=(7, cols_numeric_count))
@@ -89,6 +93,7 @@ class DataProcess(object):
             axs[index].get_yaxis().set_visible(False)
         fig.tight_layout()
         plt.show()           
+
 
     def graph_categoric_cols(self, cols_categoric):
         cols_categoric_count = len(cols_categoric)
@@ -116,10 +121,13 @@ class DataProcess(object):
                 axs[y_index, x_index].get_xaxis().set_ticklabels([])
                 axs[y_index, x_index].get_yaxis().set_visible(False)
             x_index += 1
-        axs[-1, -1].axis('off')
+        
+        if cols_categoric_count % ncols != 0:
+            axs[-1, -1].axis('off')
         fig.tight_layout()
         plt.show()           
-    
+
+
     def remove_cols(self, cols_to_remove):
         if all(isinstance(item, int) for item in cols_to_remove):
             col_names = self.dataset.columns[cols_to_remove]
@@ -127,11 +135,14 @@ class DataProcess(object):
         else:
             self.dataset = self.dataset.drop(cols_to_remove, axis=1)
 
+
     def rename_cols(self, cols_to_rename):
         self.dataset = self.dataset.rename(mapper=cols_to_rename, axis=1)
 
+
     def unify_format(self, cols, search_func, transform_func):
         pass
+
 
     def unify_cols(self, cols, new_col, chr_to_replace={';':'', '.':''}):
         for col in cols:
@@ -139,7 +150,7 @@ class DataProcess(object):
             self.dataset[col].apply(lambda x: "".join([chr_to_replace.get(c, c) for c in x]))
 
         self.dataset[new_col] = self.dataset[cols].agg(', '.join, axis=1)
-        
+
 
     def group_cols_by_type(self):        
         dataset_series = self.dataset.columns.to_series()
@@ -147,12 +158,14 @@ class DataProcess(object):
         cols_by_type = {str(key): list(value) for key, value in cols_by_type.items()}
         return cols_by_type
 
+
     def get_cols_by_type(self, cols_by_type, types):
         numeric_cols = []
         for key in types: 
             if cols_by_type.get(key): 
                 numeric_cols.extend(cols_by_type.get(key))
         return numeric_cols
+
 
     def replace_missing(self, cols, method='mode'):
         """ Look for all NaN values (nulls, none, blanks) in the input columns and replace
@@ -179,6 +192,7 @@ class DataProcess(object):
 
             print(f"Warning! {count} rows removed in column {col}")
 
+
     def standardize(self, cols, method='z_score'):
 
         if method == "z_score":
@@ -191,15 +205,17 @@ class DataProcess(object):
         else:
             raise ValueError("Standardize method not supported")
             
-    
+
     # TODO: Implement using SOLID.
-    def reduction_dims(self, cols, method='pca', final_number_dims=2, visualize=True):
+    def reduction_dims(self, cols=None, method='pca', final_number_dims=2, visualize=True):
         if not self.is_standardize:
             raise ValueError("You should standardize your columns first.")
+        if not cols:
+            cols = self.dataset.columns.tolist()
 
         if method == 'pca':
             pca = PCA(n_components=final_number_dims)
-            principal_components = pca.fit_transform(self.dataset)
+            principal_components = pca.fit_transform(self.dataset[cols])
 
             for index in range(0, final_number_dims):
                 self.dataset[f"PC{index + 1}"] = principal_components[:,index]
@@ -213,12 +229,10 @@ class DataProcess(object):
                 ax.set_xlabel('PC 1', fontsize = 15)
                 ax.set_ylabel('PC 2', fontsize = 15)
                 ax.set_title('2 component PCA', fontsize = 20)
-                ax.scatter(self.datset['PC 1']
-                            , self.dataset['PC 2']
+                ax.scatter(self.dataset['PC1']
+                            , self.dataset['PC2']
                             , s = 50)
                 ax.grid()
-
-
 
 
     # TODO: Implement this using SOLID

@@ -77,7 +77,7 @@ cols_to_unify = [
 chr_to_replace = {';':'', '.':'', 'ninguno':'', 'ninguna':''}
 sysarmy_analysis.unify_cols(cols_to_unify, 'tecnologies', chr_to_replace)
 
-
+sysarmy_analysis.remove_cols(cols_to_unify)
 
 
 # Data processing
@@ -94,6 +94,13 @@ cols_to_standard = [
     'politicas_diversidad'
 ]
 sysarmy_analysis.standardize(cols_to_standard, 'z_score')
+
+sysarmy_analysis.reduction_dims(
+    cols_to_standard,
+    method='pca', 
+    final_number_dims=2, 
+    visualize=True
+)
 
 # sysarmy_analysis.reset()
 # print(sysarmy_analysis)
