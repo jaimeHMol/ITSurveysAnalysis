@@ -221,7 +221,8 @@ class DataProcess(object):
                 self.dataset[f"PC{index + 1}"] = principal_components[:,index]
 
             print("Principal components analysis finished. Explained variance ratio:")
-            print(str(pca.explained_variance_ratio_))
+            components_variance = ["{:.12f}".format(i)[:8] for i in pca.explained_variance_ratio_]
+            print(components_variance)
 
             if visualize and final_number_dims == 2:
                 fig = plt.figure(figsize = (8,8))
@@ -229,8 +230,8 @@ class DataProcess(object):
                 ax.set_xlabel('PC 1', fontsize = 15)
                 ax.set_ylabel('PC 2', fontsize = 15)
                 ax.set_title('2 component PCA', fontsize = 20)
-                ax.scatter(self.dataset['PC1']
-                            , self.dataset['PC2']
+                ax.scatter(self.dataset[f'PC1 - Variance ratio: {components_variance[0]}']
+                            , self.dataset[f'PC2 - Variance ratio: {components_variance[1]}']
                             , s = 50)
                 ax.grid()
 
