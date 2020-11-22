@@ -61,7 +61,7 @@ cols_to_rename = {
 }
 sysarmy_analysis.rename_cols(cols_to_rename)
 print(sysarmy_analysis)
-sysarmy_analysis.describe(graph=True)
+# sysarmy_analysis.describe(graph=True)
 
 numeric_types = ['int32', 'int64', 'float32', 'float64']
 cols_by_type = sysarmy_analysis.group_cols_by_type()

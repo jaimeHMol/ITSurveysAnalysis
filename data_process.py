@@ -225,15 +225,24 @@ class DataProcess(object):
             print(components_variance)
 
             if visualize and final_number_dims == 2:
+                x = self.dataset['PC1']
+                y = self.dataset['PC2']        
+                scalex = 1.0/(x.max() - x.min())
+                scaley = 1.0/(y.max() - y.min())
+                coeff = np.transpose(pca.components_)
+
                 fig = plt.figure(figsize = (8,8))
-                ax = fig.add_subplot(1,1,1) 
-                ax.set_xlabel('PC 1', fontsize = 15)
-                ax.set_ylabel('PC 2', fontsize = 15)
-                ax.set_title('2 component PCA', fontsize = 20)
-                ax.scatter(self.dataset[f'PC1 - Variance ratio: {components_variance[0]}']
-                            , self.dataset[f'PC2 - Variance ratio: {components_variance[1]}']
-                            , s = 50)
-                ax.grid()
+                sp = fig.add_subplot(1,1,1) 
+                sp.set_xlabel(f'PC 1 - Variance ratio: {components_variance[0]}', fontsize = 15)
+                sp.set_ylabel(f'PC 2 - Variance ratio: {components_variance[1]}', fontsize = 15)
+                sp.set_xlim(-1,1)
+                sp.set_ylim(-1,1)
+                sp.set_title('PCA Biplot', fontsize = 20)
+                sp.scatter(x * scalex, y * scaley, s = 50)
+                for i, col in enumerate(cols):
+                    plt.arrow(0, 0, coeff[i,0], coeff[i,1], color = 'r', head_width=0.02, length_includes_head = True)
+                    plt.text(coeff[i,0] /2, coeff[i,1] /2, col, color = 'g', ha = 'left', va = 'baseline')
+                sp.grid()
 
 
     # TODO: Implement this using SOLID
