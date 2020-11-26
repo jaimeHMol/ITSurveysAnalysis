@@ -96,6 +96,8 @@ cols_to_standard = [
 ]
 sysarmy_analysis.standardize(cols_to_standard, 'z_score')
 
+# Dimensionality reduction using PCA:
+# Applies only for numeric columns, requieres standardized values
 sysarmy_analysis.reduction_dims(
     cols_to_standard,
     method='pca', 

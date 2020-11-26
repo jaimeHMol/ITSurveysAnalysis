@@ -246,7 +246,7 @@ class DataProcess(object):
 
 
     # TODO: Implement this using SOLID
-    def clusterization(self, method='k_means', visualize=True, n_clusters=None):
+    def clusterization(self, cols=None, method='k_means', visualize=True, n_clusters=None):
 
         if not self.is_standardize:
             raise ValueError("You should standardize your columns first.")
@@ -256,24 +256,24 @@ class DataProcess(object):
             print("Clustering using K-Means")
             print("="*27)
 
-            if not n_clusters:
-                kmeans = KMeans(
-                    init="random",
-                    n_clusters=3,
-                    n_init=10,
-                    max_iter=300,
-                    random_state=42,
-                )
-                kmeans.fit(standardized_features)
+            # if not n_clusters:
+            #     kmeans = KMeans(
+            #         init="random",
+            #         n_clusters=3,
+            #         n_init=10,
+            #         max_iter=300,
+            #         random_state=42,
+            #     )
+            #     kmeans.fit(self.dataset[cols])
 
-                print("The lowest Sum of Squared Error (SSE) value: ")
-                kmeans.inertia_
+            #     print("The lowest Sum of Squared Error (SSE) value: ")
+            #     kmeans.inertia_
 
-                print("Final locations of the centroid")
-                kmeans.cluster_centers_
+            #     print("Final locations of the centroid")
+            #     kmeans.cluster_centers_
 
-                print("The number of iterations required to converge")
-                kmeans.n_iter_
+            #     print("The number of iterations required to converge")
+            #     kmeans.n_iter_
 
             kmeans_kwargs  = {
                 "init": "random",
@@ -285,9 +285,9 @@ class DataProcess(object):
             kmeans_silhouette_coefficients = []
             for k in range(1, 11):
                 kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
-                kmeans.fit(self.dataset)
+                kmeans.fit(self.dataset[cols])
                 sse.append(kmeans.inertia_)
-                score = silhouette_score(self.dataset, kmeans.labels_)
+                score = silhouette_score(self.dataset[cols], kmeans.labels_)
                 kmeans_silhouette_coefficients.append(score)
 
             if visualize:
@@ -314,6 +314,7 @@ class DataProcess(object):
             number_clusters_best = kl.elbow
             print(f"Best number of clusters using elbow method: {number_clusters_best}")
 
+            # TODO: Add silhoute coeficient calculation
             print(f"Best number of clusters using silhouete coefficient: PENDING!!!!!")
 
 
