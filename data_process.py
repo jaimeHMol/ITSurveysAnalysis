@@ -41,14 +41,17 @@ class DataProcess(object):
 
 
     def __str__(self):
-        print("Position | Column name:")
-        for index, col in enumerate(self.dataset.columns):
-            print(f"{index} | {col}")
-        print()
-        total_rows = len(self.dataset.index)
-        total_col = len(self.dataset.columns)
+        # print("Position | Column name:")
+        # for index, col in enumerate(self.dataset.columns):
+        #     print(f"{index} | {col}")
+        # print()
+        # total_rows = len(self.dataset.index)
+        # total_col = len(self.dataset.columns)
+        # return f"Data frame with {total_col} columns and {total_rows} rows in total"
 
-        return f"Data frame with {total_col} columns and {total_rows} rows in total"
+        self.dataset.info()
+
+        return ''
 
 
     def save(self, path, format='csv'):
@@ -81,6 +84,19 @@ class DataProcess(object):
 
             self.graph_numeric_cols(cols_numeric)
             self.graph_categoric_cols(cols_categoric)
+
+
+    # def explore(self, output_path='', compact=False):
+    #     #!pip install sweetviz
+    #     import sweetviz as sv
+    #     dataset_report = sv.analyze(self.dataset)
+    #     dataset_report.show_html(filepath=f'{output_path}dataset_report.html', open_browser=True)
+
+    #     #!pip install pandas-profiling[notebook]
+    #     from pandas_profiling import ProfileReport
+    #     dataset_report = ProfileReport(self.dataset, title="Dataset Report", minimal=compact)
+    #     dataset_report.to_file(f'{output_path}dataset_report.html')
+
 
 
     def graph_numeric_cols(self, cols_numeric):
@@ -243,6 +259,7 @@ class DataProcess(object):
                     plt.arrow(0, 0, coeff[i,0], coeff[i,1], color = 'r', head_width=0.02, length_includes_head = True)
                     plt.text(coeff[i,0] /2, coeff[i,1] /2, col, color = 'g', ha = 'left', va = 'baseline')
                 sp.grid()
+                plt.show()
 
 
     # TODO: Implement this using SOLID
@@ -283,23 +300,24 @@ class DataProcess(object):
             }
             sse = []
             kmeans_silhouette_coefficients = []
-            for k in range(1, 11):
+            for k in range(2, 11):
                 kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
                 kmeans.fit(self.dataset[cols])
                 sse.append(kmeans.inertia_)
+                # Silhouette coefficient (goes from -1 to 1, near to 1 is better)
                 score = silhouette_score(self.dataset[cols], kmeans.labels_)
                 kmeans_silhouette_coefficients.append(score)
 
             if visualize:
-                plt.style.use("fivethirtyeight")
-                plt.plot(range(1, 11), sse)
-                plt.xticks(range(1, 11))
+                # plt.style.use("fivethirtyeight")
+                plt.plot(range(2, 11), sse)
+                plt.xticks(range(2, 11))
                 plt.title("K-Means")
                 plt.xlabel("Number of Clusters")
                 plt.ylabel("SSE")
                 plt.show()
 
-                plt.style.use("fivethirtyeight")
+                # plt.style.use("fivethirtyeight")
                 plt.plot(range(2, 11), kmeans_silhouette_coefficients)
                 plt.xticks(range(2, 11))
                 plt.title("K-Means")
@@ -307,9 +325,7 @@ class DataProcess(object):
                 plt.ylabel("Silhouette Coefficient")
                 plt.show()
 
-            kl = KneeLocator(
-                    range(1, 11), sse, curve="convex", direction="decreasing"
-                )
+            kl = KneeLocator(range(2, 11), sse, curve="convex", direction="decreasing")
                 
             number_clusters_best = kl.elbow
             print(f"Best number of clusters using elbow method: {number_clusters_best}")

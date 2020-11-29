@@ -105,6 +105,14 @@ sysarmy_analysis.reduction_dims(
     visualize=True
 )
 
+sysarmy_analysis.clusterization(
+    cols_to_standard,
+    method='k_means', 
+    visualize=True
+)
+
+
+
 # sysarmy_analysis.reset()
 # print(sysarmy_analysis)
 
