@@ -79,6 +79,8 @@ sysarmy_analysis.unify_cols(cols_to_unify, 'tecnologies', chr_to_replace)
 
 sysarmy_analysis.remove_cols(cols_to_unify)
 
+sysarmy_analysis.explore()
+
 
 # Data processing
 all_cols_to_standard = cols_numeric
