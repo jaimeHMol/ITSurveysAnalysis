@@ -10,6 +10,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics import silhouette_score
 from kneed import KneeLocator
 from pandas_profiling import ProfileReport
+import webbrowser
 
 # TOIMPROVE: Add optional argument 'cols' to all the method that do some process over the self.dataset
 
@@ -92,10 +93,10 @@ class DataProcess(object):
     #     import sweetviz as sv
     #     dataset_report = sv.analyze(self.dataset)
     #     dataset_report.show_html(filepath=f'{output_path}dataset_report.html', open_browser=True)
-
-        #!pip install pandas-profiling[notebook]        
+     
         dataset_report = ProfileReport(self.dataset, title='Dataset Report', minimal=compact)
         dataset_report.to_file(f'{output_path}dataset_report.html')
+        webbrowser.open(f'{output_path}dataset_report.html')
 
 
 
@@ -285,7 +286,6 @@ class DataProcess(object):
                 kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
                 kmeans.fit(self.dataset[cols])
                 sse.append(kmeans.inertia_)
-                # Silhouette coefficient (goes from -1 to 1, near to 1 is better)
                 score = silhouette_score(self.dataset[cols], kmeans.labels_)
                 kmeans_silhouette_coefficients.append(score)
 
@@ -310,9 +310,10 @@ class DataProcess(object):
                 
             number_clusters_best = kl.elbow
             print(f'Best number of clusters using elbow method: {number_clusters_best}')
-
-            # TODO: Calculate best number of clusters using the silhouete coefficient.
-            print(f'Best number of clusters using silhouete coefficient: PENDING!!!!!')
+            print('')
+            print(f'See the graph Silhouette coefficient vs number of clusters to define \
+                the best amount of clusters in your case. \
+                (Silhouette coefficient goes from -1 to 1, near to 1 is better)')
             print('')
 
         elif method == 'k_medoids':
@@ -329,7 +330,6 @@ class DataProcess(object):
                 kmedoids = KMedoids(n_clusters=k, **kmedoids_kwargs)
                 kmedoids.fit(self.dataset[cols])
                 sse.append(kmedoids.inertia_)
-                # Silhouette coefficient (goes from -1 to 1, near to 1 is better)
                 score = silhouette_score(self.dataset[cols], kmedoids.labels_)
                 kmedoids_silhouette_coefficients.append(score)
 
@@ -354,9 +354,10 @@ class DataProcess(object):
                 
             number_clusters_best = kl.elbow
             print(f'Best number of clusters using elbow method: {number_clusters_best}')
-
-            # TODO: Calculate best number of clusters using the silhouete coefficient.
-            print(f'Best number of clusters using silhouete coefficient: PENDING!!!!!')
+            print('')
+            print(f'See the graph Silhouette coefficient vs number of clusters to define \
+                the best amount of clusters in your case. \
+                (Silhouette coefficient goes from -1 to 1, near to 1 is better)')
             print('')
 
         elif method == 'dbscan':
@@ -385,8 +386,16 @@ class DataProcess(object):
             print(f'Best number of clusters using Silhouette over multiple eps: {number_clusters_best}')
 
         else:
-            ValueError('Clustering method not implemented.')
+            raise ValueError('Clustering method not implemented.')
         
+
+    # TODO:
+    def dummy_cols_from_text(self, col, sep=','):
+        if self.dataset[col].dtype == np.number:
+            raise ValueError('The origin column to generate dummy columns must be text.')
+        
+        #https://pandas.pydata.org/pandas-docs/stable/user_guide/text.html#creating-indicator-variables
+        #https://pandas.pydata.org/pandas-docs/stable/getting_started/intro_tutorials/05_add_columns.html
 
     def reset (self):
         self.__init__(self.path, self.format)
