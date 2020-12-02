@@ -74,8 +74,21 @@ cols_to_unify = [
     'Bases de datos',
     'IDEs'
 ]
-chr_to_replace = {';':'', '.':'', 'ninguno':'', 'ninguna':''}
-sysarmy_analysis.unify_cols(cols_to_unify, 'tecnologies', chr_to_replace)
+str_to_replace = {
+    ';': '', 
+    '.': '', 
+    'ninguna de las anteriores': '', 
+    'ninguno de los anteriores': '',
+    'ninguno': '', 
+    'ninguna': '',
+    'microsoft': '',
+    'oracle': '',
+    'ibm': '',
+    'saleforce': '',
+    'google': '',
+    'apache': '',
+}
+sysarmy_analysis.unify_cols(cols_to_unify, 'tecnologies', str_to_replace)
 
 sysarmy_analysis.remove_cols(cols_to_unify)
 
