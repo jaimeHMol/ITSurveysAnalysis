@@ -75,8 +75,11 @@ cols_to_unify = [
     'IDEs'
 ]
 str_to_replace = {
+    '; ': ',', 
     ';': '', 
     '.': '', 
+    ', ': ',', 
+    ' ': '',
     'ninguna de las anteriores': '', 
     'ninguno de los anteriores': '',
     'ninguno': '', 

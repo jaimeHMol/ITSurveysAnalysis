@@ -163,12 +163,12 @@ class DataProcess(object):
 
     def unify_cols(self, cols, new_col, str_to_replace={';':'', '.':''}):
         for col in cols:
-            self.dataset[col] = self.dataset[col].replace(np.nan, '').str.lower()
+            self.dataset[col] = self.dataset[col].replace(np.nan, '').str.strip().str.lower()
             
             for str_find, str_rep in str_to_replace.items():
                 self.dataset[col] = self.dataset[col].apply(lambda x: x.replace(str_find, str_rep))
 
-        self.dataset[new_col] = self.dataset[cols].agg(', '.join, axis=1)
+        self.dataset[new_col] = self.dataset[cols].agg(','.join, axis=1)
 
 
     def group_cols_by_type(self):        
@@ -396,7 +396,7 @@ class DataProcess(object):
         if self.dataset[col].dtype == np.number:
             raise ValueError('The origin column to generate dummy columns must be text.')
         
-        
+
         #https://pandas.pydata.org/pandas-docs/stable/user_guide/text.html#creating-indicator-variables
         #https://pandas.pydata.org/pandas-docs/stable/getting_started/intro_tutorials/05_add_columns.html
 
