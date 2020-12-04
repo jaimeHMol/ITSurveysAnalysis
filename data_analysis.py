@@ -75,11 +75,6 @@ cols_to_unify = [
     'IDEs'
 ]
 str_to_replace = {
-    '; ': ',', 
-    ';': '', 
-    '.': '', 
-    ', ': ',', 
-    ' ': '',
     'ninguna de las anteriores': '', 
     'ninguno de los anteriores': '',
     'ninguno': '', 
@@ -90,12 +85,19 @@ str_to_replace = {
     'saleforce': '',
     'google': '',
     'apache': '',
+    '; ': ',', 
+    ';': '', 
+    '.': '', 
+    ', ': ',', 
+    ' ': '',
+    '-':'',
+    '0':'',
 }
 sysarmy_analysis.unify_cols(cols_to_unify, 'tecnologies', str_to_replace)
 
 sysarmy_analysis.remove_cols(cols_to_unify)
 
-sysarmy_analysis.explore()
+# sysarmy_analysis.explore()
 
 
 # Data processing
@@ -130,6 +132,10 @@ sysarmy_analysis.clusterization(
 )
 
 
+tecnologies_df = sysarmy_analysis.dummy_cols_from_text(col='tecnologies', sep=',')
+
+aux = tecnologies_df[tecnologies_df.sum().sort_values(ascending=False, inplace=False)[0:10].index]
+aux
 
 # sysarmy_analysis.reset()
 # print(sysarmy_analysis)

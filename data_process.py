@@ -395,6 +395,8 @@ class DataProcess(object):
     def dummy_cols_from_text(self, col, sep=','):
         if self.dataset[col].dtype == np.number:
             raise ValueError('The origin column to generate dummy columns must be text.')
+
+        return self.dataset[col].str.get_dummies(sep=sep)
         
 
         #https://pandas.pydata.org/pandas-docs/stable/user_guide/text.html#creating-indicator-variables
