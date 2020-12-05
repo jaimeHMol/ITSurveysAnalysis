@@ -367,41 +367,45 @@ class DataProcess(object):
             print('Clustering using DBScan')
             print('='*27)
 
-            dbscan_silhouette_coefficients = []
-            for eps in np.linspace(0.1,4,10):
+            silhouette_eps_ncluster = {}
+            for eps in np.linspace(0.1, 4, 10):
                 dbscan = DBSCAN(eps=eps)
                 dbscan.fit(self.dataset[cols])
-                score = silhouette_score(self.dataset[cols], dbscan.labels_)
-                dbscan_silhouette_coefficients.append(score)
+                if len(set(dbscan.labels_)) > 1:
+                    # Silhouette score requires at least 2 clusters to be calculated.
+                    # Rows marked with dbscan.labels_=-1 don't belong to a real cluster
+                    # but are considered noise.
+                    score = round(silhouette_score(self.dataset[cols], dbscan.labels_), 4)
+                    nclusters = len(set(dbscan.labels_))
+                    
+                    silhouette_eps_ncluster[score] = ((eps, nclusters))
 
             if visualize:
+                y, tup = zip(*silhouette_eps_ncluster.items())
+                x = [eps for eps, nclusters in tup]
+
                 # plt.style.use('fivethirtyeight')
-                plt.plot(np.linspace(0.1,4,10), dbscan_silhouette_coefficients)
+                plt.plot(x, y)
                 plt.xticks(np.linspace(0.1,4,10))
                 plt.title('DBScan')
                 plt.xlabel('eps')
                 plt.ylabel('Silhouette Coefficient')
                 plt.show()
 
-            # TODO: Calculate best number of clusters using the silhouete coefficient.
-            number_clusters_best = len(set(dbscan.labels_))
-            print(f'Best number of clusters using Silhouette over multiple eps: {number_clusters_best}')
-
+            nclusters_best = silhouette_eps_ncluster.get(max(silhouette_eps_ncluster.keys()), -1)[1]
+            print(f'Best number of clusters using Silhouette over multiple eps: {nclusters_best}')
+            print('')
         else:
             raise ValueError('Clustering method not implemented.')
         
 
-    # TODO:
     def dummy_cols_from_text(self, col, sep=','):
         if self.dataset[col].dtype == np.number:
             raise ValueError('The origin column to generate dummy columns must be text.')
 
         return self.dataset[col].str.get_dummies(sep=sep)
+
         
-
-        #https://pandas.pydata.org/pandas-docs/stable/user_guide/text.html#creating-indicator-variables
-        #https://pandas.pydata.org/pandas-docs/stable/getting_started/intro_tutorials/05_add_columns.html
-
     def reset (self):
         self.__init__(self.path, self.format)
 

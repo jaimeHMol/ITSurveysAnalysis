@@ -3,7 +3,7 @@ from pathlib import Path
 
 from data_process import DataProcess
 
-
+# ----------------------------------------------------------------------------------
 # Data load
 project_path = Path(os.getcwd())
 sysarmy_survey = project_path / "data/raw/2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
@@ -12,6 +12,7 @@ output_path = project_path / "data/prepared/"
 sysarmy_analysis = DataProcess(sysarmy_survey, 'csv')
 
 
+# ----------------------------------------------------------------------------------
 # Data refine and exploration
 print(sysarmy_analysis)
 
@@ -100,6 +101,8 @@ sysarmy_analysis.remove_cols(cols_to_unify)
 # sysarmy_analysis.explore()
 
 
+            
+# ----------------------------------------------------------------------------------
 # Data processing
 all_cols_to_standard = cols_numeric
 
@@ -127,7 +130,7 @@ sysarmy_analysis.reduction_dims(
 
 sysarmy_analysis.clusterization(
     cols_to_standard,
-    method='k_means', 
+    method='dbscan', 
     visualize=True
 )
 
