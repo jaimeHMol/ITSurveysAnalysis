@@ -399,11 +399,16 @@ class DataProcess(object):
             raise ValueError('Clustering method not implemented.')
         
 
-    def dummy_cols_from_text(self, col, sep=','):
+    def dummy_cols_from_text(self, col, sep=',', n_cols=10):
         if self.dataset[col].dtype == np.number:
             raise ValueError('The origin column to generate dummy columns must be text.')
 
-        return self.dataset[col].str.get_dummies(sep=sep)
+        dummy_df = self.dataset[col].str.get_dummies(sep=sep)
+
+        top_dummy_df = dummy_df[dummy_df.sum().sort_values(ascending=False, inplace=False)[0:n_cols].index]
+
+        self.dataset = pd.concat([self.dataset, top_dummy_df], axis=1, sort=False)
+
 
         
     def reset (self):

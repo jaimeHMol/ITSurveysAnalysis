@@ -134,12 +134,12 @@ sysarmy_analysis.clusterization(
     visualize=True
 )
 
+sysarmy_analysis.dummy_cols_from_text(col='tecnologies', sep=',', n_cols=15)
+print(sysarmy_analysis)
 
-tecnologies_df = sysarmy_analysis.dummy_cols_from_text(col='tecnologies', sep=',')
 
-aux = tecnologies_df[tecnologies_df.sum().sort_values(ascending=False, inplace=False)[0:10].index]
-aux
 
+# ----------------------------------------------------------------------------------
 # sysarmy_analysis.reset()
 # print(sysarmy_analysis)
 
