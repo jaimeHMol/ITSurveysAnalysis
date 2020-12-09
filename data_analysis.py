@@ -3,12 +3,14 @@ from pathlib import Path
 
 from data_process import DataProcess
 
-# ----------------------------------------------------------------------------------
-# Data load
 project_path = Path(os.getcwd())
-sysarmy_survey = project_path / "data/raw/2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
 output_path = project_path / "data/prepared/"
 
+
+# ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+# Data load
+sysarmy_survey = project_path / "data/raw/2020.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
 sysarmy_analysis = DataProcess(sysarmy_survey, 'csv')
 
 
@@ -100,7 +102,6 @@ sysarmy_analysis.remove_cols(cols_to_unify)
 
 # sysarmy_analysis.explore()
 
-
             
 # ----------------------------------------------------------------------------------
 # Data processing
@@ -137,8 +138,6 @@ sysarmy_analysis.clusterization(
 sysarmy_analysis.dummy_cols_from_text(col='tecnologies', sep=',', n_cols=15)
 print(sysarmy_analysis)
 
-
-
 # ----------------------------------------------------------------------------------
 # sysarmy_analysis.reset()
 # print(sysarmy_analysis)
@@ -147,3 +146,102 @@ print(sysarmy_analysis)
 # print(sysarmy_analysis)
 
 
+
+# ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+# ----------------------------------------------------------------------------------
+# Data load
+stackoverflow_survey = project_path / "data/raw/survey_results_public.csv"
+stackoverflow_analysis = DataProcess(stackoverflow_survey, 'csv')
+
+
+# ----------------------------------------------------------------------------------
+# Data refine and exploration
+print(stackoverflow_analysis)
+stackoverflow_analysis.describe(graph=True)
+
+cols_to_remove = [
+    'SurveyEase',
+    'SurveyLength',
+    'SOVisitFreq',
+    'SOPartFreq',
+    'SOComm',
+    'SOAccount',
+    'PurchaseWhat',
+    'NEWSOSites',
+    'NEWStuck',
+    'NEWPurpleLink',
+    'NEWPurchaseResearch',
+    'NEWOvertime',
+    'NEWOtherComms',
+    'NEWOnboardGood',
+    'NEWOffTopic',
+    # 'NEWLearn',
+    'NEWJobHuntResearch',
+    'NEWJobHunt',
+    'JobFactors',
+    'SOPartFreq',
+    'SOPartFreq',
+    'SOPartFreq',
+    'SOPartFreq',
+]
+stackoverflow_analysis.remove_cols(cols_to_remove)
+print(stackoverflow_analysis)
+
+cols_to_rename = {
+    'Me identifico': 'genero',
+}
+stackoverflow_analysis.rename_cols(cols_to_rename)
+print(stackoverflow_analysis)
+# stackoverflow_analysis.describe(graph=True)
+
+numeric_types = ['int32', 'int64', 'float32', 'float64']
+cols_by_type = stackoverflow_analysis.group_cols_by_type()
+cols_numeric = stackoverflow_analysis.get_cols_by_type(cols_by_type, numeric_types)
+
+cols_to_unify = [
+    'Plataformas',
+]
+str_to_replace = {
+    'ninguna de las anteriores': '', 
+}
+stackoverflow_analysis.unify_cols(cols_to_unify, 'tecnologies', str_to_replace)
+
+stackoverflow_analysis.remove_cols(cols_to_unify)
+
+# stackoverflow_analysis.explore()
+
+            
+# ----------------------------------------------------------------------------------
+# Data processing
+all_cols_to_standard = cols_numeric
+
+cols_to_standard = [
+    'edad', 
+]
+stackoverflow_analysis.standardize(cols_to_standard, 'z_score')
+
+# Dimensionality reduction using PCA:
+# Applies only for numeric columns, requieres standardized values
+stackoverflow_analysis.reduction_dims(
+    cols_to_standard,
+    method='pca', 
+    final_number_dims=2, 
+    visualize=True
+)
+
+stackoverflow_analysis.clusterization(
+    cols_to_standard,
+    method='dbscan', 
+    visualize=True
+)
+
+stackoverflow_analysis.dummy_cols_from_text(col='tecnologies', sep=',', n_cols=15)
+print(stackoverflow_analysis)
+
+# ----------------------------------------------------------------------------------
+# stackoverflow_analysis.reset()
+# print(stackoverflow_analysis)
+
+# stackoverflow_analysis.save(output_path / 'stackoverflow_survey_analysed.csv')
+# print(stackoverflow_analysis)
