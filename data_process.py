@@ -88,24 +88,16 @@ class DataProcess(object):
             self.graph_categoric_cols(cols_categoric)
 
 
-    def explore(self, output_path='', compact=False):
-    #     #!pip install sweetviz
-    #     import sweetviz as sv
-    #     dataset_report = sv.analyze(self.dataset)
-    #     dataset_report.show_html(filepath=f'{output_path}dataset_report.html', open_browser=True)
-     
-        dataset_report = ProfileReport(self.dataset, title='Dataset Report', minimal=compact)
-        dataset_report.to_file(f'{output_path}dataset_report.html')
-        webbrowser.open(f'{output_path}dataset_report.html')
-
-
-
     def graph_numeric_cols(self, cols_numeric):
         cols_numeric_count = len(cols_numeric)
         fig, axs = plt.subplots(cols_numeric_count, 1, figsize=(7, cols_numeric_count))
         for index, col in enumerate(cols_numeric):
-            axs[index].set_title(f'{col} - type: {self.dataset[col].dtype}')
-            axs[index].boxplot(self.dataset[col], vert=False)
+            values = self.dataset[col]
+            if values.isnull().values.any():
+                print(f'WARNING: The column {col} has NaN values that were removed just to build the box plot.')
+                values = values.dropna()
+            axs[index].set_title(f'{col} - type: {values.dtype}')
+            axs[index].boxplot(values, vert=False)
             axs[index].get_xaxis().set_visible(False)
             axs[index].get_yaxis().set_visible(False)
         fig.tight_layout()
@@ -143,6 +135,18 @@ class DataProcess(object):
             axs[-1, -1].axis('off')
         fig.tight_layout()
         plt.show()           
+
+
+    def explore(self, output_path='', compact=False):
+    #     #!pip install sweetviz
+    #     import sweetviz as sv
+    #     dataset_report = sv.analyze(self.dataset)
+    #     dataset_report.show_html(filepath=f'{output_path}dataset_report.html', open_browser=True)
+     
+        dataset_report = ProfileReport(self.dataset, title='Dataset Report', minimal=compact)
+        dataset_report.to_file(f'{output_path}dataset_report.html')
+        webbrowser.open(f'{output_path}dataset_report.html')
+
 
 
     def remove_cols(self, cols_to_remove):
