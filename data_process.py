@@ -23,7 +23,7 @@ class DataProcess(object):
         ''' Constructor of the data process class.
 
         Args:
-            path (pathlib/str): Full path where the input dataset is located.
+            path (pathlib/str): Full path (including file name) where the input dataset is located.
             format (str, optional): File format of the input dataset. Defaults to 'csv'.
         '''
         if format == 'csv':
@@ -31,7 +31,8 @@ class DataProcess(object):
         else:
             raise ValueError('Input file format not supported')
         self.path = path
-        self.format = format
+        self.input_file_name = path.stem
+        self.input_file_format = format
         self.dataset_raw = dataset
         self.dataset = self.dataset_raw
         
@@ -137,15 +138,17 @@ class DataProcess(object):
         plt.show()           
 
 
-    def explore(self, output_path='', compact=False):
+    def explore(self, output_path=None, compact=False):
     #     #!pip install sweetviz
     #     import sweetviz as sv
     #     dataset_report = sv.analyze(self.dataset)
     #     dataset_report.show_html(filepath=f'{output_path}dataset_report.html', open_browser=True)
      
-        dataset_report = ProfileReport(self.dataset, title='Dataset Report', minimal=compact)
-        dataset_report.to_file(f'{output_path}dataset_report.html')
-        webbrowser.open(f'{output_path}dataset_report.html')
+        if output_path is None:
+            output_path =  f'{self.input_file_name}_report.html'
+        dataset_report = ProfileReport(self.dataset, title=f'{self.input_file_name} Report', minimal=compact)
+        dataset_report.to_file(f'{output_path}')
+        webbrowser.open(f'{output_path}')
 
 
 
@@ -413,9 +416,8 @@ class DataProcess(object):
 
         self.dataset = pd.concat([self.dataset, top_dummy_df], axis=1, sort=False)
 
-
-        
+  
     def reset (self):
-        self.__init__(self.path, self.format)
+        self.__init__(self.path, self.input_file_format)
 
     
