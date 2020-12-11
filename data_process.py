@@ -152,16 +152,20 @@ class DataProcess(object):
 
 
 
-    def remove_cols(self, cols_to_remove):
-        if all(isinstance(item, int) for item in cols_to_remove):
-            col_names = self.dataset.columns[cols_to_remove]
+    def remove_cols(self, cols):
+        if all(isinstance(item, int) for item in cols):
+            col_names = self.dataset.columns[cols]
             self.dataset = self.dataset.drop(col_names, axis=1)
         else:
-            self.dataset = self.dataset.drop(cols_to_remove, axis=1)
+            self.dataset = self.dataset.drop(cols, axis=1)
 
 
-    def rename_cols(self, cols_to_rename):
-        self.dataset = self.dataset.rename(mapper=cols_to_rename, axis=1)
+    def rename_cols(self, cols):
+        self.dataset = self.dataset.rename(mapper=cols, axis=1)
+
+
+    def reformat_cols(self, cols):
+        pass
 
 
     def unify_format(self, cols, search_func, transform_func):
@@ -219,6 +223,39 @@ class DataProcess(object):
             print(f'Warning! {count} rows removed in column {col}')
 
 
+    def replace_outliers(self, cols, method='drop_iqr'):
+        print('')
+        for col in cols:        
+            skew = self.dataset[col].skew()
+            print(f'Column {col} original skew value: {skew}')
+            if method == 'replace_10_90_min_max':
+                min = self.dataset[col].quantile(0.10)
+                max = self.dataset[col].quantile(0.90)
+                self.dataset[col] = np.where(self.dataset[col] < min, min, self.dataset[col])
+                self.dataset[col] = np.where(self.dataset[col] > max, max, self.dataset[col])
+            elif method == 'replace_5_95_median':
+                median = self.dataset[col].quantile(0.5)
+                min = self.dataset[col].quantile(0.05)
+                max = self.dataset[col].quantile(0.95)
+                self.dataset[col] = np.where(self.dataset[col] < min, median, self.dataset[col])
+                self.dataset[col] = np.where(self.dataset[col] > max, median, self.dataset[col])
+            elif method == 'drop_10_90':
+                min = self.dataset[col].quantile(0.10)
+                max = self.dataset[col].quantile(0.90)
+                self.dataset[col] = self.dataset[col][~((self.dataset[col] < min) | (self.dataset[col] > max)).any(axis=1)]  
+            elif method == 'drop_iqr':
+                q1 = self.dataset[col].quantile(0.25)
+                q3 = self.dataset[col].quantile(0.75)
+                iqr = q3 - q1
+                min = q1 - 1.5 * iqr
+                max = q3 + 1.5 * iqr
+                self.dataset[col] = self.dataset[col][~((self.dataset[col] < min) | (self.dataset[col] > max)).any(axis=1)]            
+            else:
+                ValueError('Outliers handling method not implemented.')
+            skew = self.dataset[col].skew()
+            print(f'Column {col} final skew value: {skew}. Between -1 and 1 the best. Assumes data have normal distribution.')
+
+
     def standardize(self, cols, method='z_score'):
 
         if method == 'z_score':
@@ -270,6 +307,8 @@ class DataProcess(object):
                     plt.text(coeff[i,0] /2, coeff[i,1] /2, col, color = 'g', ha = 'left', va = 'baseline')
                 sp.grid()
                 plt.show()
+        else:
+            raise ValueError('Method of dimensionality reduction not implemented.')
 
 
     # TODO: Implement this using SOLID
