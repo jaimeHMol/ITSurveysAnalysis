@@ -101,6 +101,10 @@ sysarmy_analysis.remove_cols(cols_to_unify)
 
 sysarmy_analysis.explore()
 
+all_cols = list(sysarmy_analysis.dataset.columns)
+sysarmy_analysis.replace_missing(all_cols, method='remove')
+sysarmy_analysis.replace_outliers(all_cols, method='drop_iqr')
+
             
 # ----------------------------------------------------------------------------------
 # Data processing
