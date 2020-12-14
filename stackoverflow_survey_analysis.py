@@ -45,11 +45,12 @@ cols_to_remove = [
 ]
 stackoverflow_analysis.remove_cols(cols_to_remove)
 print(stackoverflow_analysis)
-stackoverflow_analysis.describe(graph=True)
+# stackoverflow_analysis.describe(graph=True)
 
 numeric_types = ['int32', 'int64', 'float32', 'float64']
 cols_by_type = stackoverflow_analysis.group_cols_by_type()
 cols_numeric = stackoverflow_analysis.get_cols_by_type(cols_by_type, numeric_types)
+all_cols = list(stackoverflow_analysis.dataset.columns)
 
 # cols_to_unify = [
 #     'Plataformas',
@@ -63,9 +64,8 @@ cols_numeric = stackoverflow_analysis.get_cols_by_type(cols_by_type, numeric_typ
 
 # stackoverflow_analysis.explore(compact=True)
 
-all_cols = list(stackoverflow_analysis.dataset.columns)
 stackoverflow_analysis.replace_missing(all_cols, method='remove')
-stackoverflow_analysis.replace_outliers(all_cols, method='drop_iqr')
+stackoverflow_analysis.replace_outliers(cols_numeric, method='drop_iqr')
 stackoverflow_analysis.describe(graph=True)
 
             

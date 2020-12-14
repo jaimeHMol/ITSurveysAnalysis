@@ -203,24 +203,26 @@ class DataProcess(object):
         rows with one or more NaN will be deleted from the dataset.
         '''
         # HINT: Be careful with datetime columns, since they use NaT instead of NaN
-        
+        print('')
         for col in cols:
-            count = self.dataset[col].isna().count()
+            na_count = self.dataset[col].isna().sum()
             if method == 'mode':
                 current_mode = self.dataset[col].mode(axis=1, dropna=True)
                 self.dataset[col] = self.dataset[col].fillna(current_mode)
+                print(f'Warning! {na_count} values replaced in column {col} because missing values.')
             elif method == 'mean':
                 current_mean = self.dataset[col].mean(axis=1, dropna=True)
                 self.dataset[col] = self.dataset[col].fillna(current_mean)
+                print(f'Warning! {na_count} values replaced in column {col} because missing values.')
             elif method == 'median':
                 current_median = self.dataset[col].median(axis=1, dropna=True)
                 self.dataset[col] = self.dataset[col].fillna(current_median)
+                print(f'Warning! {na_count} values replaced in column {col} because missing values.')
             elif method == 'remove':
-                self.dataset[col] = self.dataset[col].dropna(axis=1)
+                self.dataset = self.dataset.dropna(subset=[col])
+                print(f'Warning! {na_count} rows removed because missing values in column {col}.')
             else:
                 ValueError('Replace missing values method not implemented.')
-
-            print(f'Warning! {count} rows removed in column {col}')
 
 
     def replace_outliers(self, cols, method='drop_iqr'):
@@ -240,16 +242,28 @@ class DataProcess(object):
                 self.dataset[col] = np.where(self.dataset[col] < min, median, self.dataset[col])
                 self.dataset[col] = np.where(self.dataset[col] > max, median, self.dataset[col])
             elif method == 'drop_10_90':
+                row_count_ini = len(self.dataset[col])
+
                 min = self.dataset[col].quantile(0.10)
                 max = self.dataset[col].quantile(0.90)
-                self.dataset[col] = self.dataset[col][~((self.dataset[col] < min) | (self.dataset[col] > max)).any(axis=1)]  
+                self.dataset = self.dataset.query(f'{col} >= {min} and {col} <= {max}')
+
+                row_count_fin = len(self.dataset[col])
+                row_count_dif = row_count_ini - row_count_fin
+                print(f'Warning! {row_count_dif} rows removed because outliers in column {col}.')
             elif method == 'drop_iqr':
+                row_count_ini = len(self.dataset[col])
+
                 q1 = self.dataset[col].quantile(0.25)
                 q3 = self.dataset[col].quantile(0.75)
                 iqr = q3 - q1
                 min = q1 - 1.5 * iqr
                 max = q3 + 1.5 * iqr
-                self.dataset[col] = self.dataset[col][~((self.dataset[col] < min) | (self.dataset[col] > max)).any(axis=1)]            
+                self.dataset = self.dataset.query(f'{col} >= {min} and {col} <= {max}')
+                
+                row_count_fin = len(self.dataset[col])
+                row_count_dif = row_count_ini - row_count_fin
+                print(f'Warning! {row_count_dif} rows removed because outliers in column {col}.')
             else:
                 ValueError('Outliers handling method not implemented.')
             skew = self.dataset[col].skew()
@@ -257,7 +271,6 @@ class DataProcess(object):
 
 
     def standardize(self, cols, method='z_score'):
-
         if method == 'z_score':
             for col in cols:
                 self.dataset[col] = (self.dataset[col] - self.dataset[col].mean() / self.dataset[col].std())
