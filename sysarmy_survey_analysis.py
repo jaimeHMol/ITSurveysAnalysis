@@ -31,6 +31,11 @@ cols_to_remove = [
     'Beneficios extra',   
     '¿Cuáles considerás que son las mejores empresas de IT para trabajar en este momento, en tu ciudad?',
     'QA / Testing',
+    'Sueldo dolarizado?',
+    'Trabajo de', # Don't remove if you want to do a gender analysis
+    'Orientación sexual', # Don't remove if you want to do a diversity analysis
+    'Carrera',
+    'Universidad',
 ]
 sysarmy_analysis.remove_cols(cols_to_remove)
 print(sysarmy_analysis)
@@ -47,12 +52,12 @@ cols_to_rename = {
     'Realizaste cursos de especialización': 'cursos_especializacion',
     '¿Contribuís a proyectos open source?': 'contribucion_open_source',
     '¿Programás como hobbie?': 'programacion_hobbie',
-    'Trabajo de': 'rol_trabajo',
+    # 'Trabajo de': 'rol_trabajo',
     '¿Qué SO usás en tu laptop/PC para trabajar?': 'computador_trabajo_so',
     '¿Y en tu celular?': 'celular_so',
     '¿Tenés guardias?': 'guardias',
     'Salario mensual BRUTO (en tu moneda local)': 'sueldo_mensual_bruto_ars',
-    'Sueldo dolarizado?': 'sueldo_dolarizado',
+    # 'Sueldo dolarizado?': 'sueldo_dolarizado',
     '¿Qué tan conforme estás con tu sueldo?': 'sueldo_conformidad',
     'Recibís algún tipo de bono': 'sueldo_bonos',
     '¿Tuviste ajustes por inflación en lo que va de 2020?': 'sueldo_ajustes_inflacion',
@@ -99,12 +104,15 @@ sysarmy_analysis.unify_cols(cols_to_unify, 'tecnologies', str_to_replace)
 
 sysarmy_analysis.remove_cols(cols_to_unify)
 
-sysarmy_analysis.explore()
+# sysarmy_analysis.explore()
+sysarmy_analysis.describe(graph=True)
 
 all_cols = list(sysarmy_analysis.dataset.columns)
 sysarmy_analysis.replace_missing(all_cols, method='remove')
-sysarmy_analysis.replace_outliers(all_cols, method='drop_iqr')
+sysarmy_analysis.replace_outliers(cols_numeric, method='drop_iqr')
 
+sysarmy_analysis.describe(graph=True)
+# Careful with the variables 'presonas_a_cargo', 'sueldo_ajuste_total_2020'
             
 # ----------------------------------------------------------------------------------
 # Data processing
@@ -141,6 +149,20 @@ sysarmy_analysis.clusterization(
 sysarmy_analysis.dummy_cols_from_text(col='tecnologies', sep=',', n_cols=15)
 print(sysarmy_analysis)
 
+
+
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+# import statsmodels.api as sm
+
+var_to_predict = 'sueldo_mensual_bruto_ars'
+xs = sysarmy_analysis.dataset.drop([var_to_predict], axis=1)
+y = sysarmy_analysis.dataset[var_to_predict]
+reg = LinearRegression()
+reg.fit(xs, y)
+print('')
+print(reg.summary())
 
 # ----------------------------------------------------------------------------------
 # sysarmy_analysis.reset()
