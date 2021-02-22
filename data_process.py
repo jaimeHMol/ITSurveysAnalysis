@@ -251,6 +251,16 @@ class DataProcess(object):
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
                 print(f'Warning! {row_count_dif} rows removed because outliers in column {col}.')
+            elif method == 'drop_5_95':
+                row_count_ini = len(self.dataset[col])
+
+                min = self.dataset[col].quantile(0.05)
+                max = self.dataset[col].quantile(0.95)
+                self.dataset = self.dataset.query(f'{col} >= {min} and {col} <= {max}')
+
+                row_count_fin = len(self.dataset[col])
+                row_count_dif = row_count_ini - row_count_fin
+                print(f'Warning! {row_count_dif} rows removed because outliers in column {col}.')
             elif method == 'drop_iqr':
                 row_count_ini = len(self.dataset[col])
 

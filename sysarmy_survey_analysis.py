@@ -109,7 +109,12 @@ sysarmy_analysis.describe(graph=True)
 
 all_cols = list(sysarmy_analysis.dataset.columns)
 sysarmy_analysis.replace_missing(all_cols, method='remove')
+
+# Remove column with special case
+cols_numeric.remove('personas_a_cargo')
 sysarmy_analysis.replace_outliers(cols_numeric, method='drop_iqr')
+sysarmy_analysis.replace_outliers(['personas_a_cargo'], method='drop_5_95')
+cols_numeric.append('personas_a_cargo')
 
 sysarmy_analysis.describe(graph=True)
 # Careful with the variables 'presonas_a_cargo', 'sueldo_ajuste_total_2020'

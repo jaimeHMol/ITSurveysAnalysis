@@ -66,7 +66,7 @@ all_cols = list(stackoverflow_analysis.dataset.columns)
 
 stackoverflow_analysis.replace_missing(all_cols, method='remove')
 stackoverflow_analysis.replace_outliers(cols_numeric, method='drop_iqr')
-stackoverflow_analysis.describe(graph=True)
+# stackoverflow_analysis.describe(graph=True)
 
             
 # ----------------------------------------------------------------------------------
