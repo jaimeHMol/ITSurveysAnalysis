@@ -159,15 +159,34 @@ print(sysarmy_analysis)
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
+import matplotlib.pyplot as plt
 # import statsmodels.api as sm
 
 var_to_predict = 'sueldo_mensual_bruto_ars'
 xs = sysarmy_analysis.dataset.drop([var_to_predict], axis=1)
+
+cols_by_type = sysarmy_analysis.group_cols_by_type()
+cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
+cols_numeric.remove(var_to_predict)
+cols_numeric.remove('PC1')
+cols_numeric.remove('PC2')
+
 y = sysarmy_analysis.dataset[var_to_predict]
 reg = LinearRegression()
-reg.fit(xs, y)
+reg.fit(xs[cols_numeric], y)
 print('')
-print(reg.summary())
+print('R2 coefficient: ')
+print(reg.score(xs[cols_numeric], y))
+
+# get importance
+importance = reg.coef_
+# summarize feature importance. # TODO: Use features names.
+for i,v in enumerate(importance):
+	print('Feature: %0d, Score: %.5f' % (i,v))
+# plot feature importance
+plt.bar([x for x in range(len(importance))], importance)
+plt.show()
+
 
 # ----------------------------------------------------------------------------------
 # sysarmy_analysis.reset()
