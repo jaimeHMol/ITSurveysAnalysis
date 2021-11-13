@@ -58,7 +58,7 @@ all_cols = list(stackoverflow_analysis.dataset.columns)
 # str_to_replace = {
 #     'ninguna de las anteriores': '', 
 # }
-# stackoverflow_analysis.unify_cols(cols_to_unify, 'tecnologies', str_to_replace)
+# stackoverflow_analysis.unify_cols(cols_to_unify, 'technologies', str_to_replace)
 
 # stackoverflow_analysis.remove_cols(cols_to_unify)
 
@@ -76,7 +76,7 @@ all_cols_to_standard = cols_numeric
 stackoverflow_analysis.standardize(all_cols_to_standard, 'z_score')
 
 # Dimensionality reduction using PCA:
-# Applies only for numeric columns, requieres standardized values
+# Applies only for numeric columns, requires standardized values
 stackoverflow_analysis.reduction_dims(
     all_cols_to_standard,
     method='pca', 
@@ -90,7 +90,7 @@ stackoverflow_analysis.clusterization(
     visualize=True
 )
 
-# stackoverflow_analysis.dummy_cols_from_text(col='tecnologies', sep=',', n_cols=15)
+# stackoverflow_analysis.dummy_cols_from_text(col='technologies', sep=',', n_cols=15)
 # print(stackoverflow_analysis)
 
 

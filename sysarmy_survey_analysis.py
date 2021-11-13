@@ -73,6 +73,12 @@ cols_to_remove = [
     "¿Qué tanto sentís que te está apoyando tu empresa/organización en esta situación?", # Could be useful
     "¿Cómo se vio afectada tu empresa/organización?", # Could be useful
     "¿Instauraron algún beneficio nuevo?", # Could be useful
+    "Unnamed: 60",
+    "Unnamed: 61",
+    "Unnamed: 62",
+    "Unnamed: 63",
+    "Unnamed: 64",
+    "Unnamed: 65",
 ]
 
 sysarmy_analysis.remove_cols(cols_to_remove)
@@ -178,20 +184,23 @@ sysarmy_analysis.describe(graph=True)
 
 all_cols = list(sysarmy_analysis.dataset.columns)
 sysarmy_analysis.replace_missing(all_cols, method="remove")
+# HINT: Careful, the missings in columns like max_nivel_estudios, guardias_violencia_laboral, 
+# etc are dropping 2/3 of the dataset rows
 
 # Remove column with special case
-cols_numeric.remove("personas_a_cargo")
+cols_numeric.remove("personas_a_cargo") # The "outliers" here are real values
 sysarmy_analysis.replace_outliers(cols_numeric, method="drop_iqr")
 sysarmy_analysis.replace_outliers(["personas_a_cargo"], method="drop_5_95")
 cols_numeric.append("personas_a_cargo")
 
 sysarmy_analysis.describe(graph=True)
-# Careful with the variables "presonas_a_cargo", "sueldo_ajuste_total_2020"
+# HINT: Careful with the variables "personas_a_cargo", "sueldo_ajuste_total_2020"
             
 # ----------------------------------------------------------------------------------
 # Data processing
 all_cols_to_standard = cols_numeric
 
+# TODO: Check the names according to 2021 survey new columns name.
 cols_to_standard = [
     "edad", 
     "experiencia_anios" ,
