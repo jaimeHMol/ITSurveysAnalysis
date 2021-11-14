@@ -129,7 +129,7 @@ cols_to_rename = {
     "¿Qué SO usás en tu laptop/PC para trabajar?": "computador_trabajo_so",
     "¿Y en tu celular?": "celular_so",
     "¿Tenés guardias?": "guardias",
-    "Salario mensual BRUTO (en tu moneda local)": "sueldo_mensual_bruto_ars",
+    "Salario mensual o retiro BRUTO (en tu moneda local)": "sueldo_mensual_bruto_ars",
     # "Sueldo dolarizado?": "sueldo_dolarizado",
     "¿Qué tan conforme estás con tu sueldo?": "sueldo_conformidad",
     "Recibís algún tipo de bono": "sueldo_bonos",
@@ -138,7 +138,7 @@ cols_to_rename = {
     "¿Sufriste o presenciaste situaciones de violencia laboral?": "violencia_laboral",
     "¿La recomendás como un buen lugar para trabajar?": "recomendacion_laboral",
     "¿Cómo calificás las políticas de diversidad e inclusión?": "politicas_diversidad",
-    "¿Cómo venís llevando la pandemia?": "pandemia_feeling",
+    "¿Cómo venís llevando la pandemia?": "pandemia_percepcion",
 }
 
 sysarmy_analysis.rename_cols(cols_to_rename)
@@ -182,10 +182,21 @@ sysarmy_analysis.remove_cols(cols_to_unify)
 # sysarmy_analysis.explore()
 sysarmy_analysis.describe(graph=True)
 
-all_cols = list(sysarmy_analysis.dataset.columns)
-sysarmy_analysis.replace_missing(all_cols, method="remove")
-# HINT: Careful, the missings in columns like max_nivel_estudios, guardias_violencia_laboral, 
-# etc are dropping 2/3 of the dataset rows
+
+# Handle missings
+cols_check_missings = list(sysarmy_analysis.dataset.columns)
+
+sysarmy_analysis.replace_missing(["guardias"], method="contant", constant="No")
+cols_check_missings.remove("guardias")
+
+sysarmy_analysis.replace_missing(["pandemia_percepcion"], method="median")
+cols_check_missings.remove("pandemia_percepcion")
+
+sysarmy_analysis.replace_missing(["violencia_laboral"], method="contant", constant="No responde")
+cols_check_missings.remove("violencia_laboral")
+
+sysarmy_analysis.replace_missing(cols_check_missings, method="remove")
+
 
 # Remove column with special case
 cols_numeric.remove("personas_a_cargo") # The "outliers" here are real values
@@ -194,13 +205,13 @@ sysarmy_analysis.replace_outliers(["personas_a_cargo"], method="drop_5_95")
 cols_numeric.append("personas_a_cargo")
 
 sysarmy_analysis.describe(graph=True)
-# HINT: Careful with the variables "personas_a_cargo", "sueldo_ajuste_total_2020"
+
             
 # ----------------------------------------------------------------------------------
 # Data processing
 all_cols_to_standard = cols_numeric
 
-# TODO: Check the names according to 2021 survey new columns name.
+# TODO: Fix column "sueldo_mensual_bruto_ars" that has non numeric values!
 cols_to_standard = [
     "edad", 
     "experiencia_anios" ,
@@ -208,7 +219,7 @@ cols_to_standard = [
     "personas_a_cargo",
     "sueldo_conformidad",
     "sueldo_mensual_bruto_ars",
-    "sueldo_ajuste_total_2020",
+    "sueldo_ajuste_total_2021",
     "recomendacion_laboral",
     "politicas_diversidad"
 ]

@@ -12,24 +12,24 @@ from kneed import KneeLocator
 from pandas_profiling import ProfileReport
 import webbrowser
 
-# TOIMPROVE: Add optional argument 'cols' to all the method that do some process over the self.dataset
+# TOIMPROVE: Add optional argument "cols" to all the method that do some process over the self.dataset
 
 class DataProcess(object):
-    '''Class with all the methods required in a typical data science pipeline
-    '''
+    """Class with all the methods required in a typical data science pipeline
+    """
     # pandas.options.mode.use_inf_as_na = True
 
-    def __init__(self, path, format='csv'):
-        ''' Constructor of the data process class.
+    def __init__(self, path, format="csv"):
+        """ Constructor of the data process class.
 
         Args:
             path (pathlib/str): Full path (including file name) where the input dataset is located.
-            format (str, optional): File format of the input dataset. Defaults to 'csv'.
-        '''
-        if format == 'csv':
+            format (str, optional): File format of the input dataset. Defaults to "csv".
+        """
+        if format == "csv":
             dataset = pd.read_csv(path)
         else:
-            raise ValueError('Input file format not supported')
+            raise ValueError("Input file format not supported")
         self.path = path
         self.input_file_name = path.stem
         self.input_file_format = format
@@ -44,43 +44,43 @@ class DataProcess(object):
 
 
     def __str__(self):
-        # print('Position | Column name:')
+        # print("Position | Column name:")
         # for index, col in enumerate(self.dataset.columns):
-        #     print(f'{index} | {col}')
+        #     print(f"{index} | {col}")
         # print()
         # total_rows = len(self.dataset.index)
         # total_col = len(self.dataset.columns)
-        # return f'Data frame with {total_col} columns and {total_rows} rows in total'
+        # return f"Data frame with {total_col} columns and {total_rows} rows in total"
 
         self.dataset.info()
 
-        return ''
+        return ""
 
 
-    def save(self, path, format='csv'):
-        if format == 'csv':
+    def save(self, path, format="csv"):
+        if format == "csv":
             self.dataset.to_csv(path)
-        elif format == 'json':
+        elif format == "json":
             self.dataset.to_json(path)
-        elif format == 'xlsx':
+        elif format == "xlsx":
             self.dataset.to_excel(path)
         else:
-            raise ValueError('Output file format not supported')
+            raise ValueError("Output file format not supported")
 
 
     def describe(self, graph=False, compact=False):
         if compact:
-            self.dataset.describe(include='all')
+            self.dataset.describe(include="all")
         else:
             for col in self.dataset.columns:
-                print('='*27)
+                print("="*27)
                 print(col)
-                print('='*27)
+                print("="*27)
                 print(self.dataset[col].describe())
-                print('')
+                print("")
         if graph:
-            numeric_types = ['int32', 'int64', 'float32', 'float64']
-            categoric_types = ['object']
+            numeric_types = ["int32", "int64", "float32", "float64"]
+            categoric_types = ["object"]
             cols_by_type = self.group_cols_by_type()
             cols_numeric = self.get_cols_by_type(cols_by_type, numeric_types)
             cols_categoric = self.get_cols_by_type(cols_by_type, categoric_types)
@@ -95,9 +95,9 @@ class DataProcess(object):
         for index, col in enumerate(cols_numeric):
             values = self.dataset[col]
             if values.isnull().values.any():
-                print(f'WARNING: The column {col} has NaN values that were removed just to build the box plot.')
+                print(f"WARNING: The column {col} has NaN values that were removed just to build the box plot.")
                 values = values.dropna()
-            axs[index].set_title(f'{col} - type: {values.dtype}')
+            axs[index].set_title(f"{col} - type: {values.dtype}")
             axs[index].boxplot(values, vert=False)
             axs[index].get_xaxis().set_visible(False)
             axs[index].get_yaxis().set_visible(False)
@@ -122,10 +122,10 @@ class DataProcess(object):
             axs[y_index, x_index].set_title(col)
 
             data = self.dataset[col].value_counts(dropna=False)
-            mapper_to_rename = {str(x): str(x) if len(str(x))<10 else str(x)[0:9]+'..' for x in data.index}
+            mapper_to_rename = {str(x): str(x) if len(str(x))<10 else str(x)[0:9]+".." for x in data.index}
             data_cat_renamed = data.rename(mapper_to_rename)
 
-            data_cat_renamed.plot(kind='bar', ax=axs[y_index, x_index])
+            data_cat_renamed.plot(kind="bar", ax=axs[y_index, x_index])
 
             if len(data_cat_renamed) > 6:
                 axs[y_index, x_index].get_xaxis().set_ticklabels([])
@@ -133,7 +133,7 @@ class DataProcess(object):
             x_index += 1
         
         if cols_categoric_count % ncols != 0:
-            axs[-1, -1].axis('off')
+            axs[-1, -1].axis("off")
         fig.tight_layout()
         plt.show()           
 
@@ -142,13 +142,13 @@ class DataProcess(object):
     #     #!pip install sweetviz
     #     import sweetviz as sv
     #     dataset_report = sv.analyze(self.dataset)
-    #     dataset_report.show_html(filepath=f'{output_path}dataset_report.html', open_browser=True)
+    #     dataset_report.show_html(filepath=f"{output_path}dataset_report.html", open_browser=True)
      
         if output_path is None:
-            output_path =  f'{self.input_file_name}_report.html'
-        dataset_report = ProfileReport(self.dataset, title=f'{self.input_file_name} Report', minimal=compact)
-        dataset_report.to_file(f'{output_path}')
-        webbrowser.open(f'{output_path}')
+            output_path =  f"{self.input_file_name}_report.html"
+        dataset_report = ProfileReport(self.dataset, title=f"{self.input_file_name} Report", minimal=compact)
+        dataset_report.to_file(f"{output_path}")
+        webbrowser.open(f"{output_path}")
 
 
 
@@ -172,14 +172,14 @@ class DataProcess(object):
         pass
 
 
-    def unify_cols(self, cols, new_col, str_to_replace={';':'', '.':''}):
+    def unify_cols(self, cols, new_col, str_to_replace={";":"", ".":""}):
         for col in cols:
-            self.dataset[col] = self.dataset[col].replace(np.nan, '').str.strip().str.lower()
+            self.dataset[col] = self.dataset[col].replace(np.nan, "").str.strip().str.lower()
             
             for str_find, str_rep in str_to_replace.items():
                 self.dataset[col] = self.dataset[col].apply(lambda x: x.replace(str_find, str_rep))
 
-        self.dataset[new_col] = self.dataset[cols].agg(','.join, axis=1)
+        self.dataset[new_col] = self.dataset[cols].agg(",".join, axis=1)
 
 
     def group_cols_by_type(self):        
@@ -197,71 +197,73 @@ class DataProcess(object):
         return numeric_cols
 
 
-    def replace_missing(self, cols, method='mode'):
-        ''' Look for all NaN values (nulls, none, blanks) in the input columns and replace
-        them according to the method selected. If you define method = 'remove' all the 
+    def replace_missing(self, cols, method="mode", constant=None):
+        """ Look for all NaN values (nulls, none, blanks) in the input columns and replace
+        them according to the method selected. If you define method = "remove" all the 
         rows with one or more NaN will be deleted from the dataset.
-        '''
+        """
         # HINT: Be careful with datetime columns, since they use NaT instead of NaN
-        print('')
+        print("")
         for col in cols:
             na_count = self.dataset[col].isna().sum()
-            if method == 'mode':
-                current_mode = self.dataset[col].mode(axis=1, dropna=True)
+            if method == "mode":
+                current_mode = self.dataset[col].mode(dropna=True)
                 self.dataset[col] = self.dataset[col].fillna(current_mode)
-                print(f'Warning! {na_count} values replaced in column {col} because missing values.')
-            elif method == 'mean':
-                current_mean = self.dataset[col].mean(axis=1, dropna=True)
+                print(f"Warning! {na_count} values replaced in column {col} because missing values.")
+            elif method == "mean":
+                current_mean = self.dataset[col].mean()
                 self.dataset[col] = self.dataset[col].fillna(current_mean)
-                print(f'Warning! {na_count} values replaced in column {col} because missing values.')
-            elif method == 'median':
-                current_median = self.dataset[col].median(axis=1, dropna=True)
+                print(f"Warning! {na_count} values replaced in column {col} because missing values.")
+            elif method == "median":
+                current_median = self.dataset[col].median()
                 self.dataset[col] = self.dataset[col].fillna(current_median)
-                print(f'Warning! {na_count} values replaced in column {col} because missing values.')
-            elif method == 'remove':
+                print(f"Warning! {na_count} values replaced in column {col} because missing values.")
+            elif method == "remove":
                 self.dataset = self.dataset.dropna(subset=[col])
-                print(f'Warning! {na_count} rows removed because missing values in column {col}.')
+                print(f"Warning! {na_count} rows removed because missing values in column {col}.")
+            elif method == "constant":
+                self.dataset[col] = self.dataset[col].fillna(constant)
             else:
-                ValueError('Replace missing values method not implemented.')
+                ValueError("Replace missing values method not implemented.")
 
 
-    def replace_outliers(self, cols, method='drop_iqr'):
-        print('')
+    def replace_outliers(self, cols, method="drop_iqr"):
+        print("")
         for col in cols:        
             skew = self.dataset[col].skew()
-            print(f'Column {col} original skew value: {skew}')
-            if method == 'replace_10_90_min_max':
+            print(f"Column {col} original skew value: {skew}")
+            if method == "replace_10_90_min_max":
                 min = self.dataset[col].quantile(0.10)
                 max = self.dataset[col].quantile(0.90)
                 self.dataset[col] = np.where(self.dataset[col] < min, min, self.dataset[col])
                 self.dataset[col] = np.where(self.dataset[col] > max, max, self.dataset[col])
-            elif method == 'replace_5_95_median':
+            elif method == "replace_5_95_median":
                 median = self.dataset[col].quantile(0.5)
                 min = self.dataset[col].quantile(0.05)
                 max = self.dataset[col].quantile(0.95)
                 self.dataset[col] = np.where(self.dataset[col] < min, median, self.dataset[col])
                 self.dataset[col] = np.where(self.dataset[col] > max, median, self.dataset[col])
-            elif method == 'drop_10_90':
+            elif method == "drop_10_90":
                 row_count_ini = len(self.dataset[col])
 
                 min = self.dataset[col].quantile(0.10)
                 max = self.dataset[col].quantile(0.90)
-                self.dataset = self.dataset.query(f'{col} >= {min} and {col} <= {max}')
+                self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
 
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f'Warning! {row_count_dif} rows removed because outliers in column {col}.')
-            elif method == 'drop_5_95':
+                print(f"Warning! {row_count_dif} rows removed because outliers in column {col}.")
+            elif method == "drop_5_95":
                 row_count_ini = len(self.dataset[col])
 
                 min = self.dataset[col].quantile(0.05)
                 max = self.dataset[col].quantile(0.95)
-                self.dataset = self.dataset.query(f'{col} >= {min} and {col} <= {max}')
+                self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
 
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f'Warning! {row_count_dif} rows removed because outliers in column {col}.')
-            elif method == 'drop_iqr':
+                print(f"Warning! {row_count_dif} rows removed because outliers in column {col}.")
+            elif method == "drop_iqr":
                 row_count_ini = len(self.dataset[col])
 
                 q1 = self.dataset[col].quantile(0.25)
@@ -269,87 +271,87 @@ class DataProcess(object):
                 iqr = q3 - q1
                 min = q1 - 1.5 * iqr
                 max = q3 + 1.5 * iqr
-                self.dataset = self.dataset.query(f'{col} >= {min} and {col} <= {max}')
+                self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
                 
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f'Warning! {row_count_dif} rows removed because outliers in column {col}.')
+                print(f"Warning! {row_count_dif} rows removed because outliers in column {col}.")
             else:
-                ValueError('Outliers handling method not implemented.')
+                ValueError("Outliers handling method not implemented.")
             skew = self.dataset[col].skew()
-            print(f'Column {col} final skew value: {skew}. Between -1 and 1 the best. Assumes data have normal distribution.')
+            print(f"Column {col} final skew value: {skew}. Between -1 and 1 the best. Assumes data have normal distribution.")
 
 
-    def standardize(self, cols, method='z_score'):
-        if method == 'z_score':
+    def standardize(self, cols, method="z_score"):
+        if method == "z_score":
             for col in cols:
                 self.dataset[col] = (self.dataset[col] - self.dataset[col].mean() / self.dataset[col].std())
             self.is_standardize = True            
-        elif method == '0-1':
+        elif method == "0-1":
             # self.is_standardize = True
             pass
         else:
-            raise ValueError('Standardize method not supported')
+            raise ValueError("Standardize method not supported")
             
 
     # TODO: Implement using SOLID.
-    def reduction_dims(self, cols=None, method='pca', final_number_dims=2, visualize=True):
+    def reduction_dims(self, cols=None, method="pca", final_number_dims=2, visualize=True):
         if not self.is_standardize:
-            raise ValueError('You should standardize your columns first.')
+            raise ValueError("You should standardize your columns first.")
         if not cols:
             cols = self.dataset.columns.tolist()
 
-        if method == 'pca':
+        if method == "pca":
             pca = PCA(n_components=final_number_dims)
             principal_components = pca.fit_transform(self.dataset[cols])
 
             for index in range(0, final_number_dims):
-                self.dataset[f'PC{index + 1}'] = principal_components[:,index]
+                self.dataset[f"PC{index + 1}"] = principal_components[:,index]
 
-            print('Principal components analysis finished. Explained variance ratio:')
-            components_variance = ['{:.12f}'.format(i)[:8] for i in pca.explained_variance_ratio_]
+            print("Principal components analysis finished. Explained variance ratio:")
+            components_variance = ["{:.12f}".format(i)[:8] for i in pca.explained_variance_ratio_]
             print(components_variance)
 
             if visualize and final_number_dims == 2:
-                x = self.dataset['PC1']
-                y = self.dataset['PC2']        
+                x = self.dataset["PC1"]
+                y = self.dataset["PC2"]        
                 scalex = 1.0/(x.max() - x.min())
                 scaley = 1.0/(y.max() - y.min())
                 coeff = np.transpose(pca.components_)
 
                 fig = plt.figure(figsize = (8,8))
                 sp = fig.add_subplot(1,1,1) 
-                sp.set_xlabel(f'PC 1 - Variance ratio: {components_variance[0]}', fontsize = 15)
-                sp.set_ylabel(f'PC 2 - Variance ratio: {components_variance[1]}', fontsize = 15)
+                sp.set_xlabel(f"PC 1 - Variance ratio: {components_variance[0]}", fontsize = 15)
+                sp.set_ylabel(f"PC 2 - Variance ratio: {components_variance[1]}", fontsize = 15)
                 sp.set_xlim(-1,1)
                 sp.set_ylim(-1,1)
-                sp.set_title('PCA Biplot', fontsize = 20)
+                sp.set_title("PCA Biplot", fontsize = 20)
                 sp.scatter(x * scalex, y * scaley, s = 50)
                 for i, col in enumerate(cols):
-                    plt.arrow(0, 0, coeff[i,0], coeff[i,1], color = 'r', head_width=0.02, length_includes_head = True)
-                    plt.text(coeff[i,0] /2, coeff[i,1] /2, col, color = 'g', ha = 'left', va = 'baseline')
+                    plt.arrow(0, 0, coeff[i,0], coeff[i,1], color = "r", head_width=0.02, length_includes_head = True)
+                    plt.text(coeff[i,0] /2, coeff[i,1] /2, col, color = "g", ha = "left", va = "baseline")
                 sp.grid()
                 plt.show()
         else:
-            raise ValueError('Method of dimensionality reduction not implemented.')
+            raise ValueError("Method of dimensionality reduction not implemented.")
 
 
     # TODO: Implement this using SOLID
-    def clusterization(self, cols=None, method='k_means', visualize=True, n_clusters=None):
+    def clusterization(self, cols=None, method="k_means", visualize=True, n_clusters=None):
 
         if not self.is_standardize:
-            raise ValueError('You should standardize your columns first.')
+            raise ValueError("You should standardize your columns first.")
 
-        if method == 'k_means':
-            print('='*27)
-            print('Clustering using K-Means')
-            print('='*27)
+        if method == "k_means":
+            print("="*27)
+            print("Clustering using K-Means")
+            print("="*27)
 
             kmeans_kwargs  = {
-                'init': 'random',
-                'n_init': 10,
-                'max_iter': 300,
-                'random_state': 42,
+                "init": "random",
+                "n_init": 10,
+                "max_iter": 300,
+                "random_state": 42,
             }
             sse = []
             kmeans_silhouette_coefficients = []
@@ -361,39 +363,39 @@ class DataProcess(object):
                 kmeans_silhouette_coefficients.append(score)
 
             if visualize:
-                # plt.style.use('fivethirtyeight')
+                # plt.style.use("fivethirtyeight")
                 plt.plot(range(2, 11), sse)
                 plt.xticks(range(2, 11))
-                plt.title('K-Means')
-                plt.xlabel('Number of Clusters')
-                plt.ylabel('SSE')
+                plt.title("K-Means")
+                plt.xlabel("Number of Clusters")
+                plt.ylabel("SSE")
                 plt.show()
 
-                # plt.style.use('fivethirtyeight')
+                # plt.style.use("fivethirtyeight")
                 plt.plot(range(2, 11), kmeans_silhouette_coefficients)
                 plt.xticks(range(2, 11))
-                plt.title('K-Means')
-                plt.xlabel('Number of Clusters')
-                plt.ylabel('Silhouette Coefficient')
+                plt.title("K-Means")
+                plt.xlabel("Number of Clusters")
+                plt.ylabel("Silhouette Coefficient")
                 plt.show()
 
-            kl = KneeLocator(range(2, 11), sse, curve='convex', direction='decreasing')
+            kl = KneeLocator(range(2, 11), sse, curve="convex", direction="decreasing")
                 
             number_clusters_best = kl.elbow
-            print(f'Best number of clusters using elbow method: {number_clusters_best}')
-            print('')
-            print(f'See the graph Silhouette coefficient vs number of clusters to define \
+            print(f"Best number of clusters using elbow method: {number_clusters_best}")
+            print("")
+            print(f"See the graph Silhouette coefficient vs number of clusters to define \
                 the best amount of clusters in your case. \
-                (Silhouette coefficient goes from -1 to 1, near to 1 is better)')
-            print('')
+                (Silhouette coefficient goes from -1 to 1, near to 1 is better)")
+            print("")
 
-        elif method == 'k_medoids':
-            print('='*27)
-            print('Clustering using K-Medoids')
-            print('='*27)
+        elif method == "k_medoids":
+            print("="*27)
+            print("Clustering using K-Medoids")
+            print("="*27)
 
             kmedoids_kwargs  = {
-                'metric': 'euclidean',
+                "metric": "euclidean",
             }
             sse = []
             kmedoids_silhouette_coefficients = []
@@ -405,36 +407,36 @@ class DataProcess(object):
                 kmedoids_silhouette_coefficients.append(score)
 
             if visualize:
-                # plt.style.use('fivethirtyeight')
+                # plt.style.use("fivethirtyeight")
                 plt.plot(range(2, 11), sse)
                 plt.xticks(range(2, 11))
-                plt.title('K-Medoids')
-                plt.xlabel('Number of Clusters')
-                plt.ylabel('SSE')
+                plt.title("K-Medoids")
+                plt.xlabel("Number of Clusters")
+                plt.ylabel("SSE")
                 plt.show()
 
-                # plt.style.use('fivethirtyeight')
+                # plt.style.use("fivethirtyeight")
                 plt.plot(range(2, 11), kmedoids_silhouette_coefficients)
                 plt.xticks(range(2, 11))
-                plt.title('K-Medoids')
-                plt.xlabel('Number of Clusters')
-                plt.ylabel('Silhouette Coefficient')
+                plt.title("K-Medoids")
+                plt.xlabel("Number of Clusters")
+                plt.ylabel("Silhouette Coefficient")
                 plt.show()
 
-            kl = KneeLocator(range(2, 11), sse, curve='convex', direction='decreasing')
+            kl = KneeLocator(range(2, 11), sse, curve="convex", direction="decreasing")
                 
             number_clusters_best = kl.elbow
-            print(f'Best number of clusters using elbow method: {number_clusters_best}')
-            print('')
-            print(f'See the graph Silhouette coefficient vs number of clusters to define \
+            print(f"Best number of clusters using elbow method: {number_clusters_best}")
+            print("")
+            print(f"See the graph Silhouette coefficient vs number of clusters to define \
                 the best amount of clusters in your case. \
-                (Silhouette coefficient goes from -1 to 1, near to 1 is better)')
-            print('')
+                (Silhouette coefficient goes from -1 to 1, near to 1 is better)")
+            print("")
 
-        elif method == 'dbscan':
-            print('='*27)
-            print('Clustering using DBScan')
-            print('='*27)
+        elif method == "dbscan":
+            print("="*27)
+            print("Clustering using DBScan")
+            print("="*27)
 
             silhouette_eps_ncluster = {}
             for eps in np.linspace(0.1, 4, 10):
@@ -442,7 +444,7 @@ class DataProcess(object):
                 dbscan.fit(self.dataset[cols])
                 if len(set(dbscan.labels_)) > 1:
                     # Silhouette score requires at least 2 clusters to be calculated.
-                    # Rows marked with dbscan.labels_=-1 don't belong to a real cluster
+                    # Rows marked with dbscan.labels_=-1 don"t belong to a real cluster
                     # but are considered noise.
                     score = round(silhouette_score(self.dataset[cols], dbscan.labels_), 4)
                     nclusters = len(set(dbscan.labels_))
@@ -453,24 +455,24 @@ class DataProcess(object):
                 y, tup = zip(*silhouette_eps_ncluster.items())
                 x = [eps for eps, nclusters in tup]
 
-                # plt.style.use('fivethirtyeight')
+                # plt.style.use("fivethirtyeight")
                 plt.plot(x, y)
                 plt.xticks(np.linspace(0.1,4,10))
-                plt.title('DBScan')
-                plt.xlabel('eps')
-                plt.ylabel('Silhouette Coefficient')
+                plt.title("DBScan")
+                plt.xlabel("eps")
+                plt.ylabel("Silhouette Coefficient")
                 plt.show()
 
             nclusters_best = silhouette_eps_ncluster.get(max(silhouette_eps_ncluster.keys()), -1)[1]
-            print(f'Best number of clusters using Silhouette over multiple eps: {nclusters_best}')
-            print('')
+            print(f"Best number of clusters using Silhouette over multiple eps: {nclusters_best}")
+            print("")
         else:
-            raise ValueError('Clustering method not implemented.')
+            raise ValueError("Clustering method not implemented.")
         
 
-    def dummy_cols_from_text(self, col, sep=',', n_cols=10):
+    def dummy_cols_from_text(self, col, sep=",", n_cols=10):
         if self.dataset[col].dtype == np.number:
-            raise ValueError('The origin column to generate dummy columns must be text.')
+            raise ValueError("The origin column to generate dummy columns must be text.")
 
         dummy_df = self.dataset[col].str.get_dummies(sep=sep)
 
