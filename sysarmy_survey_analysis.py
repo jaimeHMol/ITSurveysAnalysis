@@ -179,6 +179,8 @@ sysarmy_analysis.unify_cols(cols_to_unify, "tecnologies", str_to_replace)
 
 sysarmy_analysis.remove_cols(cols_to_unify)
 
+sysarmy_analysis.enforce_numeric(["sueldo_mensual_bruto_ars"])
+
 # sysarmy_analysis.explore()
 sysarmy_analysis.describe(graph=True)
 
@@ -186,14 +188,28 @@ sysarmy_analysis.describe(graph=True)
 # Handle missings
 cols_check_missings = list(sysarmy_analysis.dataset.columns)
 
-sysarmy_analysis.replace_missing(["guardias"], method="contant", constant="No")
-cols_check_missings.remove("guardias")
+col_fix_missings = "guardias"
+sysarmy_analysis.replace_missing([col_fix_missings], method="contant", constant="No")
+cols_check_missings.remove(col_fix_missings)
 
-sysarmy_analysis.replace_missing(["pandemia_percepcion"], method="median")
-cols_check_missings.remove("pandemia_percepcion")
+col_fix_missings = "pandemia_percepcion"
+sysarmy_analysis.replace_missing([col_fix_missings], method="median")
+cols_check_missings.remove(col_fix_missings)
 
-sysarmy_analysis.replace_missing(["violencia_laboral"], method="contant", constant="No responde")
-cols_check_missings.remove("violencia_laboral")
+col_fix_missings = "sueldo_mensual_bruto_ars"
+sysarmy_analysis.replace_missing([col_fix_missings], method="median")
+cols_check_missings.remove(col_fix_missings)
+
+cols_fix_missings = [
+    "violencia_laboral",
+    "max_nivel_estudios",
+    "max_nivel_estudios_estado",
+    "cursos_especializacion",
+    "contribucion_open_source",
+    "programacion_hobbie",
+]
+sysarmy_analysis.replace_missing([cols_fix_missings], method="contant", constant="No responde")
+cols_check_missings = [i for i in cols_check_missings if i not in cols_fix_missings]
 
 sysarmy_analysis.replace_missing(cols_check_missings, method="remove")
 
@@ -211,7 +227,6 @@ sysarmy_analysis.describe(graph=True)
 # Data processing
 all_cols_to_standard = cols_numeric
 
-# TODO: Fix column "sueldo_mensual_bruto_ars" that has non numeric values!
 cols_to_standard = [
     "edad", 
     "experiencia_anios" ,

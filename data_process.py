@@ -171,6 +171,11 @@ class DataProcess(object):
     def unify_format(self, cols, search_func, transform_func):
         pass
 
+    
+    def enforce_numeric(self, cols):
+        for col in cols:
+            self.dataset[col] = pd.to_numeric(self.dataset[col], errors="coerce")
+
 
     def unify_cols(self, cols, new_col, str_to_replace={";":"", ".":""}):
         for col in cols:
