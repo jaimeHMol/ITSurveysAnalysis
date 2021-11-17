@@ -276,7 +276,7 @@ class DataProcess(object):
                 iqr = q3 - q1
                 min = q1 - 1.5 * iqr
                 max = q3 + 1.5 * iqr
-                # TODO: This query  is not working as expected!
+                # TODO: This query  is not working as expected! Also include skew validation
                 self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
                 
                 row_count_fin = len(self.dataset[col])

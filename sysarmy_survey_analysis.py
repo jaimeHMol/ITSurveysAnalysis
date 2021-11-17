@@ -217,7 +217,8 @@ sysarmy_analysis.replace_missing(cols_check_missings, method="remove")
 
 # Remove column with special case
 cols_numeric.remove("personas_a_cargo") # The "outliers" here are real values
-sysarmy_analysis.replace_outliers(cols_numeric, method="drop_iqr")
+# sysarmy_analysis.replace_outliers(cols_numeric, method="drop_iqr")
+sysarmy_analysis.replace_outliers(["pandemia_percepcion"], method="drop_iqr")
 sysarmy_analysis.replace_outliers(["personas_a_cargo"], method="drop_5_95")
 cols_numeric.append("personas_a_cargo")
 
