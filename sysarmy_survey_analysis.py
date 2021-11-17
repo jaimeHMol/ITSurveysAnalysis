@@ -131,6 +131,7 @@ cols_to_rename = {
     "¿Tenés guardias?": "guardias",
     "Salario mensual o retiro BRUTO (en tu moneda local)": "sueldo_mensual_bruto_ars",
     # "Sueldo dolarizado?": "sueldo_dolarizado",
+    "¿Tuviste ajustes por inflación durante 2021?": "sueldo_ajuste_2021",
     "¿Qué tan conforme estás con tu sueldo?": "sueldo_conformidad",
     "Recibís algún tipo de bono": "sueldo_bonos",
     "¿Tuviste ajustes por inflación en lo que va de 2021?": "sueldo_ajustes_inflacion",
