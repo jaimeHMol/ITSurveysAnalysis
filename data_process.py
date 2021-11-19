@@ -237,6 +237,10 @@ class DataProcess(object):
         for col in cols:        
             skew = self.dataset[col].skew()
             print(f"Column {col} original skew value: {skew}")
+            if -1 < skew < 1:
+                print(f"Column {col} doesn't seem to have outliers (regular skew value between -1 and 1. Assuming data have normal distribution.")                
+                continue
+
             if method == "replace_10_90_min_max":
                 min = self.dataset[col].quantile(0.10)
                 max = self.dataset[col].quantile(0.90)
@@ -270,13 +274,11 @@ class DataProcess(object):
                 print(f"Warning! {row_count_dif} rows removed because outliers in column {col}.")
             elif method == "drop_iqr":
                 row_count_ini = len(self.dataset[col])
-
                 q1 = self.dataset[col].quantile(0.25)
                 q3 = self.dataset[col].quantile(0.75)
                 iqr = q3 - q1
                 min = q1 - 1.5 * iqr
                 max = q3 + 1.5 * iqr
-                # TODO: This query  is not working as expected! Also include skew validation
                 self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
                 
                 row_count_fin = len(self.dataset[col])
