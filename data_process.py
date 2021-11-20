@@ -1,4 +1,5 @@
 import pandas as pd
+from pandas.api.types import is_numeric_dtype
 import numpy as np
 import matplotlib.pyplot as plt
 import math
@@ -95,7 +96,7 @@ class DataProcess(object):
         for index, col in enumerate(cols_numeric):
             values = self.dataset[col]
             if values.isnull().values.any():
-                print(f"WARNING: The column {col} has NaN values that were removed just to build the box plot.")
+                print(f"WARNING: The column {col} has NaN values that were dropped just to build the box plot.")
                 values = values.dropna()
             axs[index].set_title(f"{col} - type: {values.dtype}")
             axs[index].boxplot(values, vert=False)
@@ -152,7 +153,7 @@ class DataProcess(object):
 
 
 
-    def remove_cols(self, cols):
+    def drop_cols(self, cols):
         if all(isinstance(item, int) for item in cols):
             col_names = self.dataset.columns[cols]
             self.dataset = self.dataset.drop(col_names, axis=1)
@@ -195,16 +196,16 @@ class DataProcess(object):
 
 
     def get_cols_by_type(self, cols_by_type, types):
-        numeric_cols = []
-        for key in types: 
-            if cols_by_type.get(key): 
-                numeric_cols.extend(cols_by_type.get(key))
-        return numeric_cols
+        grouped_cols = []
+        for type in types: 
+            if cols_by_type.get(type): 
+                grouped_cols.extend(cols_by_type.get(type))
+        return grouped_cols
 
 
-    def replace_missing(self, cols, method="mode", constant=None):
+    def handle_missing(self, cols, method="mode", constant=None):
         """ Look for all NaN values (nulls, none, blanks) in the input columns and replace
-        them according to the method selected. If you define method = "remove" all the 
+        them according to the method selected. If you define method = "drop" all the 
         rows with one or more NaN will be deleted from the dataset.
         """
         # HINT: Be careful with datetime columns, since they use NaT instead of NaN
@@ -223,18 +224,24 @@ class DataProcess(object):
                 current_median = self.dataset[col].median()
                 self.dataset[col] = self.dataset[col].fillna(current_median)
                 print(f"Warning! {na_count} values replaced in column {col} because missing values.")
-            elif method == "remove":
+            elif method == "drop":
                 self.dataset = self.dataset.dropna(subset=[col])
-                print(f"Warning! {na_count} rows removed because missing values in column {col}.")
-            elif method == "constant":
+                print(f"Warning! {na_count} rows dropped because missing values in column {col}.")
+            elif method == "constant" and constant:
                 self.dataset[col] = self.dataset[col].fillna(constant)
+                print(f"Warning! {na_count} values replaced in column {col} because missing values.")
             else:
-                ValueError("Replace missing values method not implemented.")
+                raise ValueError("Replace missing values method not implemented or required input not provided.")
 
 
-    def replace_outliers(self, cols, method="drop_iqr"):
+    def handle_outliers(self, cols, method="drop_iqr"):
+        """ Look for outliers and handle them according to the method received.
+            Only works for numeric columns
+        """
         print("")
-        for col in cols:        
+        numeric_cols = (col for col in cols if is_numeric_dtype(self.dataset[col]))
+        for col in numeric_cols:        
+            row_count_ini = len(self.dataset[col])
             skew = self.dataset[col].skew()
             print(f"Column {col} original skew value: {skew}")
             if -1 < skew < 1:
@@ -246,48 +253,74 @@ class DataProcess(object):
                 max = self.dataset[col].quantile(0.90)
                 self.dataset[col] = np.where(self.dataset[col] < min, min, self.dataset[col])
                 self.dataset[col] = np.where(self.dataset[col] > max, max, self.dataset[col])
+                # TODO: Print count of rows replaced.
             elif method == "replace_5_95_median":
                 median = self.dataset[col].quantile(0.5)
                 min = self.dataset[col].quantile(0.05)
                 max = self.dataset[col].quantile(0.95)
                 self.dataset[col] = np.where(self.dataset[col] < min, median, self.dataset[col])
                 self.dataset[col] = np.where(self.dataset[col] > max, median, self.dataset[col])
+                # TODO: Print count of rows replaced.
             elif method == "drop_10_90":
-                row_count_ini = len(self.dataset[col])
-
                 min = self.dataset[col].quantile(0.10)
                 max = self.dataset[col].quantile(0.90)
                 self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
-
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f"Warning! {row_count_dif} rows removed because outliers in column {col}.")
+                print(f"Warning! {row_count_dif} rows dropped because outliers in column {col}.")
             elif method == "drop_5_95":
-                row_count_ini = len(self.dataset[col])
-
                 min = self.dataset[col].quantile(0.05)
                 max = self.dataset[col].quantile(0.95)
                 self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
-
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f"Warning! {row_count_dif} rows removed because outliers in column {col}.")
+                print(f"Warning! {row_count_dif} rows dropped  because outliers in column {col}.")
             elif method == "drop_iqr":
-                row_count_ini = len(self.dataset[col])
                 q1 = self.dataset[col].quantile(0.25)
                 q3 = self.dataset[col].quantile(0.75)
                 iqr = q3 - q1
                 min = q1 - 1.5 * iqr
                 max = q3 + 1.5 * iqr
                 self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
-                
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f"Warning! {row_count_dif} rows removed because outliers in column {col}.")
+                print(f"Warning! {row_count_dif} rows dropped because outliers in column {col}.")
             else:
-                ValueError("Outliers handling method not implemented.")
+                raise ValueError("Outliers handling method not implemented.")
             skew = self.dataset[col].skew()
             print(f"Column {col} final skew value: {skew}. Between -1 and 1 the best. Assumes data have normal distribution.")
+
+
+    def handle_zeros(self, cols, method="drop", constant=None):
+        """ Look for zeros and handle them according to the method received.
+            Only works for numeric columns
+        """
+        print("")
+        numeric_cols = (col for col in cols if is_numeric_dtype(self.dataset[col]))
+        for col in numeric_cols:      
+            row_count_ini = len(self.dataset[col])
+            if method == "mode":
+                current_mode = self.dataset[col].mode(dropna=True)
+                self.dataset[col] = self.dataset[col].replace({0: current_mode})
+                # TODO: Print count of rows replaced.
+            elif method == "mean":
+                current_mean = self.dataset[col].mean()
+                self.dataset[col] = self.dataset[col].replace({0: current_mean})
+                # TODO: Print count of rows replaced.
+            elif method == "median":
+                current_median = self.dataset[col].median()
+                self.dataset[col] = self.dataset[col].replace({0: current_median})
+                # TODO: Print count of rows replaced.
+            elif method == "constant" and constant:
+                self.dataset[col] = self.dataset[col].replace({0: constant})
+                # TODO: Print count of rows replaced.
+            elif method == "drop":
+                self.dataset = self.dataset.query(f"{col} != 0")
+                row_count_fin = len(self.dataset[col])
+                row_count_dif = row_count_ini - row_count_fin
+                print(f"Warning! {row_count_dif} rows dropped because zeros in column {col}.")
+            else:
+                raise ValueError("Zeros handling method not implemented or required input not provided.")
 
 
     def standardize(self, cols, method="z_score"):

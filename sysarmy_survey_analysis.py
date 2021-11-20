@@ -1,11 +1,12 @@
 import os
 from pathlib import Path
+import numpy as np
 
 from data_process import DataProcess
 
 project_path = Path(os.getcwd())
 output_path = project_path / "data/prepared/"
-
+USD_ARS = 105
 
 # ----------------------------------------------------------------------------------
 # Data load
@@ -17,28 +18,7 @@ sysarmy_analysis = DataProcess(sysarmy_survey, "csv")
 # Data refine and exploration
 print(sysarmy_analysis)
 
-# Columns from 2020
-# cols_to_remove = [
-#     "Estoy trabajando en",
-#     "Años en el puesto actual",
-#     "Cuánto cobrás por guardia",
-#     "¿Porcentaje, bruto o neto?",                  
-#     "Salario mensual NETO (en tu moneda local)",
-#     "Cómo creés que está tu sueldo con respecto al último semestre",
-#     "A qué está atado el bono",
-#     "¿Tenés algún tipo de discapacidad?",
-#     "¿Sentís que esto te dificultó el conseguir trabajo?",
-#     "¿En qué mes fue el último ajuste?",
-#     "Beneficios extra",   
-#     "¿Cuáles considerás que son las mejores empresas de IT para trabajar en este momento, en tu ciudad?",
-#     "QA / Testing",
-#     "Sueldo dolarizado?",
-#     "Trabajo de", # Don"t remove if you want to do a gender analysis
-#     "Orientación sexual", # Don"t remove if you want to do a diversity analysis
-#     "Carrera",
-#     "Universidad",
-# ]
-cols_to_remove = [
+cols_to_drop = [
     "Dónde estás trabajando",
     "Salario mensual o retiro NETO (en tu moneda local)",
     "Pagos en dólares",
@@ -46,7 +26,7 @@ cols_to_remove = [
     "Cómo creés que está tu sueldo con respecto al último semestre",
     "A qué está atado el bono",
     "¿En qué mes fue el último ajuste?",
-    "Trabajo de", # Don"t remove if you want to do a gender analysis
+    "Trabajo de", # Don"t drop if you want to do a gender analysis
     "Años en el puesto actual",
     "QA / Testing",
     "Cantidad de personas en tu organización",
@@ -80,38 +60,9 @@ cols_to_remove = [
     "Unnamed: 64",
     "Unnamed: 65",
 ]
-
-sysarmy_analysis.remove_cols(cols_to_remove)
+sysarmy_analysis.drop_cols(cols_to_drop)
 print(sysarmy_analysis)
 
-# Column mapping from 2020
-# cols_to_rename = {
-#     "Me identifico": "genero",
-#     "Tengo": "edad",
-#     "Dónde estás trabajando": "ubicacion",
-#     "Tipo de contrato": "tipo_contrato",
-#     "Años de experiencia": "experiencia_anios",
-#     "Años en la empresa actual": "empresa_actual_anios",
-#     "Nivel de estudios alcanzado": "max_nivel_estudios",
-#     "¿Gente a cargo?": "personas_a_cargo",
-#     "Estado": "max_nivel_estudios_estado",
-#     "Realizaste cursos de especialización": "cursos_especializacion",
-#     "¿Contribuís a proyectos open source?": "contribucion_open_source",
-#     "¿Programás como hobbie?": "programacion_hobbie",
-#     # "Trabajo de": "rol_trabajo",
-#     "¿Qué SO usás en tu laptop/PC para trabajar?": "computador_trabajo_so",
-#     "¿Y en tu celular?": "celular_so",
-#     "¿Tenés guardias?": "guardias",
-#     "Salario mensual BRUTO (en tu moneda local)": "sueldo_mensual_bruto_ars",
-#     # "Sueldo dolarizado?": "sueldo_dolarizado",
-#     "¿Qué tan conforme estás con tu sueldo?": "sueldo_conformidad",
-#     "Recibís algún tipo de bono": "sueldo_bonos",
-#     "¿Tuviste ajustes por inflación en lo que va de 2020?": "sueldo_ajustes_inflacion",
-#     "¿De qué % fue el ajuste total?": "sueldo_ajuste_total_2020",
-#     "¿Sufriste o presenciaste situaciones de violencia laboral?": "violencia_laboral",
-#     "¿La recomendás como un buen lugar para trabajar?": "recomendacion_laboral",
-#     "¿Cómo calificás las políticas de diversidad e inclusión?": "politicas_diversidad",
-# }
 cols_to_rename = {
     "Me identifico": "genero",
     "Tengo": "edad",
@@ -141,9 +92,12 @@ cols_to_rename = {
     "¿Cómo calificás las políticas de diversidad e inclusión?": "politicas_diversidad",
     "¿Cómo venís llevando la pandemia?": "pandemia_percepcion",
 }
-
 sysarmy_analysis.rename_cols(cols_to_rename)
+
+sysarmy_analysis.enforce_numeric(["sueldo_mensual_bruto_ars"])
+
 print(sysarmy_analysis)
+
 # sysarmy_analysis.describe(graph=True)
 
 numeric_types = ["int32", "int64", "float32", "float64"]
@@ -177,28 +131,30 @@ str_to_replace = {
     "0":"",
 }
 sysarmy_analysis.unify_cols(cols_to_unify, "tecnologies", str_to_replace)
-
-sysarmy_analysis.remove_cols(cols_to_unify)
-
-sysarmy_analysis.enforce_numeric(["sueldo_mensual_bruto_ars"])
+sysarmy_analysis.drop_cols(cols_to_unify)
 
 # sysarmy_analysis.explore()
 sysarmy_analysis.describe(graph=True)
+
+
+# Handle zeros
+col_fix_zeros = "sueldo_mensual_bruto_ars"
+sysarmy_analysis.handle_zeros([col_fix_zeros], method="median")
 
 
 # Handle missings
 cols_check_missings = list(sysarmy_analysis.dataset.columns)
 
 col_fix_missings = "guardias"
-sysarmy_analysis.replace_missing([col_fix_missings], method="contant", constant="No")
+sysarmy_analysis.handle_missing([col_fix_missings], method="constant", constant="No")
 cols_check_missings.remove(col_fix_missings)
 
 col_fix_missings = "pandemia_percepcion"
-sysarmy_analysis.replace_missing([col_fix_missings], method="median")
+sysarmy_analysis.handle_missing([col_fix_missings], method="median")
 cols_check_missings.remove(col_fix_missings)
 
 col_fix_missings = "sueldo_mensual_bruto_ars"
-sysarmy_analysis.replace_missing([col_fix_missings], method="median")
+sysarmy_analysis.handle_missing([col_fix_missings], method="median")
 cols_check_missings.remove(col_fix_missings)
 
 cols_fix_missings = [
@@ -209,17 +165,22 @@ cols_fix_missings = [
     "contribucion_open_source",
     "programacion_hobbie",
 ]
-sysarmy_analysis.replace_missing([cols_fix_missings], method="contant", constant="No responde")
+sysarmy_analysis.handle_missing([cols_fix_missings], method="constant", constant="No responde")
 cols_check_missings = [i for i in cols_check_missings if i not in cols_fix_missings]
 
-sysarmy_analysis.replace_missing(cols_check_missings, method="remove")
+sysarmy_analysis.handle_missing(cols_check_missings, method="drop")
 
 
-# Remove column with special case
-cols_numeric.remove("personas_a_cargo") # The "outliers" here are real values
-# sysarmy_analysis.replace_outliers(cols_numeric, method="drop_iqr")
-sysarmy_analysis.replace_outliers(["pandemia_percepcion"], method="drop_iqr")
-sysarmy_analysis.replace_outliers(["personas_a_cargo"], method="drop_5_95")
+# Handle outliers
+# Assume that a salary less than 10000 ARS is not possible (less than minimum wage)
+# so it refers to a value in dollars
+# TODO: does it worth to be in data_process.py?
+col = "sueldo_mensual_bruto_ars"
+sysarmy_analysis.dataset[col] = np.where(sysarmy_analysis.dataset[col] <= 10000, sysarmy_analysis.dataset[col] * USD_ARS, sysarmy_analysis.dataset[col])
+
+cols_numeric.remove("personas_a_cargo") # The "outliers" here are real values so another method is used
+sysarmy_analysis.handle_outliers(cols_numeric, method="drop_iqr")
+sysarmy_analysis.handle_outliers(["personas_a_cargo"], method="drop_5_95")
 cols_numeric.append("personas_a_cargo")
 
 sysarmy_analysis.describe(graph=True)
@@ -227,6 +188,7 @@ sysarmy_analysis.describe(graph=True)
             
 # ----------------------------------------------------------------------------------
 # Data processing
+# ----------------------------------------------------------------------------------
 all_cols_to_standard = cols_numeric
 
 cols_to_standard = [
@@ -238,9 +200,12 @@ cols_to_standard = [
     "sueldo_mensual_bruto_ars",
     "sueldo_ajuste_total_2021",
     "recomendacion_laboral",
-    "politicas_diversidad"
+    "politicas_diversidad",
+    "pandemia_percepcion",
 ]
 sysarmy_analysis.standardize(cols_to_standard, "z_score")
+
+
 
 # Dimensionality reduction using PCA:
 # Applies only for numeric columns, requieres standardized values
