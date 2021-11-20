@@ -326,6 +326,8 @@ class DataProcess(object):
     def standardize(self, cols, method="z_score"):
         if method == "z_score":
             for col in cols:
+                # TODO: Confirm that this transformation is working correctly
+                # it doesn't look like is working with column "experiencia_anios"
                 self.dataset[col] = (self.dataset[col] - self.dataset[col].mean() / self.dataset[col].std())
             self.is_standardize = True            
         elif method == "0-1":
@@ -355,7 +357,7 @@ class DataProcess(object):
 
             if visualize and final_number_dims == 2:
                 x = self.dataset["PC1"]
-                y = self.dataset["PC2"]        
+                y = self.dataset["PC2"]
                 scalex = 1.0/(x.max() - x.min())
                 scaley = 1.0/(y.max() - y.min())
                 coeff = np.transpose(pca.components_)

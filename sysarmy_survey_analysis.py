@@ -194,17 +194,24 @@ all_cols_to_standard = cols_numeric
 cols_to_standard = [
     "edad", 
     "experiencia_anios" ,
-    "empresa_actual_anios", 
+    "empresa_actual_anios",
     "personas_a_cargo",
     "sueldo_conformidad",
-    "sueldo_mensual_bruto_ars",
-    "sueldo_ajuste_total_2021",
+    # "sueldo_mensual_bruto_ars", 
+    # "sueldo_ajuste_total_2021", 
     "recomendacion_laboral",
     "politicas_diversidad",
     "pandemia_percepcion",
 ]
 sysarmy_analysis.standardize(cols_to_standard, "z_score")
 
+
+# Bartlett test to know if PCA could be done
+import scipy.stats as stats
+stats.bartlett(*[sysarmy_analysis.dataset[col].tolist() for col in cols_to_standard])
+# BartlettResult(statistic=774806.2025723966, pvalue=0.0)
+# According to the pvalue (less than 0.05) we have enough evidence to reject the null
+# hypotesis hence the variances is different among all the numeric (continuos) variables
 
 
 # Dimensionality reduction using PCA:

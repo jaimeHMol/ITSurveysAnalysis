@@ -17,7 +17,7 @@ sysarmy_analysis = DataProcess(sysarmy_survey, 'csv')
 # Data refine and exploration
 print(sysarmy_analysis)
 
-cols_to_remove = [
+cols_to_drop = [
     'Estoy trabajando en',
     'Años en el puesto actual',
     'Cuánto cobrás por guardia',
@@ -32,12 +32,12 @@ cols_to_remove = [
     '¿Cuáles considerás que son las mejores empresas de IT para trabajar en este momento, en tu ciudad?',
     'QA / Testing',
     'Sueldo dolarizado?',
-    'Trabajo de', # Don't remove if you want to do a gender analysis
-    'Orientación sexual', # Don't remove if you want to do a diversity analysis
+    'Trabajo de', # Don't drop if you want to do a gender analysis
+    'Orientación sexual', # Don't drop if you want to do a diversity analysis
     'Carrera',
     'Universidad',
 ]
-sysarmy_analysis.remove_cols(cols_to_remove)
+sysarmy_analysis.drop_cols(cols_to_drop)
 print(sysarmy_analysis)
 
 cols_to_rename = {
@@ -102,18 +102,18 @@ str_to_replace = {
 }
 sysarmy_analysis.unify_cols(cols_to_unify, 'tecnologies', str_to_replace)
 
-sysarmy_analysis.remove_cols(cols_to_unify)
+sysarmy_analysis.drop_cols(cols_to_unify)
 
 # sysarmy_analysis.explore()
 sysarmy_analysis.describe(graph=True)
 
 all_cols = list(sysarmy_analysis.dataset.columns)
-sysarmy_analysis.replace_missing(all_cols, method='remove')
+sysarmy_analysis.handle_missing(all_cols, method='drop')
 
 # Remove column with special case
 cols_numeric.remove('personas_a_cargo')
-sysarmy_analysis.replace_outliers(cols_numeric, method='drop_iqr')
-sysarmy_analysis.replace_outliers(['personas_a_cargo'], method='drop_5_95')
+sysarmy_analysis.handle_outliers(cols_numeric, method='drop_iqr')
+sysarmy_analysis.handle_outliers(['personas_a_cargo'], method='drop_5_95')
 cols_numeric.append('personas_a_cargo')
 
 sysarmy_analysis.describe(graph=True)
