@@ -34,8 +34,8 @@ class DataProcess(object):
         self.path = path
         self.input_file_name = path.stem
         self.input_file_format = format
-        self.dataset_raw = dataset
-        self.dataset = self.dataset_raw
+        self.dataset = dataset
+        self.dataset_raw = dataset.copy(deep=True)
         
         # TOIMPROVE: Fill this in a more comprehensive way.
         self.is_standardize = False
