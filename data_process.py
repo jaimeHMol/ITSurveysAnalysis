@@ -509,6 +509,9 @@ class DataProcess(object):
             nclusters_best = silhouette_eps_ncluster.get(max(silhouette_eps_ncluster.keys()), -1)[1]
             print(f"Best number of clusters using Silhouette over multiple eps: {nclusters_best}")
             print("")
+
+            # TODO: Add column with the id of the cluster each row belongs to
+            # TODO: Implement scatter plot of clusters.
         else:
             raise ValueError("Clustering method not implemented.")
         

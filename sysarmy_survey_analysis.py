@@ -257,12 +257,17 @@ print("R2 coefficient: ")
 print(reg.score(xs[cols_numeric], y))
 
 # get importance
-importance = reg.coef_
-# summarize feature importance. # TODO: Use features names.
-for i,v in enumerate(importance):
-	print("Feature: %0d, Score: %.5f" % (i,v))
+importances = reg.coef_
+# summarize feature importance.
+cols_importance = list(zip(cols_numeric, importances))
+cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
+
+for col, importance in cols_importance_ordered:
+	print(f"Feature: {col}, Score: {importance}")
 # plot feature importance
-plt.bar([x for x in range(len(importance))], importance)
+
+plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
+plt.xticks(rotation=90)
 plt.show()
 
 
