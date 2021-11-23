@@ -178,13 +178,15 @@ class DataProcess(object):
             self.dataset[col] = pd.to_numeric(self.dataset[col], errors="coerce")
 
 
+    def replace_str_in_col(self, col, str_to_replace):
+        for str_find, str_rep in str_to_replace.items():
+            self.dataset[col] = self.dataset[col].apply(lambda x: str(x).replace(str_find, str_rep))
+
+
     def unify_cols(self, cols, new_col, str_to_replace={";":"", ".":""}):
         for col in cols:
-            self.dataset[col] = self.dataset[col].replace(np.nan, "").str.strip().str.lower()
-            
-            for str_find, str_rep in str_to_replace.items():
-                self.dataset[col] = self.dataset[col].apply(lambda x: x.replace(str_find, str_rep))
-
+            self.dataset[col] = self.dataset[col].replace(np.nan, "").str.strip().str.lower()       
+            self.replace_str_in_col(col, str_to_replace)
         self.dataset[new_col] = self.dataset[cols].agg(",".join, axis=1)
 
 

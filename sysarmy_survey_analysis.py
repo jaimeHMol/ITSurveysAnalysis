@@ -97,13 +97,13 @@ sysarmy_analysis.rename_cols(cols_to_rename)
 sysarmy_analysis.enforce_numeric(["sueldo_mensual_bruto_ars"])
 
 print(sysarmy_analysis)
-
 # sysarmy_analysis.describe(graph=True)
 
 numeric_types = ["int32", "int64", "float32", "float64"]
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
 
+# Create tecnologies column unifying multiple related columns
 cols_to_unify = [
     "Plataformas",
     "Lenguajes de programación o tecnologías.", 
@@ -111,7 +111,7 @@ cols_to_unify = [
     "Bases de datos",
     "IDEs"
 ]
-str_to_replace = {
+tecs_to_replace = {
     "ninguna de las anteriores": "", 
     "ninguno de los anteriores": "",
     "ninguno": "", 
@@ -130,8 +130,170 @@ str_to_replace = {
     "-":"",
     "0":"",
 }
-sysarmy_analysis.unify_cols(cols_to_unify, "tecnologies", str_to_replace)
+sysarmy_analysis.unify_cols(cols_to_unify, "tecnologies", tecs_to_replace)
 sysarmy_analysis.drop_cols(cols_to_unify)
+
+# Unify the multiple ways to referer to the gender, since the goal of this analysis is
+# focus on the salary but not in diversity.
+genders_to_replace = {
+    "Varón (Supongo que Cis, no se que significa)": "Masculino",
+    "Varon heterosexual de pelo en pecho no entiendo que es cis corrigan eso": "Masculino",
+    "Varon Heterosexual blanco, Agorista, Anarquista, Liberal": "Masculino",
+    "Hombre. Punto. 🤦🏻\u200d♂️ Son impresentable con este punto ": "Masculino",
+    "Me rompe los huevos estas opciones. Soy masculino": "Masculino",
+    "no se entiendo! Soy hombre, heterosexual y  me gustan las minas": "Masculino",
+    "Hombre (hay solo 2 generos biologicos y no deberian discriminar por preferencias sexuales, no aporta al supuesto gender pay gap)": "Masculino",
+    "biológicamente hombre": "Masculino",
+    "wtf es esto? hombre": "Masculino",
+    "Macho lomo plateado": "Masculino",
+    "Masculino macho": "Masculino",
+    "Varon la puta madre": "Masculino",
+    "Hombre normal heterosexual": "Masculino",
+    "Hombre heterosexual": "Masculino",
+    "Hombre Heterosexual": "Masculino",
+    "Masculino no pregunten pendejadas": "Masculino",
+    "Varon, a secas, me gustan las mujeres, cortemos con la boludes": "Masculino",
+    "que pelotudos, soy masculino": "Masculino",
+    "Hombre nada de Cis ": "Masculino",
+    "Me indentifico como Masculino, uno de los dos sexos que existen.": "Masculino",
+    "varon heterosexual ": "Masculino",
+    "Varon heterosexual": "Masculino",
+    "Hombre, no inventen boludeces": "Masculino",
+    "Hombre, zurdos pelotudos no inventen la rueda": "Masculino",
+    "una ridiculez esta pregunta. Me es difícil entender donde poner que soy HOMBRE": "Masculino",
+    "Hombre, man, ¿qué son todos esos términos? ": "Masculino",
+    'Para q preguntan esto??? Que tiene q ver??? Nací con pito, por eso soy hombre. Tan dificil es??? Ademas, a quien le importa como te "identificas"???': "Masculino",
+    '"Que le fue asignado al nacer"?? WTF? Tengo pito y me gustan las chicas. Lo que hace miles de años se conocía como: Hombre': "Masculino",
+    "Macho alfa estilo cosaco": "Masculino",
+    "El varon comun y corriente. No se que opcion es": "Masculino",
+    "Que es todo esto? Tengo huevos y me gustan las mujeres.": "Masculino",
+    "Hombre bisexual": "Masculino",
+    "Masculino y punto": "Masculino",
+    "soy hombre LRPMQTP": "Masculino",
+    "Helicoptero apache (nah mentira, soy hombre)": "Masculino",
+    "Mujer/Fememino/Humano hembra. No se cual opción de arriba sería.": "Femenino",
+    "MUJER SEXO FEMENINO DEJENSE DE JODER CON GENERO, ES SEXO!!! EN DONDE VAMOS A TERMINAR CON ESTAS PAVADAS DIO MIO!!!": "Femenino",
+    "Mujer ¯\\_(ツ)_/¯ ·": "Femenino",
+    "UNA PERONOLA GIRANDO EN CUATRO DIMENSIONES": "No responde",
+    "Tortuga Ninja": "No responde",
+    "Prefiero no decir": "No responde",
+    "Ni idea, no le doy hola a esas cosas.": "No responde",
+    "Deberian colocar ademas de todo lo incluyente el clasico hombre y mujer": "No responde",
+    "alienigena.. que carajo es esto? en serio.": "No responde",
+    "no se que significa cada opción, así que no se": "No responde",
+    "Me identifico por mi nombre y apellido.": "No responde",
+    "Me autopercibo jirafa": "No responde",
+    "Chupala": "No responde",
+    "Normal, no raro como otros": "No responde",
+    "no me interesa los cartelitos": "No responde",
+    "Que quilombo esto de los generos": "No responde",
+    "No entiendo esta pregunta": "No responde",
+    "Un galline no binario": "No responde",
+    "ESTO ES DISCRIMINAR, NO SE PUEDE UTILIZAR ESTA INFORMACIÓN PARA GENERAR ESTADISTICAS": "No responde",
+    "QUE PREGUNTA PELOTUDA": "No responde",
+    "really? siguen con esta boludez?": "No responde",
+    "que es esto????": "No responde",
+    "helicoptero de ataque": "No responde",
+    "helicóptero de combate": "No responde",
+    "Helicóptero de combate": "No responde",
+    "Helicoptero de combate": "No responde",
+    "Que ganas de joder con estas pavadas :P": "No responde",
+    "Algunos días como salame": "No responde",
+    "que carajo es CIS? estan locos? sales de la panza y te ponen el genero?? esto se sale de control!!!": "No responde",
+    "basta de boludeces": "No responde",
+    "Que tiene que ver": "No responde",
+    "Es complicado": "No responde",
+    "Solo hay 2 sexos hombre o mujer.": "No responde",
+    "Esto es una mierda": "No responde",
+    "Casi Normal": "No responde",
+    "Un ornitorrinco pelotudos": "No responde",
+    "naaaaaaaaaaaaaaaaaaaaaaaaa": "No responde",
+    "Yo soy un pollo Marge!": "No responde",
+    "Solo hay 2 sexos hombre o mujer.": "No responde",
+    "furro (no hay pregunta más estúpida que ésta? acaso les paga algún colectivo LGTBQI? jajaja": "No responde",
+    "JAJAJAJA seriedad por favor....": "No responde",
+    "alienigena.. que carajo es estoOtro en serio.": "No responde",
+    "non binarie plus lgbt q + system.debug": "No responde",
+    "Sapiosexual (Bi).": "No responde",
+    "Que pelotudes": "No responde",
+    "Chevy camaro": "No responde",
+    "Cis? O sea no quieren etiquetas y me tengo que poner una etiqueta": "No responde",
+    "No entiendo": "No responde",
+    "Helicóptero Apache": "No responde",
+    "Dejen de pelotudear con estás pijas": "No responde",
+    "Oso panda rengo": "No responde",
+    "muy heterosexual": "No responde",
+    "A mi no me asignaron nada. Nací como la biología de mi madre se le ocurrió crearme.": "No responde",
+    "Que clase de pregunta es esta, importa lo que uno es o lo que uno sabe, soy felizmente casado con una maravillosa mujer con 3 hijas hermosas.": "No responde",
+    "Fiat uno": "No responde",
+    "No vendan humo con este tipo de opciones, no se paren arriba de la naturaleza.": "No responde",
+    "QUE ESTA MIERDA": "No responde",
+    "no encuentro la clasificacion con la que me identifico, y no pienso usar la clasificacion que pretenden": "No responde",
+    "Persona normal": "No responde",
+    "Que te importa": "No responde",
+    "No binarie": "Otro",
+    "Ni idea, creia que era Hetero, pero bisexual me gusta mas": "Otro",
+    "Genderqueer, y la pregunta anterior está mal redactada: o indican orientación o indican identidad de género (o separan en dos preguntas)": "Otro",
+    "Agénero": "Otro",
+    "Trans queer": "Otro",
+    "Mujer Trans": "Otro",
+    "Varón Trans": "Otro",
+    "Mujer Pan": "Femenino",
+    "Soy Varon": "Masculino",
+    "macho alfa": "Masculino",
+    "Varón Cis": "Masculino",
+    "Femenino Trans": "Otro",
+    "Hombre masculino": "Masculino",
+    "hombre macho": "Masculino",
+    "Masculino Trans": "Otro",
+    "Macho Alfa": "Masculino",
+    "Mujer Cis": "Femenino",
+    "Mujer NB": "Femenino",
+    "cactus": "No responde",
+    "Enserio?": "No responde",
+    "Bisexual": "No responde",
+    "Travesti": "Otro",
+    "Tester": "No responde",
+    "Lesbiana": "No responde",
+    "Normal": "No responde",
+    "1": "No responde",
+    "Oteo": "Otro",
+    "cis": "Otro",
+    "quetimporta": "No responde",
+    "Humano": "No responde",
+    "Mujer.": "Femenino",
+    "hetero": "No responde",
+    "Mujer": "Femenino",
+    "Gay": "No responde",
+    "Femenino ": "Femenino",
+    "marica": "No responde",
+    "Hola": "No responde",
+    "Irrelevante": "No responde",
+    "BI": "Otro",
+    "Hombre???": "No responde",
+    "FemeninoTrans": "Otro",
+    "MACHO": "Masculino",
+    "nene": "Masculino",
+    "Hombre": "Masculino",
+    "hombre": "Masculino",
+    "Hombre ": "Masculino",
+    "HOMBRE ": "Masculino",
+    "HOMBRE": "Masculino",
+    "Varón": "Masculino",
+    "Varon": "Masculino",
+    "varon": "Masculino",
+    "poyi": "No responde",
+    "Hetero": "No responde",
+    "nan": "No responde",
+    "Masculino ": "Masculino",
+    "Varón ": "Masculino",
+    ".": "No responde",
+    "x": "No responde",
+    "?": "Otro",
+}
+sysarmy_analysis.replace_str_in_col("genero", genders_to_replace)
+sysarmy_analysis.dataset["genero"].unique()
+
 
 # sysarmy_analysis.explore()
 sysarmy_analysis.describe(graph=True)
@@ -248,6 +410,7 @@ cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
 cols_numeric.remove(var_to_predict)
 cols_numeric.remove("PC1")
 cols_numeric.remove("PC2")
+# cols_numeric = ["PC1", "PC2"]
 
 y = sysarmy_analysis.dataset[var_to_predict]
 reg = LinearRegression()
@@ -264,8 +427,8 @@ cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
 
 for col, importance in cols_importance_ordered:
 	print(f"Feature: {col}, Score: {importance}")
-# plot feature importance
 
+# plot feature importance
 plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
 plt.xticks(rotation=90)
 plt.show()
