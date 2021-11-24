@@ -81,7 +81,7 @@ class DataProcess(object):
                 print("")
         if graph:
             numeric_types = ["int32", "int64", "float32", "float64"]
-            categoric_types = ["object"]
+            categoric_types = ["object", "category"]
             cols_by_type = self.group_cols_by_type()
             cols_numeric = self.get_cols_by_type(cols_by_type, numeric_types)
             cols_categoric = self.get_cols_by_type(cols_by_type, categoric_types)

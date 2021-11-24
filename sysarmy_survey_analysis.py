@@ -99,7 +99,7 @@ sysarmy_analysis.enforce_numeric(["sueldo_mensual_bruto_ars"])
 print(sysarmy_analysis)
 # sysarmy_analysis.describe(graph=True)
 
-numeric_types = ["int32", "int64", "float32", "float64"]
+numeric_types = ["int8", "int16", "int32", "int64", "float8", "float16", "float32", "float64"]
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
 
@@ -292,7 +292,10 @@ genders_to_replace = {
     "?": "Otro",
 }
 sysarmy_analysis.replace_str_in_col("genero", genders_to_replace)
-sysarmy_analysis.dataset["genero"].unique()
+
+# TODO: Move this to data_process
+import pandas as pd
+sysarmy_analysis.dataset["genero_num"] = pd.Categorical(sysarmy_analysis.dataset.genero).codes
 
 
 # sysarmy_analysis.explore()
