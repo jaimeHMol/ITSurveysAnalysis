@@ -293,10 +293,7 @@ genders_to_replace = {
 }
 sysarmy_analysis.replace_str_in_col("genero", genders_to_replace)
 
-# TODO: Move this to data_process
-import pandas as pd
-sysarmy_analysis.dataset["genero_num"] = pd.Categorical(sysarmy_analysis.dataset.genero).codes
-
+sysarmy_analysis.categories_to_num(cols=["genero"])
 
 # sysarmy_analysis.explore()
 sysarmy_analysis.describe(graph=True)
@@ -337,7 +334,7 @@ sysarmy_analysis.handle_missing(cols_check_missings, method="drop")
 
 
 # Handle outliers
-# Assume that a salary less than 10000 ARS is not possible (less than minimum wage)
+# Assume that a salary less than 10000 ARS is not possible (much less than minimum wage)
 # so it refers to a value in dollars
 # TODO: does it worth to be in data_process.py?
 col = "sueldo_mensual_bruto_ars"
@@ -363,7 +360,7 @@ cols_to_standard = [
     "personas_a_cargo",
     "sueldo_conformidad",
     # "sueldo_mensual_bruto_ars", 
-    # "sueldo_ajuste_total_2021", 
+    "sueldo_ajuste_total_2021", 
     "recomendacion_laboral",
     "politicas_diversidad",
     "pandemia_percepcion",

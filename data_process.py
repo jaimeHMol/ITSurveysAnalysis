@@ -80,7 +80,7 @@ class DataProcess(object):
                 print(self.dataset[col].describe())
                 print("")
         if graph:
-            numeric_types = ["int32", "int64", "float32", "float64"]
+            numeric_types = ["int8", "int16", "int32", "int64", "float8", "float16", "float32", "float64"]
             categoric_types = ["object", "category"]
             cols_by_type = self.group_cols_by_type()
             cols_numeric = self.get_cols_by_type(cols_by_type, numeric_types)
@@ -176,6 +176,11 @@ class DataProcess(object):
     def enforce_numeric(self, cols):
         for col in cols:
             self.dataset[col] = pd.to_numeric(self.dataset[col], errors="coerce")
+
+
+    def categories_to_num(self, cols):
+        for col in cols:
+            self.dataset[f"{col}_num"] = pd.Categorical(self.dataset[col]).codes
 
 
     def replace_str_in_col(self, col, str_to_replace):
