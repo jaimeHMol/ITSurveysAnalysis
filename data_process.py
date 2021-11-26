@@ -6,9 +6,11 @@ import math
 
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
-from sklearn_extra.cluster import KMedoids
 from sklearn.cluster import DBSCAN
+from sklearn_extra.cluster import KMedoids
 from sklearn.metrics import silhouette_score
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
 from kneed import KneeLocator
 from pandas_profiling import ProfileReport
 import webbrowser
@@ -19,6 +21,8 @@ class DataProcess(object):
     """Class with all the methods required in a typical data science pipeline
     """
     # pandas.options.mode.use_inf_as_na = True
+    numeric_types = ["int8", "int16", "int32", "int64", "float8", "float16", "float32", "float64"]
+    categoric_types = ["object", "category"]
 
     def __init__(self, path, format="csv"):
         """ Constructor of the data process class.
@@ -80,11 +84,9 @@ class DataProcess(object):
                 print(self.dataset[col].describe())
                 print("")
         if graph:
-            numeric_types = ["int8", "int16", "int32", "int64", "float8", "float16", "float32", "float64"]
-            categoric_types = ["object", "category"]
             cols_by_type = self.group_cols_by_type()
-            cols_numeric = self.get_cols_by_type(cols_by_type, numeric_types)
-            cols_categoric = self.get_cols_by_type(cols_by_type, categoric_types)
+            cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
+            cols_categoric = self.get_cols_by_type(cols_by_type, self.categoric_types)
 
             self.graph_numeric_cols(cols_numeric)
             self.graph_categoric_cols(cols_categoric)
@@ -533,7 +535,38 @@ class DataProcess(object):
 
         self.dataset = pd.concat([self.dataset, top_dummy_df], axis=1, sort=False)
 
-  
+
+    def linear_regresion(self, col_to_predict, cols_to_remove=[], graph=True):
+        cols_by_type = self.group_cols_by_type()
+        cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
+        xs = self.dataset.drop([col_to_predict], axis=1)
+        cols_numeric.remove(col_to_predict)
+        for col in cols_to_remove:
+            cols_numeric.remove(col)
+
+        y = self.dataset[col_to_predict]
+        reg = LinearRegression()
+        reg.fit(xs[cols_numeric], y)
+        print("")
+        print("R2 coefficient: ")
+        print(reg.score(xs[cols_numeric], y))
+
+        # get importance
+        importances = reg.coef_
+        # summarize feature importance.
+        cols_importance = list(zip(cols_numeric, importances))
+        cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
+
+        for col, importance in cols_importance_ordered:
+            print(f"Feature: {col}, Score: {importance}")
+
+        if graph:
+            plt.title("Feature Importance")
+            plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
+            plt.xticks(rotation=90)
+            plt.show()
+
+
     def reset (self):
         self.__init__(self.path, self.input_file_format)
 
