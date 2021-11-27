@@ -294,6 +294,15 @@ genders_to_replace = {
 sysarmy_analysis.replace_str_in_col("genero", genders_to_replace)
 
 sysarmy_analysis.categories_to_num(cols=["genero"])
+sysarmy_analysis.categories_to_num(cols=["violencia_laboral"])
+sysarmy_analysis.categories_to_num(cols=["tipo_contrato"])
+sysarmy_analysis.categories_to_num(cols=["max_nivel_estudios"])
+sysarmy_analysis.categories_to_num(cols=["cursos_especializacion"])
+sysarmy_analysis.categories_to_num(cols=["guardias"])
+sysarmy_analysis.categories_to_num(cols=["sueldo_bonos"])
+sysarmy_analysis.categories_to_num(cols=["sueldo_ajuste_2021"])
+sysarmy_analysis.categories_to_num(cols=["contribucion_open_source"])
+sysarmy_analysis.categories_to_num(cols=["programacion_hobbie"])
 
 # sysarmy_analysis.explore()
 sysarmy_analysis.describe(graph=True)
@@ -394,49 +403,11 @@ sysarmy_analysis.clusterization(
 sysarmy_analysis.dummy_cols_from_text(col="tecnologies", sep=",", n_cols=15)
 print(sysarmy_analysis)
 
-
 sysarmy_analysis.linear_regresion(
     col_to_predict="sueldo_mensual_bruto_ars", 
     cols_to_remove=["PC1", "PC2"], 
     graph=True
 )
-
-# import pandas as pd
-# from sklearn.linear_model import LinearRegression
-# from sklearn.metrics import r2_score
-# import matplotlib.pyplot as plt
-# # import statsmodels.api as sm
-
-# var_to_predict = "sueldo_mensual_bruto_ars"
-# xs = sysarmy_analysis.dataset.drop([var_to_predict], axis=1)
-
-# cols_by_type = sysarmy_analysis.group_cols_by_type()
-# cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
-# cols_numeric.remove(var_to_predict)
-# cols_numeric.remove("PC1")
-# cols_numeric.remove("PC2")
-# # cols_numeric = ["PC1", "PC2"]
-
-# y = sysarmy_analysis.dataset[var_to_predict]
-# reg = LinearRegression()
-# reg.fit(xs[cols_numeric], y)
-# print("")
-# print("R2 coefficient: ")
-# print(reg.score(xs[cols_numeric], y))
-
-# # get importance
-# importances = reg.coef_
-# # summarize feature importance.
-# cols_importance = list(zip(cols_numeric, importances))
-# cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
-
-# for col, importance in cols_importance_ordered:
-# 	print(f"Feature: {col}, Score: {importance}")
-
-# # plot feature importance
-# plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
-# plt.xticks(rotation=90)
-# plt.show()
 
 
 # ----------------------------------------------------------------------------------
