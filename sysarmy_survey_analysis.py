@@ -367,7 +367,7 @@ cols_to_standard = [
     "experiencia_anios" ,
     "empresa_actual_anios",
     "personas_a_cargo",
-    "sueldo_conformidad",
+    # "sueldo_conformidad",
     # "sueldo_mensual_bruto_ars", 
     "sueldo_ajuste_total_2021", 
     "recomendacion_laboral",

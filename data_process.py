@@ -1,3 +1,4 @@
+import logging
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
 import numpy as np
@@ -16,6 +17,7 @@ from pandas_profiling import ProfileReport
 import webbrowser
 
 # TOIMPROVE: Add optional argument "cols" to all the method that do some process over the self.dataset
+logger = logging.getLogger(__name__)
 
 class DataProcess(object):
     """Class with all the methods required in a typical data science pipeline
@@ -49,10 +51,10 @@ class DataProcess(object):
 
 
     def __str__(self):
-        # print("Position | Column name:")
+        # logger.info("Position | Column name:")
         # for index, col in enumerate(self.dataset.columns):
-        #     print(f"{index} | {col}")
-        # print()
+        #     logger.info(f"{index} | {col}")
+        # logger.info()
         # total_rows = len(self.dataset.index)
         # total_col = len(self.dataset.columns)
         # return f"Data frame with {total_col} columns and {total_rows} rows in total"
@@ -78,11 +80,11 @@ class DataProcess(object):
             self.dataset.describe(include="all")
         else:
             for col in self.dataset.columns:
-                print("="*27)
-                print(col)
-                print("="*27)
-                print(self.dataset[col].describe())
-                print("")
+                logger.info("="*27)
+                logger.info(col)
+                logger.info("="*27)
+                logger.info(self.dataset[col].describe())
+                logger.info("")
         if graph:
             cols_by_type = self.group_cols_by_type()
             cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
@@ -98,7 +100,7 @@ class DataProcess(object):
         for index, col in enumerate(cols_numeric):
             values = self.dataset[col]
             if values.isnull().values.any():
-                print(f"WARNING: The column {col} has NaN values that were dropped just to build the box plot.")
+                logger.info(f"WARNING: The column {col} has NaN values that were dropped just to build the box plot.")
                 values = values.dropna()
             axs[index].set_title(f"{col} - type: {values.dtype}")
             axs[index].boxplot(values, vert=False)
@@ -218,27 +220,27 @@ class DataProcess(object):
         rows with one or more NaN will be deleted from the dataset.
         """
         # HINT: Be careful with datetime columns, since they use NaT instead of NaN
-        print("")
+        logger.info("")
         for col in cols:
             na_count = self.dataset[col].isna().sum()
             if method == "mode":
                 current_mode = self.dataset[col].mode(dropna=True)
                 self.dataset[col] = self.dataset[col].fillna(current_mode)
-                print(f"Warning! {na_count} values replaced in column {col} because missing values.")
+                logger.warning(f"{na_count} values replaced in column {col} because missing values.")
             elif method == "mean":
                 current_mean = self.dataset[col].mean()
                 self.dataset[col] = self.dataset[col].fillna(current_mean)
-                print(f"Warning! {na_count} values replaced in column {col} because missing values.")
+                logger.warning(f"{na_count} values replaced in column {col} because missing values.")
             elif method == "median":
                 current_median = self.dataset[col].median()
                 self.dataset[col] = self.dataset[col].fillna(current_median)
-                print(f"Warning! {na_count} values replaced in column {col} because missing values.")
+                logger.warning(f"{na_count} values replaced in column {col} because missing values.")
             elif method == "drop":
                 self.dataset = self.dataset.dropna(subset=[col])
-                print(f"Warning! {na_count} rows dropped because missing values in column {col}.")
+                logger.warning(f"{na_count} rows dropped because missing values in column {col}.")
             elif method == "constant" and constant:
                 self.dataset[col] = self.dataset[col].fillna(constant)
-                print(f"Warning! {na_count} values replaced in column {col} because missing values.")
+                logger.warning(f"{na_count} values replaced in column {col} because missing values.")
             else:
                 raise ValueError("Replace missing values method not implemented or required input not provided.")
 
@@ -247,14 +249,14 @@ class DataProcess(object):
         """ Look for outliers and handle them according to the method received.
             Only works for numeric columns
         """
-        print("")
+        logger.info("")
         numeric_cols = (col for col in cols if is_numeric_dtype(self.dataset[col]))
         for col in numeric_cols:        
             row_count_ini = len(self.dataset[col])
             skew = self.dataset[col].skew()
-            print(f"Column {col} original skew value: {skew}")
+            logger.info(f"Column {col} original skew value: {skew}")
             if -1 < skew < 1:
-                print(f"Column {col} doesn't seem to have outliers (regular skew value between -1 and 1. Assuming data have normal distribution.")                
+                logger.info(f"Column {col} doesn't seem to have outliers (regular skew value between -1 and 1. Assuming data have normal distribution.")                
                 continue
 
             if method == "replace_10_90_min_max":
@@ -276,14 +278,14 @@ class DataProcess(object):
                 self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f"Warning! {row_count_dif} rows dropped because outliers in column {col}.")
+                logger.warning(f"{row_count_dif} rows dropped because outliers in column {col}.")
             elif method == "drop_5_95":
                 min = self.dataset[col].quantile(0.05)
                 max = self.dataset[col].quantile(0.95)
                 self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f"Warning! {row_count_dif} rows dropped  because outliers in column {col}.")
+                logger.warning(f"{row_count_dif} rows dropped  because outliers in column {col}.")
             elif method == "drop_iqr":
                 q1 = self.dataset[col].quantile(0.25)
                 q3 = self.dataset[col].quantile(0.75)
@@ -293,18 +295,18 @@ class DataProcess(object):
                 self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f"Warning! {row_count_dif} rows dropped because outliers in column {col}.")
+                logger.warning(f"{row_count_dif} rows dropped because outliers in column {col}.")
             else:
                 raise ValueError("Outliers handling method not implemented.")
             skew = self.dataset[col].skew()
-            print(f"Column {col} final skew value: {skew}. Between -1 and 1 the best. Assumes data have normal distribution.")
+            logger.info(f"Column {col} final skew value: {skew}. Between -1 and 1 the best. Assumes data have normal distribution.")
 
 
     def handle_zeros(self, cols, method="drop", constant=None):
         """ Look for zeros and handle them according to the method received.
             Only works for numeric columns
         """
-        print("")
+        logger.info("")
         numeric_cols = (col for col in cols if is_numeric_dtype(self.dataset[col]))
         for col in numeric_cols:      
             row_count_ini = len(self.dataset[col])
@@ -327,7 +329,7 @@ class DataProcess(object):
                 self.dataset = self.dataset.query(f"{col} != 0")
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                print(f"Warning! {row_count_dif} rows dropped because zeros in column {col}.")
+                logger.warning(f"{row_count_dif} rows dropped because zeros in column {col}.")
             else:
                 raise ValueError("Zeros handling method not implemented or required input not provided.")
 
@@ -360,9 +362,9 @@ class DataProcess(object):
             for index in range(0, final_number_dims):
                 self.dataset[f"PC{index + 1}"] = principal_components[:,index]
 
-            print("Principal components analysis finished. Explained variance ratio:")
+            logger.info("Principal components analysis finished. Explained variance ratio:")
             components_variance = ["{:.12f}".format(i)[:8] for i in pca.explained_variance_ratio_]
-            print(components_variance)
+            logger.info(components_variance)
 
             if visualize and final_number_dims == 2:
                 x = self.dataset["PC1"]
@@ -395,9 +397,9 @@ class DataProcess(object):
             raise ValueError("You should standardize your columns first.")
 
         if method == "k_means":
-            print("="*27)
-            print("Clustering using K-Means")
-            print("="*27)
+            logger.info("="*27)
+            logger.info("Clustering using K-Means")
+            logger.info("="*27)
 
             kmeans_kwargs  = {
                 "init": "random",
@@ -434,17 +436,17 @@ class DataProcess(object):
             kl = KneeLocator(range(2, 11), sse, curve="convex", direction="decreasing")
                 
             number_clusters_best = kl.elbow
-            print(f"Best number of clusters using elbow method: {number_clusters_best}")
-            print("")
-            print(f"See the graph Silhouette coefficient vs number of clusters to define \
+            logger.info(f"Best number of clusters using elbow method: {number_clusters_best}")
+            logger.info("")
+            logger.info(f"See the graph Silhouette coefficient vs number of clusters to define \
                 the best amount of clusters in your case. \
                 (Silhouette coefficient goes from -1 to 1, near to 1 is better)")
-            print("")
+            logger.info("")
 
         elif method == "k_medoids":
-            print("="*27)
-            print("Clustering using K-Medoids")
-            print("="*27)
+            logger.info("="*27)
+            logger.info("Clustering using K-Medoids")
+            logger.info("="*27)
 
             kmedoids_kwargs  = {
                 "metric": "euclidean",
@@ -478,17 +480,17 @@ class DataProcess(object):
             kl = KneeLocator(range(2, 11), sse, curve="convex", direction="decreasing")
                 
             number_clusters_best = kl.elbow
-            print(f"Best number of clusters using elbow method: {number_clusters_best}")
-            print("")
-            print(f"See the graph Silhouette coefficient vs number of clusters to define \
+            logger.info(f"Best number of clusters using elbow method: {number_clusters_best}")
+            logger.info("")
+            logger.info(f"See the graph Silhouette coefficient vs number of clusters to define \
                 the best amount of clusters in your case. \
                 (Silhouette coefficient goes from -1 to 1, near to 1 is better)")
-            print("")
+            logger.info("")
 
         elif method == "dbscan":
-            print("="*27)
-            print("Clustering using DBScan")
-            print("="*27)
+            logger.info("="*27)
+            logger.info("Clustering using DBScan")
+            logger.info("="*27)
 
             silhouette_eps_ncluster = {}
             for eps in np.linspace(0.1, 4, 10):
@@ -516,8 +518,8 @@ class DataProcess(object):
                 plt.show()
 
             nclusters_best = silhouette_eps_ncluster.get(max(silhouette_eps_ncluster.keys()), -1)[1]
-            print(f"Best number of clusters using Silhouette over multiple eps: {nclusters_best}")
-            print("")
+            logger.info(f"Best number of clusters using Silhouette over multiple eps: {nclusters_best}")
+            logger.info("")
 
             # TODO: Add column with the id of the cluster each row belongs to
             # TODO: Implement scatter plot of clusters.
@@ -547,9 +549,9 @@ class DataProcess(object):
         y = self.dataset[col_to_predict]
         reg = LinearRegression()
         reg.fit(xs[cols_numeric], y)
-        print("")
-        print("R2 coefficient: ")
-        print(reg.score(xs[cols_numeric], y))
+        logger.info("")
+        logger.info("R2 coefficient: ")
+        logger.info(reg.score(xs[cols_numeric], y))
 
         # get importance
         importances = reg.coef_
@@ -558,7 +560,7 @@ class DataProcess(object):
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
 
         for col, importance in cols_importance_ordered:
-            print(f"Feature: {col}, Score: {importance}")
+            logger.info(f"Feature: {col}, Score: {importance}")
 
         if graph:
             plt.title("Feature Importance")
