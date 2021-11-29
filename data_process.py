@@ -18,21 +18,27 @@ import webbrowser
 
 # TOIMPROVE: Add optional argument "cols" to all the method that do some process over the self.dataset
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+logger.addHandler(ch)
+
 
 class DataProcess(object):
     """Class with all the methods required in a typical data science pipeline
     """
     # pandas.options.mode.use_inf_as_na = True
-    numeric_types = ["int8", "int16", "int32", "int64", "float8", "float16", "float32", "float64"]
+    numeric_types = ["uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "float8", "float16", "float32", "float64"]
     categoric_types = ["object", "category"]
 
-    def __init__(self, path, format="csv"):
+    def __init__(self, path, format="csv", log_level=logging.WARNING):
         """ Constructor of the data process class.
 
         Args:
             path (pathlib/str): Full path (including file name) where the input dataset is located.
             format (str, optional): File format of the input dataset. Defaults to "csv".
         """
+
         if format == "csv":
             dataset = pd.read_csv(path)
         else:
@@ -48,6 +54,9 @@ class DataProcess(object):
         self.continuos_cols = 0 # Numerical (quantitative)
         self.discrete = 0       # Numerical (quantitative)
         self.categorical = 0    # Numerical or char (qualitative)
+        
+        # TODO: Not working for all the methods of the class. Temporally setting log level at module level
+        # logger.setLevel(log_level)
 
 
     def __str__(self):
@@ -538,13 +547,20 @@ class DataProcess(object):
         self.dataset = pd.concat([self.dataset, top_dummy_df], axis=1, sort=False)
 
 
+    def dummy_cols_from_category(self, cols):
+        for col in cols:
+            dummy_df = pd.get_dummies(self.dataset[col], prefix=f"{col}")
+            self.dataset = pd.concat([self.dataset, dummy_df], axis=1, sort=False)
+        
+
+
     def linear_regresion(self, col_to_predict, cols_to_remove=[], graph=True):
         cols_by_type = self.group_cols_by_type()
         cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
         xs = self.dataset.drop([col_to_predict], axis=1)
         cols_numeric.remove(col_to_predict)
         for col in cols_to_remove:
-            cols_numeric.remove(col)
+            if col in cols_to_remove: cols_numeric.remove(col)
 
         y = self.dataset[col_to_predict]
         reg = LinearRegression()
@@ -563,11 +579,11 @@ class DataProcess(object):
             logger.info(f"Feature: {col}, Score: {importance}")
 
         if graph:
+            plt.figure(figsize=(20,10))
             plt.title("Feature Importance")
             plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
             plt.xticks(rotation=90)
             plt.show()
-
 
     def reset (self):
         self.__init__(self.path, self.input_file_format)

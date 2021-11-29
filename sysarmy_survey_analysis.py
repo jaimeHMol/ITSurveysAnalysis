@@ -1,6 +1,8 @@
+import logging
 import os
 from pathlib import Path
 import numpy as np
+from numpy.core.numeric import False_
 
 from data_process import DataProcess
 
@@ -11,7 +13,7 @@ USD_ARS = 105
 # ----------------------------------------------------------------------------------
 # Data load
 sysarmy_survey = project_path / "data/raw/2021.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
-sysarmy_analysis = DataProcess(sysarmy_survey, "csv")
+sysarmy_analysis = DataProcess(sysarmy_survey, "csv", logging.INFO)
 
 
 # ----------------------------------------------------------------------------------
@@ -293,16 +295,17 @@ genders_to_replace = {
 }
 sysarmy_analysis.replace_str_in_col("genero", genders_to_replace)
 
-sysarmy_analysis.categories_to_num(cols=["genero"])
-sysarmy_analysis.categories_to_num(cols=["violencia_laboral"])
-sysarmy_analysis.categories_to_num(cols=["tipo_contrato"])
-sysarmy_analysis.categories_to_num(cols=["max_nivel_estudios"])
-sysarmy_analysis.categories_to_num(cols=["cursos_especializacion"])
-sysarmy_analysis.categories_to_num(cols=["guardias"])
-sysarmy_analysis.categories_to_num(cols=["sueldo_bonos"])
-sysarmy_analysis.categories_to_num(cols=["sueldo_ajuste_2021"])
-sysarmy_analysis.categories_to_num(cols=["contribucion_open_source"])
-sysarmy_analysis.categories_to_num(cols=["programacion_hobbie"])
+
+# Unify the values on the column "cursos_especializacion" due to contradictions in the categories
+# if the response contains at least one "sí" then is an affirmative answer.
+courses_to_replace={
+    "Sí, de forma particular, Sí, los pagó un empleador": "Si",
+    "No, Sí, los pagó un empleador": "Si",
+    "No, Sí, de forma particular": "Si",
+    "Sí, de forma particular": "Si",
+    "Sí, los pagó un empleador": "Si",
+}
+sysarmy_analysis.replace_str_in_col("cursos_especializacion", courses_to_replace)
 
 # sysarmy_analysis.explore()
 sysarmy_analysis.describe(graph=True)
@@ -354,6 +357,33 @@ sysarmy_analysis.handle_outliers(cols_numeric, method="drop_iqr")
 sysarmy_analysis.handle_outliers(["personas_a_cargo"], method="drop_5_95")
 cols_numeric.append("personas_a_cargo")
 
+
+# Create dummy columns from categorical columns
+sysarmy_analysis.dummy_cols_from_category(
+    cols=["genero",
+        "violencia_laboral",
+        "tipo_contrato",
+        "max_nivel_estudios",
+        "cursos_especializacion",
+        "guardias",
+        "sueldo_bonos",
+        "sueldo_ajuste_2021",
+        "contribucion_open_source",
+        "programacion_hobbie",
+    ]
+)
+# sysarmy_analysis.categories_to_num(cols=["genero"])
+# sysarmy_analysis.categories_to_num(cols=["violencia_laboral"])
+# sysarmy_analysis.categories_to_num(cols=["tipo_contrato"])
+# sysarmy_analysis.categories_to_num(cols=["max_nivel_estudios"])
+# sysarmy_analysis.categories_to_num(cols=["cursos_especializacion"])
+# sysarmy_analysis.categories_to_num(cols=["guardias"])
+# sysarmy_analysis.categories_to_num(cols=["sueldo_bonos"])
+# sysarmy_analysis.categories_to_num(cols=["sueldo_ajuste_2021"])
+# sysarmy_analysis.categories_to_num(cols=["contribucion_open_source"])
+# sysarmy_analysis.categories_to_num(cols=["programacion_hobbie"])
+
+
 sysarmy_analysis.describe(graph=True)
 
             
@@ -403,10 +433,11 @@ sysarmy_analysis.clusterization(
 sysarmy_analysis.dummy_cols_from_text(col="tecnologies", sep=",", n_cols=15)
 print(sysarmy_analysis)
 
+
 sysarmy_analysis.linear_regresion(
     col_to_predict="sueldo_mensual_bruto_ars", 
     cols_to_remove=["PC1", "PC2"], 
-    graph=True
+    graph=True,
 )
 
 
