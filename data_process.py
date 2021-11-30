@@ -12,6 +12,9 @@ from sklearn_extra.cluster import KMedoids
 from sklearn.metrics import silhouette_score
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import train_test_split
+
 from kneed import KneeLocator
 from pandas_profiling import ProfileReport
 import webbrowser
@@ -550,8 +553,7 @@ class DataProcess(object):
     def dummy_cols_from_category(self, cols):
         for col in cols:
             dummy_df = pd.get_dummies(self.dataset[col], prefix=f"{col}")
-            self.dataset = pd.concat([self.dataset, dummy_df], axis=1, sort=False)
-        
+            self.dataset = pd.concat([self.dataset, dummy_df], axis=1, sort=False)    
 
 
     def linear_regresion(self, col_to_predict, cols_to_remove=[], graph=True):
@@ -584,6 +586,27 @@ class DataProcess(object):
             plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
             plt.xticks(rotation=90)
             plt.show()
+
+
+    def random_forest(self, col_to_predict):
+        X_train, X_test, y_train, y_test = train_test_split(
+            self.dataset.drop(columns = col_to_predict),
+            self.dataset[col_to_predict],
+            random_state = 777
+        )
+        model = RandomForestRegressor(
+            n_estimators = 10,
+            criterion    = 'mse',
+            max_depth    = None,
+            max_features = 'auto',
+            oob_score    = False,
+            n_jobs       = -1,
+            random_state = 777
+        )
+
+         model.fit(X_train, y_train)
+
+
 
     def reset (self):
         self.__init__(self.path, self.input_file_format)
