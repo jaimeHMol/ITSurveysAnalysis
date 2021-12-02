@@ -10,8 +10,9 @@ from sklearn.cluster import KMeans
 from sklearn.cluster import DBSCAN
 from sklearn_extra.cluster import KMedoids
 from sklearn.metrics import silhouette_score
-from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
+from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 
@@ -556,7 +557,7 @@ class DataProcess(object):
             self.dataset = pd.concat([self.dataset, dummy_df], axis=1, sort=False)    
 
 
-    def linear_regresion(self, col_to_predict, cols_to_remove=[], graph=True):
+    def linear_regression(self, col_to_predict, cols_to_remove=[], graph=True):
         cols_by_type = self.group_cols_by_type()
         cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
         xs = self.dataset.drop([col_to_predict], axis=1)
@@ -604,11 +605,25 @@ class DataProcess(object):
             random_state = 777
         )
 
-         model.fit(X_train, y_train)
+        model.fit(X_train, y_train)
+
+        prediction = model.predict(X = X_test)
+
+        rmse = mean_squared_error(
+                y_true  = y_test,
+                y_pred  = prediction,
+                squared = False
+            )
+        # TODO: To improve
+        logger.info(f"The error (RMSE) in test is: {rmse}")
+        logger.info(f"")
+        logger.info(f"Features:")
+        logger.info(self.dataset.drop(columns = col_to_predict).columns)
+        logger.info(f"Feature importance:")
+        logger.info(model.feature_importances_)
+
 
 
 
     def reset (self):
         self.__init__(self.path, self.input_file_format)
-
-    

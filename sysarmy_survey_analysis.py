@@ -359,30 +359,19 @@ cols_numeric.append("personas_a_cargo")
 
 
 # Create dummy columns from categorical columns
-sysarmy_analysis.dummy_cols_from_category(
-    cols=["genero",
-        "violencia_laboral",
-        "tipo_contrato",
-        "max_nivel_estudios",
-        "cursos_especializacion",
-        "guardias",
-        "sueldo_bonos",
-        "sueldo_ajuste_2021",
-        "contribucion_open_source",
-        "programacion_hobbie",
-    ]
-)
-# sysarmy_analysis.categories_to_num(cols=["genero"])
-# sysarmy_analysis.categories_to_num(cols=["violencia_laboral"])
-# sysarmy_analysis.categories_to_num(cols=["tipo_contrato"])
-# sysarmy_analysis.categories_to_num(cols=["max_nivel_estudios"])
-# sysarmy_analysis.categories_to_num(cols=["cursos_especializacion"])
-# sysarmy_analysis.categories_to_num(cols=["guardias"])
-# sysarmy_analysis.categories_to_num(cols=["sueldo_bonos"])
-# sysarmy_analysis.categories_to_num(cols=["sueldo_ajuste_2021"])
-# sysarmy_analysis.categories_to_num(cols=["contribucion_open_source"])
-# sysarmy_analysis.categories_to_num(cols=["programacion_hobbie"])
-
+# sysarmy_analysis.dummy_cols_from_category(
+#     cols=["genero",
+#         "violencia_laboral",
+#         "tipo_contrato",
+#         "max_nivel_estudios",
+#         "cursos_especializacion",
+#         "guardias",
+#         "sueldo_bonos",
+#         "sueldo_ajuste_2021",
+#         "contribucion_open_source",
+#         "programacion_hobbie",
+#     ]
+# )
 
 sysarmy_analysis.describe(graph=True)
 
@@ -434,11 +423,29 @@ sysarmy_analysis.dummy_cols_from_text(col="tecnologies", sep=",", n_cols=15)
 print(sysarmy_analysis)
 
 
-sysarmy_analysis.linear_regresion(
+# Linear regression
+sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars", 
     cols_to_remove=["PC1", "PC2"], 
     graph=True,
 )
+
+
+# Random forest
+cols_to_use = [
+    "edad", 
+    "experiencia_anios" ,
+    "empresa_actual_anios",
+    "personas_a_cargo",
+    # "sueldo_conformidad",
+    "sueldo_mensual_bruto_ars", 
+    "sueldo_ajuste_total_2021", 
+    "recomendacion_laboral",
+    "politicas_diversidad",
+    "pandemia_percepcion",
+]
+sysarmy_analysis.dataset = sysarmy_analysis.dataset[cols_to_use]
+sysarmy_analysis.random_forest(col_to_predict="sueldo_mensual_bruto_ars")
 
 
 # ----------------------------------------------------------------------------------
