@@ -438,14 +438,18 @@ cols_to_use = [
     "empresa_actual_anios",
     "personas_a_cargo",
     # "sueldo_conformidad",
-    "sueldo_mensual_bruto_ars", 
+    # "sueldo_mensual_bruto_ars", 
     "sueldo_ajuste_total_2021", 
     "recomendacion_laboral",
     "politicas_diversidad",
     "pandemia_percepcion",
 ]
-sysarmy_analysis.dataset = sysarmy_analysis.dataset[cols_to_use]
-sysarmy_analysis.random_forest(col_to_predict="sueldo_mensual_bruto_ars")
+# sysarmy_analysis.dataset = sysarmy_analysis.dataset[cols_to_use]
+sysarmy_analysis.random_forest(
+    col_to_predict="sueldo_mensual_bruto_ars", 
+    cols=cols_to_use,
+    graph=True,
+)
 
 
 # ----------------------------------------------------------------------------------

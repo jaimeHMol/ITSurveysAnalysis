@@ -559,6 +559,7 @@ class DataProcess(object):
 
     def linear_regression(self, col_to_predict, cols_to_remove=[], graph=True):
         cols_by_type = self.group_cols_by_type()
+        # Linear regression only works with numeric columns
         cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
         xs = self.dataset.drop([col_to_predict], axis=1)
         cols_numeric.remove(col_to_predict)
@@ -583,15 +584,16 @@ class DataProcess(object):
 
         if graph:
             plt.figure(figsize=(20,10))
-            plt.title("Feature Importance")
+            plt.title("Feature Importance - Linear Regression")
             plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
             plt.xticks(rotation=90)
             plt.show()
 
 
-    def random_forest(self, col_to_predict):
+    def random_forest(self, col_to_predict, cols, graph=True):
         X_train, X_test, y_train, y_test = train_test_split(
-            self.dataset.drop(columns = col_to_predict),
+            # self.dataset.drop(columns = col_to_predict),
+            self.dataset[cols],
             self.dataset[col_to_predict],
             random_state = 777
         )
@@ -613,16 +615,26 @@ class DataProcess(object):
                 y_true  = y_test,
                 y_pred  = prediction,
                 squared = False
-            )
-        # TODO: To improve
+        )
         logger.info(f"The error (RMSE) in test is: {rmse}")
         logger.info(f"")
-        logger.info(f"Features:")
-        logger.info(self.dataset.drop(columns = col_to_predict).columns)
-        logger.info(f"Feature importance:")
-        logger.info(model.feature_importances_)
 
 
+        # get importance
+        importances = model.feature_importances_
+        # summarize feature importance.
+        cols_importance = list(zip(cols, importances))
+        cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
+
+        for col, importance in cols_importance_ordered:
+            logger.info(f"Feature: {col}, Score: {importance}")
+
+        if graph:
+            plt.figure(figsize=(20,10))
+            plt.title("Feature Importance - Random Forest")
+            plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
+            plt.xticks(rotation=90)
+            plt.show()
 
 
     def reset (self):
