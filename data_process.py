@@ -590,10 +590,17 @@ class DataProcess(object):
             plt.show()
 
 
-    def random_forest(self, col_to_predict, cols, graph=True):
+    def random_forest(self, col_to_predict, cols_to_remove=[], graph=True):
+        cols_by_type = self.group_cols_by_type()
+        # Linear regression only works with numeric columns
+        cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
+        cols_numeric.remove(col_to_predict)
+        for col in cols_to_remove:
+            if col in cols_to_remove: cols_numeric.remove(col)
+
         X_train, X_test, y_train, y_test = train_test_split(
             # self.dataset.drop(columns = col_to_predict),
-            self.dataset[cols],
+            self.dataset[cols_numeric],
             self.dataset[col_to_predict],
             random_state = 777
         )
@@ -623,7 +630,7 @@ class DataProcess(object):
         # get importance
         importances = model.feature_importances_
         # summarize feature importance.
-        cols_importance = list(zip(cols, importances))
+        cols_importance = list(zip(cols_numeric, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
 
         for col, importance in cols_importance_ordered:

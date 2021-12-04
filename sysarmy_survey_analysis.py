@@ -359,19 +359,19 @@ cols_numeric.append("personas_a_cargo")
 
 
 # Create dummy columns from categorical columns
-# sysarmy_analysis.dummy_cols_from_category(
-#     cols=["genero",
-#         "violencia_laboral",
-#         "tipo_contrato",
-#         "max_nivel_estudios",
-#         "cursos_especializacion",
-#         "guardias",
-#         "sueldo_bonos",
-#         "sueldo_ajuste_2021",
-#         "contribucion_open_source",
-#         "programacion_hobbie",
-#     ]
-# )
+sysarmy_analysis.dummy_cols_from_category(
+    cols=["genero",
+        "violencia_laboral",
+        "tipo_contrato",
+        "max_nivel_estudios",
+        "cursos_especializacion",
+        "guardias",
+        "sueldo_bonos",
+        "sueldo_ajuste_2021",
+        "contribucion_open_source",
+        "programacion_hobbie",
+    ]
+)
 
 sysarmy_analysis.describe(graph=True)
 
@@ -432,22 +432,21 @@ sysarmy_analysis.linear_regression(
 
 
 # Random forest
-cols_to_use = [
-    "edad", 
-    "experiencia_anios" ,
-    "empresa_actual_anios",
-    "personas_a_cargo",
-    # "sueldo_conformidad",
-    # "sueldo_mensual_bruto_ars", 
-    "sueldo_ajuste_total_2021", 
-    "recomendacion_laboral",
-    "politicas_diversidad",
-    "pandemia_percepcion",
-]
-# sysarmy_analysis.dataset = sysarmy_analysis.dataset[cols_to_use]
+# cols_to_use = [
+#     "edad", 
+#     "experiencia_anios" ,
+#     "empresa_actual_anios",
+#     "personas_a_cargo",
+#     # "sueldo_conformidad",
+#     # "sueldo_mensual_bruto_ars", 
+#     "sueldo_ajuste_total_2021", 
+#     "recomendacion_laboral",
+#     "politicas_diversidad",
+#     "pandemia_percepcion",
+# ]
 sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars", 
-    cols=cols_to_use,
+    cols_to_remove=["PC1", "PC2"],
     graph=True,
 )
 
