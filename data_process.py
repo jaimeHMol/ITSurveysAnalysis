@@ -566,15 +566,36 @@ class DataProcess(object):
         for col in cols_to_remove:
             if col in cols_to_remove: cols_numeric.remove(col)
 
-        y = self.dataset[col_to_predict]
+        X_train, X_test, y_train, y_test = train_test_split(
+            self.dataset[cols_numeric],
+            self.dataset[col_to_predict],
+            random_state = 777
+        )
+
+        # y = self.dataset[col_to_predict]
         reg = LinearRegression()
-        reg.fit(xs[cols_numeric], y)
+        # reg.fit(xs[cols_numeric], y)
+        reg.fit(X_train, y_train)
         logger.info("")
-        logger.info("R2 coefficient: ")
-        logger.info(reg.score(xs[cols_numeric], y))
+        logger.info("R2 coefficient (Using train): ")
+        logger.info("")
+        # logger.info(reg.score(xs[cols_numeric], y))
+        logger.info(reg.score(X_train, y_train))
+
+
+        prediction = reg.predict(X = X_test)
+
+        rmse = mean_squared_error(
+            y_true  = y_test,
+            y_pred  = prediction,
+            squared = False
+        )
+        logger.info(f"The error (RMSE) in test is: {rmse}")
+        logger.info(f"")
 
         # get importance
         importances = reg.coef_
+        logger.info(f"Importance length: {len(importances)} and shape: {importances.shape}")
         # summarize feature importance.
         cols_importance = list(zip(cols_numeric, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
@@ -599,7 +620,6 @@ class DataProcess(object):
             if col in cols_to_remove: cols_numeric.remove(col)
 
         X_train, X_test, y_train, y_test = train_test_split(
-            # self.dataset.drop(columns = col_to_predict),
             self.dataset[cols_numeric],
             self.dataset[col_to_predict],
             random_state = 777
@@ -619,9 +639,9 @@ class DataProcess(object):
         prediction = model.predict(X = X_test)
 
         rmse = mean_squared_error(
-                y_true  = y_test,
-                y_pred  = prediction,
-                squared = False
+            y_true  = y_test,
+            y_pred  = prediction,
+            squared = False
         )
         logger.info(f"The error (RMSE) in test is: {rmse}")
         logger.info(f"")
@@ -629,6 +649,7 @@ class DataProcess(object):
 
         # get importance
         importances = model.feature_importances_
+        logger.info(f"Importance shape: {importances.shape}")
         # summarize feature importance.
         cols_importance = list(zip(cols_numeric, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
