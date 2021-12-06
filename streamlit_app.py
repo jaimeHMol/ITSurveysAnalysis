@@ -19,23 +19,23 @@ Para obtener más detalles del modelo implementado puedes entrar [aquí](https:/
 
 
 with st.echo(code_location='below'):
-    input_edad = st.slider("Number of points in spiral", 1, 15, 80)
-    input_experiencia_anios = st.slider("Number of points in spiral", 1, 15, 80)
-    input_empresa_actual_anios = st.slider("Number of points in spiral", 1, 15, 80)
-    input_personas_a_cargo = st.slider("Number of points in spiral", 1, 15, 80)
-    input_sueldo_ajuste_total_2021 = st.slider("Number of points in spiral", 1, 15, 80)
-    input_recomendacion_laboral = st.slider("Number of points in spiral", 1, 15, 80)
-    input_politicas_diversidad = st.slider("Number of points in spiral", 1, 15, 80)
-    input_pandemia_percepcion = st.slider("Number of points in spiral", 1, 15, 80)
+    input_edad = st.slider("Edad", 1, 80, 10)
+    input_experiencia_anios = st.slider("Experiencia en años", 1, 80, 10)
+    input_empresa_actual_anios = st.slider("Tiempo en empresa actual en años", 1, 80, 10)
+    input_personas_a_cargo = st.slider("Personas a cargo", 1, 80, 10)
+    input_sueldo_ajuste_total_2021 = st.slider("Ajuste de sueldo total en 2021", 1, 80, 10)
+    input_recomendacion_laboral = st.slider("Nivel de recomendación de la empresa actual", 1, 80, 10)
+    input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 1, 80, 10)
+    input_pandemia_percepcion = st.slider("Percepción de la pandemia", 1, 80, 10)
 
     data = []
 
-    points_per_turn = total_points / num_turns
+    points_per_turn = input_edad / input_experiencia_anios
 
-    for curr_point_num in range(total_points):
+    for curr_point_num in range(input_edad):
         curr_turn, i = divmod(curr_point_num, points_per_turn)
         angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / total_points
+        radius = curr_point_num / input_edad
         x = radius * math.cos(angle)
         y = radius * math.sin(angle)
         data.append(Point(x, y))
