@@ -370,7 +370,8 @@ sysarmy_analysis.dummy_cols_from_category(
         "sueldo_ajuste_2021",
         "contribucion_open_source",
         "programacion_hobbie",
-    ]
+    ],
+    drop_first=True,
 )
 
 sysarmy_analysis.describe(graph=True)
@@ -423,7 +424,6 @@ sysarmy_analysis.dummy_cols_from_text(col="tecnologies", sep=",", n_cols=15)
 print(sysarmy_analysis)
 
 
-# Linear regression
 sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars", 
     cols_to_remove=["PC1", "PC2"], 
@@ -431,19 +431,6 @@ sysarmy_analysis.linear_regression(
 )
 
 
-# Random forest
-# cols_to_use = [
-#     "edad", 
-#     "experiencia_anios" ,
-#     "empresa_actual_anios",
-#     "personas_a_cargo",
-#     # "sueldo_conformidad",
-#     # "sueldo_mensual_bruto_ars", 
-#     "sueldo_ajuste_total_2021", 
-#     "recomendacion_laboral",
-#     "politicas_diversidad",
-#     "pandemia_percepcion",
-# ]
 sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars", 
     cols_to_remove=["PC1", "PC2"],

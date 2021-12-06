@@ -551,9 +551,9 @@ class DataProcess(object):
         self.dataset = pd.concat([self.dataset, top_dummy_df], axis=1, sort=False)
 
 
-    def dummy_cols_from_category(self, cols):
+    def dummy_cols_from_category(self, cols, drop_first=False):
         for col in cols:
-            dummy_df = pd.get_dummies(self.dataset[col], prefix=f"{col}")
+            dummy_df = pd.get_dummies(self.dataset[col], prefix=f"{col}", drop_first=drop_first)
             self.dataset = pd.concat([self.dataset, dummy_df], axis=1, sort=False)    
 
 
