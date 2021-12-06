@@ -1,3 +1,4 @@
+from collections import namedtuple
 import altair as alt
 import math
 import pandas as pd
@@ -28,6 +29,7 @@ with st.echo(code_location='below'):
     input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 1, 80, 10)
     input_pandemia_percepcion = st.slider("Percepción de la pandemia", 1, 80, 10)
 
+    Point = namedtuple('Point', 'x y')
     data = []
 
     points_per_turn = input_edad / input_experiencia_anios
