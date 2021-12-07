@@ -595,7 +595,6 @@ class DataProcess(object):
 
         # get importance
         importances = reg.coef_
-        logger.info(f"Importance length: {len(importances)} and shape: {importances.shape}")
         # summarize feature importance.
         cols_importance = list(zip(cols_numeric, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
@@ -649,7 +648,6 @@ class DataProcess(object):
 
         # get importance
         importances = model.feature_importances_
-        logger.info(f"Importance shape: {importances.shape}")
         # summarize feature importance.
         cols_importance = list(zip(cols_numeric, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
