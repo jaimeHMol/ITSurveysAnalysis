@@ -19,6 +19,7 @@ sysarmy_analysis = DataProcess(sysarmy_survey, "csv", logging.INFO)
 # ----------------------------------------------------------------------------------
 # Data refine and exploration
 print(sysarmy_analysis)
+sysarmy_analysis.explore(name_postfix="raw_data")
 
 cols_to_drop = [
     "Dónde estás trabajando",

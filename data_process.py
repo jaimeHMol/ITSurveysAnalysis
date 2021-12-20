@@ -156,14 +156,14 @@ class DataProcess(object):
         plt.show()           
 
 
-    def explore(self, output_path=None, compact=False):
+    def explore(self, output_path=None, name_postfix="report", compact=False):
     #     #!pip install sweetviz
     #     import sweetviz as sv
     #     dataset_report = sv.analyze(self.dataset)
     #     dataset_report.show_html(filepath=f"{output_path}dataset_report.html", open_browser=True)
      
         if output_path is None:
-            output_path =  f"{self.input_file_name}_report.html"
+            output_path =  f"{self.input_file_name}_{name_postfix}.html"
         dataset_report = ProfileReport(self.dataset, title=f"{self.input_file_name} Report", minimal=compact)
         dataset_report.to_file(f"{output_path}")
         webbrowser.open(f"{output_path}")
