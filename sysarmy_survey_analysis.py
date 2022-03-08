@@ -52,7 +52,6 @@ sysarmy_analysis.replace_str_in_col("genero", maps.genders_to_replace)
 # if the response contains at least one "sí" then is an affirmative answer.
 sysarmy_analysis.replace_str_in_col("cursos_especializacion", maps.courses_to_replace)
 
-# sysarmy_analysis.explore()
 sysarmy_analysis.describe(graph=True)
 
 
@@ -120,6 +119,7 @@ sysarmy_analysis.dummy_cols_from_category(
 )
 
 sysarmy_analysis.describe(graph=True)
+sysarmy_analysis.explore(name_postfix="processed")
 
             
 # ----------------------------------------------------------------------------------
