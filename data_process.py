@@ -298,7 +298,7 @@ class DataProcess(object):
                 self.dataset = self.dataset.query(f"{col} >= {min} and {col} <= {max}")
                 row_count_fin = len(self.dataset[col])
                 row_count_dif = row_count_ini - row_count_fin
-                logger.warning(f"{row_count_dif} rows dropped  because outliers in column {col}.")
+                logger.warning(f"{row_count_dif} rows dropped because outliers in column {col}.")
             elif method == "drop_iqr":
                 q1 = self.dataset[col].quantile(0.25)
                 q3 = self.dataset[col].quantile(0.75)

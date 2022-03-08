@@ -347,7 +347,7 @@ sysarmy_analysis.handle_missing(cols_check_missings, method="drop")
 
 
 # Handle outliers
-# Assume that a salary less than 10000 ARS is not possible (much less than minimum wage)
+# Assume that a salary less than 10000 ARS is not possible (much less than the minimum wage in Argentina)
 # so it refers to a value in dollars
 # TODO: does it worth to be in data_process.py?
 col = "sueldo_mensual_bruto_ars"
@@ -410,7 +410,7 @@ stats.bartlett(*[sysarmy_analysis.dataset[col].tolist() for col in cols_to_stand
 # Applies only for numeric columns, requieres standardized values
 sysarmy_analysis.reduction_dims(
     cols_to_standard,
-    method="pca", 
+    method="pca",
     final_number_dims=2, 
     visualize=True
 )
