@@ -36,6 +36,7 @@ print(sysarmy_analysis)
 numeric_types = ["int8", "int16", "int32", "int64", "float8", "float16", "float32", "float64"]
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
+cols_categoric = sysarmy_analysis.get_cols_by_type(cols_by_type, ["object"])
 
 
 # Create tecnologies column unifying multiple related columns
@@ -155,6 +156,15 @@ stats.bartlett(*[sysarmy_analysis.dataset[col].tolist() for col in cols_to_stand
 sysarmy_analysis.reduction_dims(
     cols_to_standard,
     method="pca",
+    final_number_dims=2, 
+    visualize=True
+)
+
+# Dimensionality reduction using MCA:
+# Applies only for categoric columns
+sysarmy_analysis.reduction_dims(
+    cols_categoric,
+    method="mca",
     final_number_dims=2, 
     visualize=True
 )

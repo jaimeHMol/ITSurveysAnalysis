@@ -399,6 +399,40 @@ class DataProcess(object):
                     plt.text(coeff[i,0] /2, coeff[i,1] /2, col, color = "g", ha = "left", va = "baseline")
                 sp.grid()
                 plt.show()
+
+        if method == "mca":
+            # TODO: Implement this using: https://towardsdatascience.com/5-must-know-dimensionality-reduction-techniques-via-prince-e6ffb27e55d1 
+            pca = PCA(n_components=final_number_dims)
+            principal_components = pca.fit_transform(self.dataset[cols])
+
+            for index in range(0, final_number_dims):
+                self.dataset[f"PC{index + 1}"] = principal_components[:,index]
+
+            logger.info("Multiple correspondence analysis finished. Explained variance ratio:")
+            components_variance = ["{:.12f}".format(i)[:8] for i in pca.explained_variance_ratio_]
+            logger.info(components_variance)
+
+            if visualize and final_number_dims == 2:
+                x = self.dataset["PC1"]
+                y = self.dataset["PC2"]
+                scalex = 1.0/(x.max() - x.min())
+                scaley = 1.0/(y.max() - y.min())
+                coeff = np.transpose(pca.components_)
+
+                fig = plt.figure(figsize = (8,8))
+                sp = fig.add_subplot(1,1,1) 
+                sp.set_xlabel(f"PC 1 - Variance ratio: {components_variance[0]}", fontsize = 15)
+                sp.set_ylabel(f"PC 2 - Variance ratio: {components_variance[1]}", fontsize = 15)
+                sp.set_xlim(-1,1)
+                sp.set_ylim(-1,1)
+                sp.set_title("Row and column principal coordinates", fontsize = 20)
+                sp.scatter(x * scalex, y * scaley, s = 50)
+                for i, col in enumerate(cols):
+                    plt.arrow(0, 0, coeff[i,0], coeff[i,1], color = "r", head_width=0.02, length_includes_head = True)
+                    plt.text(coeff[i,0] /2, coeff[i,1] /2, col, color = "g", ha = "left", va = "baseline")
+                sp.grid()
+                plt.show()
+        
         else:
             raise ValueError("Method of dimensionality reduction not implemented.")
 
