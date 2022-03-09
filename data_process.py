@@ -202,7 +202,7 @@ class DataProcess(object):
 
     def replace_str_in_col(self, col, str_to_replace):
         for str_find, str_rep in str_to_replace.items():
-            self.dataset[col] = self.dataset[col].apply(lambda x: str(x).replace(str_find, str_rep))
+            self.dataset[col] = self.dataset[col].apply(lambda x: str(x).replace(str_find, str_rep) if pd.notnull(x) else x)
 
 
     def unify_cols(self, cols, new_col, str_to_replace={";":"", ".":""}):

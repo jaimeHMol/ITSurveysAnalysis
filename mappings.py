@@ -255,9 +255,9 @@ genders_to_replace = {
     "?": "Otro",
 }
 courses_to_replace={
+    "No, Sí, de forma particular": "Si", # Transformed as affirmative cause contains "Si" even though it looks contradictory
+    "No, Sí, los pagó un empleador": "Si", # Transformed as affirmative cause contains "Si" even though it looks contradictory
     "Sí, de forma particular, Sí, los pagó un empleador": "Si",
     "Sí, de forma particular": "Si",
     "Sí, los pagó un empleador": "Si",
-    "No, Sí, los pagó un empleador": "Si", # Transformed as affirmative cause contains "Si" even though it looks contradictory
-    "No, Sí, de forma particular": "Si", # Transformed as affirmative cause contains "Si" even though it looks contradictory
 }
