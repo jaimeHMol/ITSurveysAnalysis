@@ -21,7 +21,7 @@ sysarmy_analysis = DataProcess(sysarmy_survey, "csv", logging.INFO)
 # Data refine and exploration
 # ----------------------------------------------------------------------------------
 print(sysarmy_analysis)
-sysarmy_analysis.explore(name_postfix="raw_data")
+# sysarmy_analysis.explore(name_postfix="raw_data")
 
 sysarmy_analysis.drop_cols(maps.cols_to_drop)
 print(sysarmy_analysis)
@@ -36,7 +36,6 @@ print(sysarmy_analysis)
 numeric_types = ["int8", "int16", "int32", "int64", "float8", "float16", "float32", "float64"]
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
-cols_categoric = sysarmy_analysis.get_cols_by_type(cols_by_type, ["object"])
 
 
 # Create tecnologies column unifying multiple related columns
@@ -120,7 +119,7 @@ sysarmy_analysis.dummy_cols_from_category(
 )
 
 sysarmy_analysis.describe(graph=True)
-sysarmy_analysis.explore(name_postfix="processed")
+# sysarmy_analysis.explore(name_postfix="processed")
 
             
 # ----------------------------------------------------------------------------------
@@ -148,11 +147,11 @@ import scipy.stats as stats
 stats.bartlett(*[sysarmy_analysis.dataset[col].tolist() for col in cols_to_standard])
 # BartlettResult(statistic=774806.2025723966, pvalue=0.0)
 # According to the pvalue (less than 0.05) we have enough evidence to reject the null
-# hypotesis hence the variances is different among all the numeric (continuos) variables
+# hypothesis hence the variances is different among all the numeric (continuos) variables
 
 
 # Dimensionality reduction using PCA:
-# Applies only for numeric columns, requieres standardized values
+# Applies only for numeric columns, requires standardized values
 sysarmy_analysis.reduction_dims(
     cols_to_standard,
     method="pca",
@@ -162,6 +161,8 @@ sysarmy_analysis.reduction_dims(
 
 # Dimensionality reduction using MCA:
 # Applies only for categoric columns
+cols_by_type = sysarmy_analysis.group_cols_by_type()
+cols_categoric = sysarmy_analysis.get_cols_by_type(cols_by_type, ["object"])
 sysarmy_analysis.reduction_dims(
     cols_categoric,
     method="mca",
@@ -179,16 +180,18 @@ sysarmy_analysis.dummy_cols_from_text(col="tecnologies", sep=",", n_cols=15)
 print(sysarmy_analysis)
 
 
+# Salary prediction with linear regression with cleaned columns, no dim reduction
 sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars", 
-    cols_to_remove=["PC1", "PC2"], 
+    cols_to_remove=["PC1", "PC2", "MC1", "MC2"], 
     graph=True,
 )
 
 
+# Salary prediction with random forest with cleaned columns, no dim reduction
 sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars", 
-    cols_to_remove=["PC1", "PC2"],
+    cols_to_remove=["PC1", "PC2", "MC1", "MC2"],
     graph=True,
 )
 
