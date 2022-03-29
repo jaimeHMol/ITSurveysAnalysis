@@ -573,14 +573,17 @@ class DataProcess(object):
             self.dataset = pd.concat([self.dataset, dummy_df], axis=1, sort=False)    
 
 
-    def linear_regression(self, col_to_predict, cols_to_remove=[], graph=True):
-        cols_by_type = self.group_cols_by_type()
-        # Linear regression only works with numeric columns
-        cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
-        xs = self.dataset.drop([col_to_predict], axis=1)
-        cols_numeric.remove(col_to_predict)
+    def linear_regression(self, col_to_predict, cols=[], cols_to_remove=[], graph=True):
+        if cols:
+            cols_numeric = cols
+        else:
+            cols_by_type = self.group_cols_by_type()
+            # Linear regression only works with numeric columns
+            cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
+            # xs = self.dataset.drop([col_to_predict], axis=1)
+        if col_to_predict in cols_numeric: cols_numeric.remove(col_to_predict)
         for col in cols_to_remove:
-            if col in cols_to_remove: cols_numeric.remove(col)
+            if col in cols_numeric: cols_numeric.remove(col)
 
         X_train, X_test, y_train, y_test = train_test_split(
             self.dataset[cols_numeric],
@@ -626,16 +629,18 @@ class DataProcess(object):
             plt.show()
 
 
-    def random_forest(self, col_to_predict, cols_to_remove=[], graph=True):
-        cols_by_type = self.group_cols_by_type()
-        # Linear regression only works with numeric columns
-        cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
-        cols_numeric.remove(col_to_predict)
+    def random_forest(self, col_to_predict, cols=[], cols_to_remove=[], graph=True):
+        if cols:
+            cols_input = cols
+        else:
+            # TODO: Validate if random forest requires all variables to be numeric (no categoric).
+            cols_input = list(self.dataset)
+        if col_to_predict in cols_input: cols_input.remove(col_to_predict)
         for col in cols_to_remove:
-            if col in cols_to_remove: cols_numeric.remove(col)
+            if col in cols_input: cols_input.remove(col)
 
         X_train, X_test, y_train, y_test = train_test_split(
-            self.dataset[cols_numeric],
+            self.dataset[cols_input],
             self.dataset[col_to_predict],
             random_state = 777
         )
@@ -665,7 +670,7 @@ class DataProcess(object):
         # get importance
         importances = model.feature_importances_
         # summarize feature importance.
-        cols_importance = list(zip(cols_numeric, importances))
+        cols_importance = list(zip(cols_input, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
 
         for col, importance in cols_importance_ordered:

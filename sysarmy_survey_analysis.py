@@ -102,6 +102,15 @@ sysarmy_analysis.handle_outliers(["personas_a_cargo"], method="drop_5_95")
 cols_numeric.append("personas_a_cargo")
 
 
+# sysarmy_analysis.drop_cols(["tecnologies"])
+# print(set(sysarmy_analysis.dataset))
+# print(set(sysarmy_analysis.dataset[cols_to_standard]))
+# print(set(sysarmy_analysis.dataset) - set(sysarmy_analysis.dataset[cols_to_standard]))
+# sysarmy_analysis.drop_cols(list(set(sysarmy_analysis.dataset) - set(sysarmy_analysis.dataset[cols_to_standard])))
+# print(list(sysarmy_analysis.dataset))
+# sysarmy_analysis.explore(name_postfix="temp")
+
+
 # Create dummy columns from categorical columns
 sysarmy_analysis.dummy_cols_from_category(
     cols=["genero",
@@ -163,10 +172,11 @@ sysarmy_analysis.reduction_dims(
 # Applies only for categoric columns
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_categoric = sysarmy_analysis.get_cols_by_type(cols_by_type, ["object"])
+cols_categoric.remove("tecnologies") # This column is removed because it was manually created and it has a very high cardinality
 sysarmy_analysis.reduction_dims(
     cols_categoric,
     method="mca",
-    final_number_dims=2, 
+    final_number_dims=5, 
     visualize=True
 )
 
@@ -183,7 +193,7 @@ print(sysarmy_analysis)
 # Salary prediction with linear regression with cleaned columns, no dim reduction
 sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars", 
-    cols_to_remove=["PC1", "PC2", "MC1", "MC2"], 
+    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"], 
     graph=True,
 )
 
@@ -191,7 +201,7 @@ sysarmy_analysis.linear_regression(
 # Salary prediction with random forest with cleaned columns, no dim reduction
 sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars", 
-    cols_to_remove=["PC1", "PC2", "MC1", "MC2"],
+    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
 )
 
