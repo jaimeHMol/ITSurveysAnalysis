@@ -9,20 +9,36 @@ lotTitle: |
 tableTemplate: |
   *$$tableTitle$$ $$i$$*$$titleDelim$$ $$t$$
 autoSectionLabels: True
+toc-title: Tabla de contenido # Only used if the table of contents is added with the --table-of-contents flag on the pandoc command.
+documentclass: article
 title: Trabajo integrador - Jaime Herrán
+author: [Jaime Herrán]
+date: "2021-12-01"
+keywords: [Data science, Machine learning, Regresión]
 ---
+
+
+\maketitle
+\thispagestyle{empty}
+\clearpage <!-- Also could use \pagebreak -->
+\renewcommand{\contentsname}{Tabla de contenido}
+\tableofcontents
+\pagenumbering{roman}
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 
 **Abstract**
 El desarrollo de software y las tecnologías de la información es una industria que se hace cada vez más importante en el desarrollo económico y social no solo de los países sino de la humanidad en general, por lo que hacer un análisis cuantitativo apoyado en diversas herramientas que la ciencia de datos nos provee resulta no solo relevante sino también necesario.  Por lo tanto, en el presente estudio se analizan los datos recogidos en una de las encuestas más tradicionales y populares de Argentina, llevada a cabo por la comunidad SysArmy durante el segundo periodo del año 2021, aplicando en ese conjunto de datos técnicas exploratorias (medidas estadísticas de dispersión, centralidad, distribución y outliers), análisis dimensional (correlaciones y componentes principales) y regresiones (Regresión lineal múltiple y random forests) para extraer información que permita perfilar y comprender la evolución del sector poniendo especial foco en el contexto local Argentino.
 
-_keywords_: Desarrollo de software, PCA, Regresión lineal múltiople, random forests, Kmeans, DBScan, IT surveys, Sysarmy.
+_keywords_: Desarrollo de software, PCA, Regresión lineal múltiple, random forests, Kmeans, DBScan, IT surveys, Sysarmy.
 
 
 # Introducción {#sec:sec1}
 El mercado laboral de las tecnologías de la información actualmente tiene una muy alta demanda de profesionales que no está siendo totalmente cubierta debido a múltiples razones, tales como insuficiente cantidad de personas capacitadas, la cada vez más amplia cantidad de tecnologías, frameworks y herramientas de software que requieren conocimiento especializado, la transformación digital que están sufriendo todas las empresas en aras de mantenerse competitivas, entra otras.
 Todo lo anterior hace que este se un mercado complejo, apropiado para ser estudiado desde la ciencia de datos. Uno de los más comunes y accesibles conjuntos de datos para trabajar al respecto son las encuestas que se hacen desde las mismas comunidades de TI, que se perfilan como una manera fiable de recolectar datos ya que las personas pertenecientes a estas son también parte del mercado laboral de IT, por lo que se suelen obtener volúmenes significativos de datos que capturan la información relevante para poder analizar, modelar y entender el sector.
-El conjunto de datos analizado proviene de la encuesta de sueldos del segundo semestre del 2021 llevada a cabo por Sysarmy. Sysarmy, como ellos se describen en su Linkedin[Referencia bibliográfica 1], nació en el 2012 como una comunidad de administradores de sistemas en la Argentina, pero rápidamente creció a otros países en la región y otras áreas dentro de IT, su lema es "El soporte de quienes dan soporte" y su misión es facilitar el intercambio de conocimiento entre profesionales. La encuesta de sueldo la vienen realizando desde hace 7 años por lo que se ha consolidado y es bastante popular entre los profesionales asociados al área de IT, razones suficientes para elegir esta fuente de datos para ser analizada.
+El conjunto de datos analizado proviene de la encuesta de sueldos del segundo semestre del 2021 llevada a cabo por Sysarmy. Sysarmy, como ellos se describen en su Linkedin**Referencia bibliográfica 1 (página de Linkedin)**, nació en el 2012 como una comunidad de administradores de sistemas en la Argentina, pero rápidamente creció a otros países en la región y otras áreas dentro de IT, su lema es "El soporte de quienes dan soporte" y su misión es facilitar el intercambio de conocimiento entre profesionales. La encuesta de sueldo la vienen realizando desde hace 7 años por lo que se ha consolidado y es bastante popular entre los profesionales asociados al área de IT, razones suficientes para elegir esta fuente de datos para ser analizada.
 La encuesta posee 66 preguntas con respuestas de tipo continuo (numéricas) y categóricas (que pueden ser categorías fijas, opciones numéricas y respuestas abiertas), recogidas durante 1 mes desde el 1 de Julio de 2021 al 9 de agosto de 2021 y si bien la encuesta está dirigida a todos los países latinoamericanos, es en Argentina donde más respuestas consigue, con un total de 6440 entradas en esta edición, por lo cual el presente estudio se aplica solo al contexto argentino. 
 Con este análisis se pretende entender y caracterizar el mercado laboral Argentino en tecnología haciendo especial foco en la detección de características y patrones importantes que influyan en el aumento o disminución del salario mensual que ganan los trabajadores del sector, de tal manera que pueda llegar a ser una herramienta de consulta a la hora de evaluar la situación salarial de los empleados, así como los aspectos en los que debería hacer énfasis para aumentar su percepción económica a la hora de salir a buscar una nueva oportunidad laboral. Desde la perspectiva de las empresas y reclutadores puede ser útil también para comprender las características más importantes del talento que están buscando suplir en sus empresas y que resulta una tarea cada vez más ardua y compleja.
 
@@ -50,7 +66,7 @@ Las fuentes de datos a estudiar corresponden a encuestas realizadas a través de
 | **Cantidad de respuestas::** | 6095  |
 | **Formato del dataset:** | csv  |
 | **Peso del dataset:** | 3.7 MB  |
-: Table example {#tbl:table1}
+: Descripción archivo con la información cruda de la encuesta {#tbl:table1}
 
 ## Caracterización cuantitativa del dataset
 Se cargaron los datasets usando un script de Python desarrollado a medida para implementar el pipeline de procesamiento de datos y la exploración inicial de la data cruda se realizó utilizando la biblioteca panda_profiler, que calcula todas las métricas estadísticas básicas (dispersión, centralidad, distribución) del dataset y sus columnas y genera un HTML para visualizarlas adecuadamente. A continuación, se resume la información más importante.
@@ -103,7 +119,7 @@ Luego de tener un entendimiento base de los datasets estudiados, el siguiente pa
 * politicas_diversidad
 * pandemia_percepcion
 Nótese que la variable que se buscará predecir no fue incluida en la lista.
-El proceso de PCA identifica las direcciones con mayor varianza con las cuales se puede transformar un nuevo espacio vectorial. Como la varianza de una variable se mide en sus mismas unidades elevadas al cuadrado, si antes de calcular las componentes no se estandarizan todas las variables para que tengan media cero y desviación estándar de uno, aquellas variables cuya escala sea mayor dominarán al resto. Por lo que antes de realizar el llamado de la función que ejecuta el cálculo de PCA se realizó la estandarización de las mencionadas variables. [Referencia bibliográfica 2: https://www.cienciadedatos.net/documentos/py19-pca-python.html Rodrigo, J A].
+El proceso de PCA identifica las direcciones con mayor varianza con las cuales se puede transformar un nuevo espacio vectorial. Como la varianza de una variable se mide en sus mismas unidades elevadas al cuadrado, si antes de calcular las componentes no se estandarizan todas las variables para que tengan media cero y desviación estándar de uno, aquellas variables cuya escala sea mayor dominarán al resto. Por lo que antes de realizar el llamado de la función que ejecuta el cálculo de PCA se realizó la estandarización de las mencionadas variables. **Referencia bibliográfica 2: https://www.cienciadedatos.net/documentos/py19-pca-python.html Rodrigo, J A**.
 Así mismo, el análisis de componentes principales es muy sensible a valores atípicos, de ahí surge la razón por la que en este estudio realizamos primero el manejo de outliers y valores faltantes antes que el análisis de la dimensionalidad.
 Los resultados del porcentaje total de variabilidad explicada luego de calcular la segunda, tercera, cuarta y quinta componente principal se observa en la tabla [@tbl:table5]. 
 
@@ -157,16 +173,27 @@ Posteriormente, y dado no estar consiguiendo una mejora significativa en la capa
 ### Random Forests
 Yyyyy
 
-Se elige el RSME como métrica de comparación para los modelos entrenados debido a XXX y YYY. **(Incluir fórmula y explicación de cómo se calcula el RSME)**
 
-| Modelo | Número de predictores | RSME |
+## Comparación de los modelos
+Para evaluar el rendimiento de un método de aprendizaje estadístico en un conjunto de datos dado, necesitamos alguna forma de medir qué tan bien sus predicciones coinciden realmente con los datos observados. Es decir, necesitamos cuantificar hasta qué punto el valor de respuesta pronosticado para una observación determinada se acerca al valor de respuesta real para esa observación. En problemas de regresión, la medida más utilizada es el error cuadrático medio (MSE), dado por la fórmula @eq:eq1 donde f(xi) es la predicción que da f para la i-ésima observación e yi es el valor real.
+
+**PONER FORMULA ACÁ (Ver imagen)** {#eq:eq1}
+
+El MSE será pequeño si las respuestas pronosticadas están muy cerca de las respuestas verdaderas, y será grande si para algunas de las observaciones, las respuestas pronosticadas y verdaderas difieren sustancialmente. **Referencia bibliográfica 3 (Garet James, Daniela Witten, Trevor Hastie, Robert Tibshirani - An Introduction to Statistical Learning with Applications in R. Editorial Springer. pages 29-30)**
+
+Se utilizará entonce el MSE para comparar los dos modelos regresores implementados anteriormente, haciendo énfasis que este se calcula utilizando el subconjuto de datos de test para cada modelo a comparar. El MSE obtenido a partir de los datos de training no tiene ningún significado real ya que su minimización llevará al overfiting de los modelos alejandonos de una predicción precisa para observaciones nuevas (que el modelo no haya visto antes). Los resultados obtenidos se pueden observar en la tabla [@tbl:table7].
+
+
+| Modelo | Número de predictores | MSE |
 |:-------------|:--------------|
 | Regresión lineal múltiple | 58 | 72584.7045  |
 | Random Forest | 58 | 74264.2954  |
 : Comparativa del rendimientode los dos modelos predictoresutilizados {#tbl:table7}
 
+
 ## Importancia de los features (feature engineering):
 A continuación, aplicamos el algoritmo **XXX** para cuantificar que tanto contribuye los features o variables medidas en las diferentes encuestas, tal que nos provea argumentos sólidos para recomendar cuales son los aspectos más importantes que un trabajador en el mercado del desarrollo de software debe tener en cuenta dentro del contexto económico argentino.
+
 
 # Conclusiones
 * Tener la variable de interés (dependiente) que se quiere analizar/predecir dentro del análisis de reducción de dimensiones puede llevar a resultados donde esta sea la que en mayor medida explique la variabilidad total del conjunto de datos, produciendo resultados en los cuales solo la primera componente tiene más del 90% de la variabilidad total. Esto nos puede llevar a conclusiones triviales y erradas que se deben evitar. Un gráfico biplot (para el caso de dos componentes) en este escenario mostrará claramente la variable que está explicando la mayor variabilidad y que debería ser removida en caso de ser la variable a predecir.

@@ -604,12 +604,12 @@ class DataProcess(object):
 
         prediction = reg.predict(X = X_test)
 
-        rmse = mean_squared_error(
+        mse = mean_squared_error(
             y_true  = y_test,
             y_pred  = prediction,
             squared = False
         )
-        logger.info(f"The error (RMSE) in test is: {rmse}")
+        logger.info(f"The error (MSE) in test is: {mse}")
         logger.info(f"")
 
         # get importance
@@ -658,12 +658,12 @@ class DataProcess(object):
 
         prediction = model.predict(X = X_test)
 
-        rmse = mean_squared_error(
+        mse = mean_squared_error(
             y_true  = y_test,
             y_pred  = prediction,
             squared = False
         )
-        logger.info(f"The error (RMSE) in test is: {rmse}")
+        logger.info(f"The error (MSE) in test is: {mse}")
         logger.info(f"")
 
 
