@@ -2,6 +2,8 @@
 codeBlockCaptions: True
 figureTitle: |
   Figura 
+tableTitle: |
+  Tabla 
 lofTitle: |
   ## Lista de figuras
 lotTitle: |
@@ -10,6 +12,8 @@ tableTemplate: |
   *$$tableTitle$$ $$i$$*$$titleDelim$$ $$t$$
 autoSectionLabels: True
 toc-title: Tabla de contenido # Only used if the table of contents is added with the --table-of-contents flag on the pandoc command.
+bibliography: refs.bib
+# csl: biomed-central.csl # Define a custom citation style
 documentclass: article
 title: Trabajo integrador - Jaime Herrán
 author: [Jaime Herrán]
@@ -29,16 +33,17 @@ keywords: [Data science, Machine learning, Regresión]
 \setcounter{page}{1}
 
 
-**Abstract**
+**Abstract:** 
 El desarrollo de software y las tecnologías de la información es una industria que se hace cada vez más importante en el desarrollo económico y social no solo de los países sino de la humanidad en general, por lo que hacer un análisis cuantitativo apoyado en diversas herramientas que la ciencia de datos nos provee resulta no solo relevante sino también necesario.  Por lo tanto, en el presente estudio se analizan los datos recogidos en una de las encuestas más tradicionales y populares de Argentina, llevada a cabo por la comunidad SysArmy durante el segundo periodo del año 2021, aplicando en ese conjunto de datos técnicas exploratorias (medidas estadísticas de dispersión, centralidad, distribución y outliers), análisis dimensional (correlaciones y componentes principales) y regresiones (Regresión lineal múltiple y random forests) para extraer información que permita perfilar y comprender la evolución del sector poniendo especial foco en el contexto local Argentino.
 
 _keywords_: Desarrollo de software, PCA, Regresión lineal múltiple, random forests, Kmeans, DBScan, IT surveys, Sysarmy.
+\pagebreak
 
 
 # Introducción {#sec:sec1}
 El mercado laboral de las tecnologías de la información actualmente tiene una muy alta demanda de profesionales que no está siendo totalmente cubierta debido a múltiples razones, tales como insuficiente cantidad de personas capacitadas, la cada vez más amplia cantidad de tecnologías, frameworks y herramientas de software que requieren conocimiento especializado, la transformación digital que están sufriendo todas las empresas en aras de mantenerse competitivas, entra otras.
 Todo lo anterior hace que este se un mercado complejo, apropiado para ser estudiado desde la ciencia de datos. Uno de los más comunes y accesibles conjuntos de datos para trabajar al respecto son las encuestas que se hacen desde las mismas comunidades de TI, que se perfilan como una manera fiable de recolectar datos ya que las personas pertenecientes a estas son también parte del mercado laboral de IT, por lo que se suelen obtener volúmenes significativos de datos que capturan la información relevante para poder analizar, modelar y entender el sector.
-El conjunto de datos analizado proviene de la encuesta de sueldos del segundo semestre del 2021 llevada a cabo por Sysarmy. Sysarmy, como ellos se describen en su Linkedin**Referencia bibliográfica 1 (página de Linkedin)**, nació en el 2012 como una comunidad de administradores de sistemas en la Argentina, pero rápidamente creció a otros países en la región y otras áreas dentro de IT, su lema es "El soporte de quienes dan soporte" y su misión es facilitar el intercambio de conocimiento entre profesionales. La encuesta de sueldo la vienen realizando desde hace 7 años por lo que se ha consolidado y es bastante popular entre los profesionales asociados al área de IT, razones suficientes para elegir esta fuente de datos para ser analizada.
+El conjunto de datos analizado proviene de la encuesta de sueldos del segundo semestre del 2021 llevada a cabo por Sysarmy. Sysarmy, como ellos se describen en su Linkedin [@ref:web1], nació en el 2012 como una comunidad de administradores de sistemas en la Argentina, pero rápidamente creció a otros países en la región y otras áreas dentro de IT, su lema es "El soporte de quienes dan soporte" y su misión es facilitar el intercambio de conocimiento entre profesionales. La encuesta de sueldo la vienen realizando desde hace 7 años por lo que se ha consolidado y es bastante popular entre los profesionales asociados al área de IT, razones suficientes para elegir esta fuente de datos para ser analizada.
 La encuesta posee 66 preguntas con respuestas de tipo continuo (numéricas) y categóricas (que pueden ser categorías fijas, opciones numéricas y respuestas abiertas), recogidas durante 1 mes desde el 1 de Julio de 2021 al 9 de agosto de 2021 y si bien la encuesta está dirigida a todos los países latinoamericanos, es en Argentina donde más respuestas consigue, con un total de 6440 entradas en esta edición, por lo cual el presente estudio se aplica solo al contexto argentino. 
 Con este análisis se pretende entender y caracterizar el mercado laboral Argentino en tecnología haciendo especial foco en la detección de características y patrones importantes que influyan en el aumento o disminución del salario mensual que ganan los trabajadores del sector, de tal manera que pueda llegar a ser una herramienta de consulta a la hora de evaluar la situación salarial de los empleados, así como los aspectos en los que debería hacer énfasis para aumentar su percepción económica a la hora de salir a buscar una nueva oportunidad laboral. Desde la perspectiva de las empresas y reclutadores puede ser útil también para comprender las características más importantes del talento que están buscando suplir en sus empresas y que resulta una tarea cada vez más ardua y compleja.
 
@@ -48,13 +53,17 @@ Posteriormente, un análisis de componentes principales permitirá analizar la c
 Finalmente, se realiza un ejercicio de regresión para predecir el salario bruto mensual en pesos argentinos en el rubro de las tecnologías de la información. Para esto se propone implementar una regresión lineal múltiple y un modelo de random forests para así tener dos predictores de características distintas que puedan ser comparados buscando generar respuestas para las siguientes preguntas claves en torno a las cuales gira el análisis que realiza este estudio.
 
 Las preguntas que se busca responder son:
+
 * Desde la perspectiva de un trabajador en el área de tecnología, que salario puede esperar según variables generales tales como nivel de estudio, años de experiencia, edad, ubicación geográfica, tecnologías manejadas, etc.
+
 * Desde la perspectiva de una empresa de búsqueda y contratación de talentos en tecnología, saber cuáles son las áreas y tecnologías con mayor oferta de trabajadores, así como cuál es el salario adecuado en cada una de ellas para cautivar de manera más eficaz a los perfiles adecuados.
+
 * **¿Cuáles son las variables más importantes a la hora de predecir el salario ideal? Variables no relacionadas a las habilidades técnicas en el área, como el género, la edad o la ubicación geográfica afectan los sueldos esperados ¿En qué medida?**
+
 
 Con los objetivos funcionales claros, a continuación, se presenta un diagrama de flujo a alto nivel del pipeline de procesamiento de datos implementado, utilizando Python 3.82 y las librerías pandas, pandas_profiling, numpy, mathplotlib y sklearn.
 
-![Pipeline de datosimplementado](pipeline.jpg){#fig:figure1}
+![Pipeline de datosimplementado](data_pipeline.jpg){#fig:figure1}
 
 # Inspección delsetde datos
 Las fuentes de datos a estudiar corresponden a encuestas realizadas a través de internet, dirigidas a todas las personas involucradas laboralmente en el sector del desarrollo de software y las tecnologías de la información en general. 
@@ -100,9 +109,9 @@ Como se puede observar hay varias tareas de preprocesado que es importante reali
 Luego de tener el dataset en un mejor estado, se procede a analizar más en profundidad las variables numéricas, pues se sospecha que la existencia de outliers y valores faltantes puede ser un problema para el análisis posterior.
 
 ## Manejo de outliers y valores faltantes
-Los box-plot de la figura [@fig:figure2] sugieren la existencia de valores atípicos en la muestra tanto para el extremo inferior como para el extremo superior, por lo que a continuación analizaremos individualmente algunos de los casos más interesantes, pues no es recomendable descartarlos sin siquiera examinar su origen y el potencial informativo que estos pueden aportar al presente estudio.
+Los box-plot de la [Figura @fig:figure2] sugieren la existencia de valores atípicos en la muestra tanto para el extremo inferior como para el extremo superior, por lo que a continuación analizaremos individualmente algunos de los casos más interesantes, pues no es recomendable descartarlos sin siquiera examinar su origen y el potencial informativo que estos pueden aportar al presente estudio.
 
-![Boxplots variables numéricas](boxplot.jpg){#fig:figure2}
+![Boxplots variables numéricas](boxplots2.jpg){#fig:figure2}
 
 Dado que no se tiene un número de muestras demasiado grande no se quiere descartar filas por tener alguna de sus columnas con valores extremos o faltantes. Por lo cual se analiza columna a columna los valores faltantes o erróneos, donde las variables categóricas son las más problemáticas debido a que en la mayoría de las preguntas de la encuesta no se limitó adecuadamente las categorías permitidas en cada caso. La columna **género** es un perfecto ejemplo donde se evidencia que las personas han respondido de diversas maneras para referirse a un mismo género, mientras que otras simplemente han preferido no responder. Por lo cual se transformaron todas las respuestas para entrar en solo cuatro opciones: femenino, masculino, otro y prefiero no responder. Este mismo proceso se realizó con el resto de respuestas a preguntas abiertas que no tenían un número fijo de opciones.
 En cuanto al manejo de valores extremos se realizó la eliminación de la fila completa cuando los valores estaban más allá del rango inter-cuartil, por debajo del cuantil 5% o por encima del cuantil 95% según el caso. Por ejemplo, la variable sueldo presenta valores detectados en el box-plot como extremos pero que en la realidad no lo son, pues son los sueldos de algunas personas que por su cargo y experiencia realmente ganan una cantidad de dinero que esta varios ordenes de magnitud por encima de la media. Así mismo cuando los valores del **sueldo mensual bruto expresado en pesos argentinos** (ARS) fue menor a 10000 se consideró un error en las respuestas dadas por los encuestados, asumiendo que en realidad no tuvieron en cuenta el enunciado completo de la pregunta e ingresaron el valor en dólares (USD), por lo que para estos casos se hizo la imputación utilizando la tasa de cambio correspondiente a la fecha en que se respondió la encuesta. 
@@ -110,6 +119,7 @@ En otros casos como en la variable **edad**, los valores extremos detectados uti
 
 ## Análisis de dimensionalidad de los datasets
 Luego de tener un entendimiento base de los datasets estudiados, el siguiente paso es realizar un análisis de componentes principales, comúnmente abreviado como PCA, buscando conocer las implicaciones de una reducción de la dimensionalidad, que se observa necesaria pues el conjunto de datos original tiene una gran cantidad de atributos (64 preguntas en total) que no se quieren descartar arbitrariamente. Esta técnica aplica solo para variables numéricas, que luego del pre-proceso explicado en secciones previas terminaron siendo un total de 8:
+
 * edad
 * experiencia_anios
 * empresa_actual_anios
@@ -118,10 +128,11 @@ Luego de tener un entendimiento base de los datasets estudiados, el siguiente pa
 * recomendacion_laboral
 * politicas_diversidad
 * pandemia_percepcion
+
 Nótese que la variable que se buscará predecir no fue incluida en la lista.
-El proceso de PCA identifica las direcciones con mayor varianza con las cuales se puede transformar un nuevo espacio vectorial. Como la varianza de una variable se mide en sus mismas unidades elevadas al cuadrado, si antes de calcular las componentes no se estandarizan todas las variables para que tengan media cero y desviación estándar de uno, aquellas variables cuya escala sea mayor dominarán al resto. Por lo que antes de realizar el llamado de la función que ejecuta el cálculo de PCA se realizó la estandarización de las mencionadas variables. **Referencia bibliográfica 2: https://www.cienciadedatos.net/documentos/py19-pca-python.html Rodrigo, J A**.
+El proceso de PCA identifica las direcciones con mayor varianza con las cuales se puede transformar un nuevo espacio vectorial. Como la varianza de una variable se mide en sus mismas unidades elevadas al cuadrado, si antes de calcular las componentes no se estandarizan todas las variables para que tengan media cero y desviación estándar de uno, aquellas variables cuya escala sea mayor dominarán al resto. Por lo que antes de realizar el llamado de la función que ejecuta el cálculo de PCA se realizó la estandarización de las mencionadas variables. [@ref:web2]
 Así mismo, el análisis de componentes principales es muy sensible a valores atípicos, de ahí surge la razón por la que en este estudio realizamos primero el manejo de outliers y valores faltantes antes que el análisis de la dimensionalidad.
-Los resultados del porcentaje total de variabilidad explicada luego de calcular la segunda, tercera, cuarta y quinta componente principal se observa en la tabla [@tbl:table5]. 
+Los resultados del porcentaje total de variabilidad explicada luego de calcular la segunda, tercera, cuarta y quinta componente principal se observa en la [Tabla @tbl:table5]. 
 
 | Cantidad de componentes principales | Variabilidad total explicada |
 |:-------------|:--------------|
@@ -134,6 +145,7 @@ Los resultados del porcentaje total de variabilidad explicada luego de calcular 
 Con solo dos componentes principales se explica una significativa variabilidad de los atributos numéricos, por lo que para el procesamiento posterior se utilizaran estas dos componentes buscando disminuir la complejidad de los modelos.
 
 Una vez reducida la dimensionalidad de las variables numéricas se hace importante analizar también la dimensionalidad de las variables categóricas pues es aquí donde está el grueso de variables del dataset. Para ello se ejecuta un análisis de correspondencia múltiple tomando como entrada las 11 variables categóricas que se listan a continuación:
+
 * tipo_contrato
 * sueldo_bonos
 * sueldo_ajuste_2021
@@ -145,7 +157,10 @@ Una vez reducida la dimensionalidad de las variables numéricas se hace importan
 * guardias
 * violencia_laboral
 * genero
-Los resultados de porcentaje total de variabilidad explicada (suma de las inercias de todas las dimensiones resultante) luego de calcular 2, 3 4 y 5 dimensiones se observan en la tabla [@tbl:table6]. 
+
+
+Los resultados de porcentaje total de variabilidad explicada (suma de las inercias de todas las dimensiones resultante) luego de calcular 2, 3 4 y 5 dimensiones se observan en la [Tabla @tbl:table6]. 
+
 
 | Cantidad de componentes principales | Variabilidad total explicada |
 |:-------------|:--------------|
@@ -155,34 +170,39 @@ Los resultados de porcentaje total de variabilidad explicada (suma de las inerci
 | 5 | 30.9162 %  |
 : El total de variables categóricas utilizadas en el análisis correspondencia múltiple es 11 {#tbl:table6}
 
-Debido a la alta correlación existente entre numerosas variables del dataset, que se puede observar en el mapa de calor de la figura [@fig:figure3], obtenemos una reducción de dimensionalidad muy efectiva en el caso de las variables numéricas continuas, pues a grandes rasgos con solo dos dimensiones se llega a cubrir el 90% de la variabilidad del dataset. Por lo que resulta interesante tener en cuenta las nuevas dimensiones encontradas para los modelos de predictores que se implementan en próximos capítulos, a pesar de que perdemos explicabilidad del modelo, al ser estas variables generadas artificialmente buscando únicamente aumentar la varianza de los datos sobre cada eje, podemos aumentar la efectividad predictora de los modelos al reducir la correlación y colinealidad entre las variables de entrada utilizadas en el modelado.
+
+Debido a la alta correlación existente entre numerosas variables del dataset, que se puede observar en el mapa de calor de la [Figura @fig:figure3], obtenemos una reducción de dimensionalidad muy efectiva en el caso de las variables numéricas continuas, pues a grandes rasgos con solo dos dimensiones se llega a cubrir el 90% de la variabilidad del dataset. Por lo que resulta interesante tener en cuenta las nuevas dimensiones encontradas para los modelos de predictores que se implementan en próximos capítulos, a pesar de que perdemos explicabilidad del modelo, al ser estas variables generadas artificialmente buscando únicamente aumentar la varianza de los datos sobre cada eje, podemos aumentar la efectividad predictora de los modelos al reducir la correlación y colinealidad entre las variables de entrada utilizadas en el modelado. 
 
 ![Mapa de calor con el nivel de correlación bivariada entre las 8 variables numéricas utilizando el coeficiente de correlación de Pearson](correlation_heat_map.jpg){#fig:figure3}
+
 
 # Predicción de salarios
 ## Predicción del salario mensual
 Buscando responder uno de los objetivos de este estudio, se entrenan y ajustan dos modelos para predecir el salario mensual en pesos argentinos (ARS) que es una variable numérica continua por lo que nos encontramos ante un problema de regresión. Dadas las características del conjunto de datos y buscando contrastar dos aproximaciones diferentes para abordar la regresión, se ajustará un modelo proveniente de la estadística como lo es la regresión lineal múltiple y un modelo de árboles aleatorios (random forests) del área de las ciencias de la computación.
 
+
 ### Regresión lineal múltiple
 En principio se ajustó una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante del proceso de preprocesado, obteniendo un coeficiente R2 de solo 0,4206 lo que sugiere que no estamos logrando representar toda la variabilidad de la variable predicha, por lo que se agrega una componente de regularización usando Ridge (o Lasso) que mejora el desempeño del modelo aumentado a XXX% la variabilidad cubierta.
 Posteriormente, y dado no estar consiguiendo una mejora significativa en la capacidad predictiva del modelo se decide comprobar los supuestos bajo los cuales se construye la regresión lineal múltiple:
+
 * Variables con distribución normal ¡??: 
 * Homocedasticidad: Misma varianza para todas las variables!??
 * No colinealidad entre sus variables!??
+
 
 ### Random Forests
 Yyyyy
 
 
 ## Comparación de los modelos
-Para evaluar el rendimiento de un método de aprendizaje estadístico en un conjunto de datos dado, necesitamos alguna forma de medir qué tan bien sus predicciones coinciden realmente con los datos observados. Es decir, necesitamos cuantificar hasta qué punto el valor de respuesta pronosticado para una observación determinada se acerca al valor de respuesta real para esa observación. En problemas de regresión, la medida más utilizada es el error cuadrático medio (MSE), dado por la fórmula @eq:eq1 donde f(xi) es la predicción que da f para la i-ésima observación e yi es el valor real.
+Para evaluar el rendimiento de un método de aprendizaje estadístico en un conjunto de datos dado, necesitamos alguna forma de medir qué tan bien sus predicciones coinciden realmente con los datos observados. Es decir, necesitamos cuantificar hasta qué punto el valor de respuesta pronosticado para una observación determinada se acerca al valor de respuesta real para esa observación. En problemas de regresión, la medida más utilizada es el error cuadrático medio (MSE), dado por la [Fórmula @eq:eq1] donde f(xi) es la predicción que da f para la i-ésima observación e yi es el valor real.
 
-**PONER FORMULA ACÁ (Ver imagen)** {#eq:eq1}
 
-El MSE será pequeño si las respuestas pronosticadas están muy cerca de las respuestas verdaderas, y será grande si para algunas de las observaciones, las respuestas pronosticadas y verdaderas difieren sustancialmente. **Referencia bibliográfica 3 (Garet James, Daniela Witten, Trevor Hastie, Robert Tibshirani - An Introduction to Statistical Learning with Applications in R. Editorial Springer. pages 29-30)**
+$$ M S E =  \frac{1}{n} \sum_{i=1}^{n} (y_{i} - \hat{f}(x_{i}))^2 $$ {#eq:eq1}
 
-Se utilizará entonce el MSE para comparar los dos modelos regresores implementados anteriormente, haciendo énfasis que este se calcula utilizando el subconjuto de datos de test para cada modelo a comparar. El MSE obtenido a partir de los datos de training no tiene ningún significado real ya que su minimización llevará al overfiting de los modelos alejandonos de una predicción precisa para observaciones nuevas (que el modelo no haya visto antes). Los resultados obtenidos se pueden observar en la tabla [@tbl:table7].
+El MSE será pequeño si las respuestas pronosticadas están muy cerca de las respuestas verdaderas, y será grande si para algunas de las observaciones, las respuestas pronosticadas y verdaderas difieren sustancialmente. [@ref:book1]
 
+Se utilizará entonce el MSE para comparar los dos modelos regresores implementados anteriormente, haciendo énfasis que este se calcula utilizando el subconjuto de datos de test para cada modelo a comparar. El MSE obtenido a partir de los datos de training no tiene ningún significado real ya que su minimización llevará al overfiting de los modelos alejandonos de una predicción precisa para observaciones nuevas (que el modelo no haya visto antes). Los resultados obtenidos se pueden observar en la [Tabla @tbl:table7].
 
 | Modelo | Número de predictores | MSE |
 |:-------------|:--------------|
@@ -210,24 +230,27 @@ A continuación, aplicamos el algoritmo **XXX** para cuantificar que tanto contr
 
 * (Conclusiones sobre los agrupamientos obtenidos y el desempeño mostrado por cada una de las tres técnicas en los conjuntos de datos).
 
+
 # Trabajo futuro
 (Mejoras en el código).
 (Construcción de un modelo predictivo que además pudiera ser utilizado de manera online).
 (Enriquecimiento de los datasets con datos económicos).
 
+
 # Bibliografía
-* Libro Análisis inteligente de datos, Chan Debora.
 * Martín, I. Mariello, A. Battiti, R. Hernández, J. A. Salary Prediction in the IT Job Market with Few High-Dimensional Samples: A Spanish Case Study. International Journal of Computational Intelligence Systems, Vol. 11 (2018), Páginas 1192 a 1209.
-* Regresión lineal con Python by Joaquín Amat Rodrigo, available under a Attribution 4.0 International (CC BY 4.0) at https://www.cienciadedatos.net/documentos/py10-regresion-lineal-python.html 
 * Enlace al repositorio de GitHub donde se encuentra cargado el código fuente de la solución implementada.
 * Enlace a las encuestas utilizadas como fuentes de datos.
-* https://sysarmy.com/blog/posts/resultados-de-la-encuesta-de-sueldos-2020-2/
 *  Papers como: https://www.researchgate.net/publication/289469100_Teachers_salary_data_analysis_using_data_mining_techniques
 * https://sueldos.openqube.io/encuesta-sueldos-2021.02/ 
 * https://seppo0010.github.io/sysarmy-sueldos-2020.1/text/prediccion-de-sueldo/index.html
 * https://towardsdatascience.com/a-simple-guide-to-beautiful-visualizations-in-python-f564e6b9d392
 * https://towardsdatascience.com/a-straightforward-guide-to-cleaning-and-preparing-data-in-python-8c82f209ae33 
 * https://www.youtube.com/watch?v=1uhPYIsJD3s
+
+
+# Referencias
+
 
 
 
