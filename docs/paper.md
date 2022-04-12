@@ -33,7 +33,7 @@ keywords: [Data science, Machine learning, Regresión]
 \setcounter{page}{1}
 
 
-**Abstract:** 
+**Abstract:**  
 El desarrollo de software y las tecnologías de la información es una industria que se hace cada vez más importante en el desarrollo económico y social no solo de los países sino de la humanidad en general, por lo que hacer un análisis cuantitativo apoyado en diversas herramientas que la ciencia de datos nos provee resulta no solo relevante sino también necesario.  Por lo tanto, en el presente estudio se analizan los datos recogidos en una de las encuestas más tradicionales y populares de Argentina, llevada a cabo por la comunidad SysArmy durante el segundo periodo del año 2021, aplicando en ese conjunto de datos técnicas exploratorias (medidas estadísticas de dispersión, centralidad, distribución y outliers), análisis dimensional (correlaciones y componentes principales) y regresiones (Regresión lineal múltiple y random forests) para extraer información que permita perfilar y comprender la evolución del sector poniendo especial foco en el contexto local Argentino.
 
 _keywords_: Desarrollo de software, PCA, Regresión lineal múltiple, random forests, Kmeans, DBScan, IT surveys, Sysarmy.
@@ -61,51 +61,127 @@ Las preguntas que se busca responder son:
 * **¿Cuáles son las variables más importantes a la hora de predecir el salario ideal? Variables no relacionadas a las habilidades técnicas en el área, como el género, la edad o la ubicación geográfica afectan los sueldos esperados ¿En qué medida?**
 
 
-Con los objetivos funcionales claros, a continuación, se presenta un diagrama de flujo a alto nivel del pipeline de procesamiento de datos implementado, utilizando Python 3.82 y las librerías pandas, pandas_profiling, numpy, mathplotlib y sklearn.
+Con los objetivos funcionales claros, a continuación, se presenta un diagrama de flujo a alto nivel del pipeline de procesamiento de datos a implementar, utilizando Python 3.82 y las librerías pandas, pandas_profiling, numpy, mathplotlib y sklearn.
 
-![Pipeline de datosimplementado](data_pipeline.jpg){#fig:figure1}
+![Pipeline de datos a implementar](data_pipeline.jpg){#fig:figure1}
+
+En el desarrollo de este pipeline de datos se prioriza la reutilización y mantenibilidad del código implementado, para facilmente procesar en el futuro las nuevas versiones (semestralmente) de la encuesta estudiada, así como también otros datasets similares, tales como la encuesta de Stackoverflow y la de Jetbrains, por citar las más famosas. El código fuente implementado es público, abierto y esta alojado en GitHub: [https://github.com/jaimeHMol/ITSurveysAnalysis](https://github.com/jaimeHMol/ITSurveysAnalysis)  [@ref:web5].
+
+Finalmente, y apuntando al usuario final que pueda estar interesado en consultar una prediccíon del salario que podría ganar a modo de referencia según su sitauación actual, respondiendo las preguntas como parámetros de entrada de los modelos, se provee una aplicación web que puede ser utilizada en el enlace: []()**COMPLETAR ESTE LINK**
+
 
 # Inspección delsetde datos
-Las fuentes de datos a estudiar corresponden a encuestas realizadas a través de internet, dirigidas a todas las personas involucradas laboralmente en el sector del desarrollo de software y las tecnologías de la información en general. 
-**Encuesta de remuneración salarial en Argentina:** Llevada a cabo por Sys Army, una comunidad de administradores de sistemas y desarrolladores de software en general con una larga trayectoria en el sector, que lleva realizando esta encuesta durante los últimos siete años. El conjunto de datos utilizado corresponde a datos recolectados en el último semestre del año 2021 (más exactamente desde el 1 de Julio de 2021 hasta el 9 de agosto de 2021). Las respuestas se recolectaron usando un "Google form" y la divulgación de la encuesta se hizo principalmente a través de Internet, específicamente Twitter, Discord, foros y portales online.
+La fuente de datos a estudiar corresponde a encuestas realizadas a través de internet, dirigidas a todas las personas involucradas laboralmente en el sector del desarrollo de software y las tecnologías de la información en general. 
+**Encuesta de remuneración salarial en Argentina:** Llevada a cabo por Sys Army, una comunidad de administradores de sistemas y desarrolladores de software en general con una larga trayectoria en el sector, que lleva realizando esta encuesta durante los últimos siete años. El conjunto de datos utilizado corresponde a datos recolectados en el último semestre del año 2021 (más exactamente desde el 1 de Julio de 2021 hasta el 9 de agosto de 2021) que están disponibles de manera abierta al público en general [@ref:web4]. Las respuestas se recolectaron usando un "Google form" y la divulgación de la encuesta se hizo principalmente a través de Internet, específicamente Twitter, Discord, foros y portales online.
 
 |  |  |
 |:-------------|:--------------|
 | **Cantidad de preguntas:** | 48  |
 | **Cantidad de respuestas::** | 6095  |
 | **Formato del dataset:** | csv  |
-| **Peso del dataset:** | 3.7 MB  |
+| **Peso del dataset:** | 3.70 MB  |
 : Descripción archivo con la información cruda de la encuesta {#tbl:table1}
 
 ## Caracterización cuantitativa del dataset
-Se cargaron los datasets usando un script de Python desarrollado a medida para implementar el pipeline de procesamiento de datos y la exploración inicial de la data cruda se realizó utilizando la biblioteca panda_profiler, que calcula todas las métricas estadísticas básicas (dispersión, centralidad, distribución) del dataset y sus columnas y genera un HTML para visualizarlas adecuadamente. A continuación, se resume la información más importante.
+Se cargaron los datasets usando un script de Python desarrollado a medida [@ref:web4] para implementar el pipeline de procesamiento de datos. La exploración inicial de la data cruda se realizó utilizando la biblioteca panda_profiler, que calcula todas las métricas estadísticas básicas (dispersión, centralidad, distribución) del dataset y sus columnas y genera un HTML para visualizarlas adecuadamente. A continuación, se resume la información más importante.
 
-| Dataset statistics || Variable types ||
+| Estadísticas generales del dataset || Typo de variables ||
 |:-------------|:--------------|:-------------|:--------------|
 | Número de variables | 66  | Categóricas | 46  |
 | Número de observaciones | 6440  | Numéricas | 14  |
 | Celdas con valores faltantes | 158142  | No soportadas | 6  |
-| Celdas con valores faltantes (%) | 37.2  | ||
+| Celdas con valores faltantes (%) | 37.20  | ||
 | Filas duplicadas | 10  | ||
-| Filas duplicadas (%) | 0.2  | ||
-| Tamaño total en memoria (MB) | 3.2  | ||
+| Filas duplicadas (%) | 0.20  | ||
+| Tamaño total en memoria (MB) | 3.20  | ||
 | Tamaño promedio en memoria por registro (Bytes) | 528  | ||
 : Descripción general del set de datos {#tbl:table2}
 
 
-| First Header | Second Header |
-|:-------------|:--------------|
-| Content Cell | Content Cell  |
-| Content Cell | Content Cell  |
+\scriptsize
+| Variable | Min | Max | Media | Mediana | Desv. Stand. | Val. Faltantes | Val. Distintos | Cant. ceros |
+|:---------------------------|:------|:-----------|:------------|:------------|:------------|:------|:--------|:------|
+| Salario mensual o retiro NETO (en tu moneda local) | 1 | 40000000 | 167355.60 | 124000 | 548213.60 | 330 | 1539 | 0 |
+| ¿De qué % fue el ajuste total? | 0 | 100 | 17.12 | 15 | 16.39 | 0 | 134 | 1861 |
+| Años de experiencia | 0 | 42 | 7.79 | 5 | 6.95 | 0 | 54 | 565 |
+| Años en la empresa actual | 0 | 2021 | 3.13 | 1 | 25.52 | 0 | 49 | 2382 |
+| Años en el puesto actual | 0 | 33 | 2.51 | 1.5 | 3.33 | 0 | 41 | 1949 |
+| ¿Gente a cargo? | 0 | 400 | 2.13 | 0 | 10.14 | 0 | 48 | 4793 |
+| ¿La recomendás como un buen lugar para trabajar? | 1 | 10 | 7.60 | 8 | 1.89 | 0 | 10 | 0 |
+| ¿Cómo calificás las políticas de diversidad e inclusión? | 0 | 10 | 6.797 | 8 | 3.394 | 0 | 11 | 839 |
+| Cuánto cobrás por guardia | 0 | 250000 | 794.83 | 0 | 6906.69 | 3422 | 99 | 2803 |
+| ¿Tenés hijos/as menores de edad? | 0 | 5 | 0.35 | 0 | 0.70 | 4106 | 5 | 1785 |
+| ¿Con cuántas personas estás conviviendo? | 0 | 10 | 1.56 | 1 | 1.29 | 4106 | 9 | 470 |
+| Tengo | 11 | 410 | 32.98 | 32 | 9.77 | 0 | 56 | 0 |
 : Variables numéricas {#tbl:table3}
 
-| First Header | Second Header |
-|:-------------|:--------------|
-| Content Cell | Content Cell  |
-| Content Cell | Content Cell  |
+\normalsize
+| Variable                                                         | Valores Faltantes | Valores Distintos |
+|:-----------------------------------------------------------------|:------------------|:------------------|
+| Dónde estás trabajando | 0 | 25 |
+| Tipo de contrato | 0 | 6 |
+| Salario mensual o retiro BRUTO (en tu moneda local) | 1 | 1692 |
+| Pagos en dólares | 5061 | 7 |
+| ¿Cuál fue el último valor de dólar que tomaron? | 5440 | 249 |
+| ¿Qué tan conforme estás con tu sueldo? | 0 | 4 |
+| Cómo creés que está tu sueldo con respecto al último semestre | 0 | 4 |
+| Recibís algún tipo de bono | 0 | 5 |
+| A qué está atado el bono | 1 | 249 |
+| ¿Tuviste ajustes por inflación durante 2021? | 0 | 5 |
+| ¿En qué mes fue el último ajuste? | 0 | 11 |
+| Trabajo de | 0 | 352 |
+| Plataformas | 1 | 1531 |
+| Frameworks, herramientas y librerías | 1 | 1259 |
+| Bases de datos | 1 | 1259 |
+| QA / Testing | 7 | 637 |
+| IDEs | 2 | 953 |
+| Cantidad de personas en tu organización | 0 | 10 |
+| Trabajo para una empresa que no tiene oficina en mi ciudad | 5098 | 1 |
+| Actividad principal | 0 | 3 |
+| ¿La recomendás como un buen lugar para trabajar? |  |  |
+| Beneficios extra | 1 | 1982 |
+| ¿Salir o seguir contestando? | 0 | 2 |
+| Nivel de estudios alcanzado | 3156 | 7 |
+| Estado | 3156 | 3 |
+| Carrera | 3318 | 408 |
+| Universidad | 3399 | 482 |
+| Realizaste cursos de especialización | 3156 | 6 |
+| ¿Contribuís a proyectos open source? | 3156 | 2 |
+| ¿Programás como hobbie? | 3156 | 2 |
+| ¿Salir o seguir contestando?_1 | 3156 | 2 |
+| ¿Tenés guardias? | 3422 | 3 |
+| ¿Porcentaje, bruto o neto? | 3422 | 3 |
+| ¿Salir o seguir contestando?_2 | 3422 | 2 |
+| ¿Sufriste o presenciaste situaciones de violencia laboral? | 3661 | 3 |
+| ¿Tenés algún tipo de discapacidad? | 6189 | 49 |
+| ¿Sentís que esto te dificultó el conseguir trabajo? | 5564 | 2 |
+| ¿Salir o seguir contestando?_3 | 3634 | 2 |
+| ¿Cómo venís llevando la pandemia? | 4106 | 4 |
+| ¿Con quiénes convivís? | 4106 | 77 |
+| ¿Tenés un espacio dedicado para el trabajo? | 4106 | 2 |
+| ¿Tenés que compartir tu equipo de trabajo con alguien? | 4106 | 2 |
+| ¿Qué tipo de cuarentena hiciste / estás haciendo? | 4106 | 4 |
+| ¿Cambió tu situación laboral a raíz de la pandemia? | 4106 | 137 |
+| ¿Qué tanto sentís que te está apoyando tu empresa/organización en esta situación? | 4106 | 10 |
+| ¿Cómo se vio afectada tu empresa/organización? | 4107 | 227 |
+| ¿Instauraron algún beneficio nuevo? | 4106 | 285 |
+| Me identifico | 1 | 146 |
+| Unnamed: 60 | 6440 | 1 |
+| Unnamed: 61 | 6440 | 1 |
+| Unnamed: 62 | 6440 | 1 |
+| Unnamed: 63 | 6440 | 1 |
+| Unnamed: 64 | 6440 | 1 |
+| Unnamed: 65 | 6440 | 1 |
 : Variables categóricas {#tbl:table4}
 
-Como se puede observar hay varias tareas de preprocesado que es importante realizar, tales como corrección del tipo de dato automáticamente cargado por la librería (Pandas) cuando leyó el CSV con la data, renombrar las columnas para hacerlas más fáciles de entender, evitar caracteres especiales como signos de interrogación, eliminación de columnas irrelevantes como "¿Salir o seguir contestando?", etc. 
+Como se puede observar hay varias tareas de preprocesado básico muy importantes, tales como 
+
+* La corrección del tipo de dato automáticamente cargado por la librería (Pandas) cuando leyó el CSV con los datos, pues podemos ver como las columnas **Salario mensual o retiro BRUTO (en tu moneda local)**, **Cantidad de personas en tu organización** y **¿Cuál fue el último valor de dólar que tomaron?** son claramente variables numéricas continuas y no categóricas. 
+
+* El renombrado de las columnas, para tener nombres más cortos, fáciles de entender, evitando caracteres especiales como espacios o signos de interrogación, convirtiendo nombres como **¿Sufriste o presenciaste situaciones de violencia laboral?** en **violencia_laboral**, o **Me identifico** en **genero** por poner solo algunos ejemplos. El mapeo completo puede ser consultado en archivo _mappings.py_ de la solución desarrollada [@ref:web4].
+
+* La eliminación de columnas irrelevantes como por ejemplo **¿Salir o seguir contestando?**, **ID** o **Unnamed: 60**. 
+
 Luego de tener el dataset en un mejor estado, se procede a analizar más en profundidad las variables numéricas, pues se sospecha que la existencia de outliers y valores faltantes puede ser un problema para el análisis posterior.
 
 ## Manejo de outliers y valores faltantes
@@ -118,7 +194,7 @@ En cuanto al manejo de valores extremos se realizó la eliminación de la fila c
 En otros casos como en la variable **edad**, los valores extremos detectados utilizando como base el rango inter-cuartil (básicamente edades menores a 18 y mayores a 80 años) produjeron la eliminación de la fila completa dado que eran muy pocos los casos y no se tenía ninguna manera medianamente confiable para imputar estos valores.
 
 ## Análisis de dimensionalidad de los datasets
-Luego de tener un entendimiento base de los datasets estudiados, el siguiente paso es realizar un análisis de componentes principales, comúnmente abreviado como PCA, buscando conocer las implicaciones de una reducción de la dimensionalidad, que se observa necesaria pues el conjunto de datos original tiene una gran cantidad de atributos (64 preguntas en total) que no se quieren descartar arbitrariamente. Esta técnica aplica solo para variables numéricas, que luego del pre-proceso explicado en secciones previas terminaron siendo un total de 8:
+Luego de tener un entendimiento base de los datasets estudiados, el siguiente paso es realizar un análisis de componentes principales, comúnmente abreviado como PCA (por sus siglas en inglés), buscando conocer las implicaciones de una reducción de la dimensionalidad, que se observa necesaria pues el conjunto de datos original tiene una gran cantidad de atributos (64 preguntas en total) que no se quieren descartar arbitrariamente. Esta técnica aplica solo para variables numéricas, que luego del pre-proceso explicado en secciones previas terminaron siendo un total de 8:
 
 * edad
 * experiencia_anios
@@ -130,8 +206,10 @@ Luego de tener un entendimiento base de los datasets estudiados, el siguiente pa
 * pandemia_percepcion
 
 Nótese que la variable que se buscará predecir no fue incluida en la lista.
-El proceso de PCA identifica las direcciones con mayor varianza con las cuales se puede transformar un nuevo espacio vectorial. Como la varianza de una variable se mide en sus mismas unidades elevadas al cuadrado, si antes de calcular las componentes no se estandarizan todas las variables para que tengan media cero y desviación estándar de uno, aquellas variables cuya escala sea mayor dominarán al resto. Por lo que antes de realizar el llamado de la función que ejecuta el cálculo de PCA se realizó la estandarización de las mencionadas variables. [@ref:web2]
+El proceso de PCA es una técnica exploratoria que no establece supuestos y siempre peude utilizarse para identificar las direcciones con mayor varianza con las cuales se puede transformar un nuevo espacio vectorial. Como la varianza de una variable se mide en sus mismas unidades elevadas al cuadrado, si antes de calcular las componentes no se estandarizan todas las variables para que tengan media cero y desviación estándar de uno, aquellas variables cuya escala sea mayor dominarán al resto. Por lo que antes de realizar el llamado de la función que ejecuta el cálculo de PCA se realizó la estandarización de las mencionadas variables. [@ref:web2]
+
 Así mismo, el análisis de componentes principales es muy sensible a valores atípicos, de ahí surge la razón por la que en este estudio realizamos primero el manejo de outliers y valores faltantes antes que el análisis de la dimensionalidad.
+
 Los resultados del porcentaje total de variabilidad explicada luego de calcular la segunda, tercera, cuarta y quinta componente principal se observa en la [Tabla @tbl:table5]. 
 
 | Cantidad de componentes principales | Variabilidad total explicada |
@@ -144,7 +222,9 @@ Los resultados del porcentaje total de variabilidad explicada luego de calcular 
 
 Con solo dos componentes principales se explica una significativa variabilidad de los atributos numéricos, por lo que para el procesamiento posterior se utilizaran estas dos componentes buscando disminuir la complejidad de los modelos.
 
-Una vez reducida la dimensionalidad de las variables numéricas se hace importante analizar también la dimensionalidad de las variables categóricas pues es aquí donde está el grueso de variables del dataset. Para ello se ejecuta un análisis de correspondencia múltiple tomando como entrada las 11 variables categóricas que se listan a continuación:
+Una vez reducida la dimensionalidad de las variables numéricas se hace importante analizar también la dimensionalidad de las variables categóricas pues es aquí donde está el grueso de variables del dataset. Para ello se ejecuta un análisis de correspondencia múltiple (MCA por sus siglas en inglés), que se define como una técnica multivariante que permite representar conjuntamente las categorías de las filas y columnas de una tabla de contingencia. Constituye el equivalente de análisis de componentes principales para variables cualitativas y no requiere el cumplimiento de ningún supuesto para poder aplicarla. Más específicamente, busca una representación en coordenadas de las filas y columnas de una tabla de contingencia, de modo tal que los patrones de asociación presentes en la tabla se reflejen en dichas coordenadas. Teniendo en cuenta que una tabla de contingencia es un arreglo matricial de números positivos donde en cada casilla se presenta la frecuencia absoluta observada para esa combinación de variables. [@ref:book2]
+
+Tomando como entrada para el MCA las 11 variables categóricas que se listan a continuación:
 
 * tipo_contrato
 * sueldo_bonos
@@ -157,7 +237,6 @@ Una vez reducida la dimensionalidad de las variables numéricas se hace importan
 * guardias
 * violencia_laboral
 * genero
-
 
 Los resultados de porcentaje total de variabilidad explicada (suma de las inercias de todas las dimensiones resultante) luego de calcular 2, 3 4 y 5 dimensiones se observan en la [Tabla @tbl:table6]. 
 
@@ -222,16 +301,22 @@ A continuación, aplicamos el algoritmo **XXX** para cuantificar que tanto contr
 
 * (Conclusiones sobre la dimensionalidad de los conjuntos de datos, específicamente sobre las variables que parecen ser más relevantes, describiendo la mayor cantidad de la variabilidad en los datos).
 
-* El modelo de random forest presentó resultados marginalmente superiores que la regresión lineal múltiple, posiblemente debido a que está última no tenía ningún tipo de regularización. Como trabajo futuro podría implementarse y analizar una regresión Ridge y Lasso para confirmar que efectivamente el RMSE (coeficiente utilizado para comparar los modelos) aumenta. (Conclusiones sobre el funcionamiento de los dos modelos utilizados.)
+* El modelo de random forest presentó resultados marginalmente superiores que la regresión lineal múltiple, posiblemente debido a que está última no tenía ningún tipo de regularización. Como trabajo futuro podría implementarse y analizar una regresión Ridge y Lasso para confirmar que efectivamente el MSE (coeficiente utilizado para comparar los modelos) aumenta. (Conclusiones sobre el funcionamiento de los dos modelos utilizados.)
 
 * (Conclusiones del desempeño de los modelos utilizados utilizando la dimensionalidad reducida, los valores estandarizados, la imputación de los valores perdidos y quizá también omitiendo el ajuste de outliers).
 
 * Los resultados obtenidos en los análisis de reducción de dimensionalidad y de importancia de las variables en cada uno de los modelos implementado nos evidencian que las variables externas al trabajo en IT no tienen la influencia que mediáticamente se supone. Variables como el género, la localización, cantidad de hijos, etc no son las que más aportan en la predicción del salario mensual, mientras que los años de experiencia, las personas a cargo y algunas tecnologías son las que predominan en ambos modelos. Los modelos fueron entrenados excluyendo las variables género y localización, para posteriormente confirmar el mínimo impacto en la capacidad predictora de los modelos, utilizando para ello el RMSE como índice de comparación. (Conclusiones sobre el mercado laboral en desarrollo de software y tecnologías de la información en Argentina).
 
-* (Conclusiones sobre los agrupamientos obtenidos y el desempeño mostrado por cada una de las tres técnicas en los conjuntos de datos).
 
 
 # Trabajo futuro
+El presente trabajo es solo el preambulo de todo lo que se puede explorar y analizar respecto a la predicción de sueldos. En general existen dos grandes apartados en los que se puede seguir trabajando en el futuro.
+
+1. El código implementado es suceptible a muchas mejoras, especialmente desde el punto de la ingeniería de software, que se hace relevante en el momento en que modelos como los que aquí se implementaron sean llevados a ambientes de producción, donde el rendimiento y la mantenibilidad del código es fundamental.
+
+2. Existe una innumerable cantidad de modelos y técnicas estadísticas y de aprendizaje de máquina que podrían probarse y compararse buscando mejores resultados predictivos. Así mismo, incluir los datos recolectados de esta misma encuesta durante los últimos 7 años permitiría también realizar análisis de series temporales buscando encontrar patrones y conocimiento más profundo y valioso sobre estes tema.
+
+3. Existen más encuestas sobre el tema tratado en este estudio que podrían analizarse para comparar por ejemplo el mercado IT argentino con el mergado IT global, buscando responder preguntas y verificar hipótesis más allá del alcance del presente trabajo.
 (Mejoras en el código).
 (Construcción de un modelo predictivo que además pudiera ser utilizado de manera online).
 (Enriquecimiento de los datasets con datos económicos).
@@ -239,8 +324,6 @@ A continuación, aplicamos el algoritmo **XXX** para cuantificar que tanto contr
 
 # Bibliografía
 * Martín, I. Mariello, A. Battiti, R. Hernández, J. A. Salary Prediction in the IT Job Market with Few High-Dimensional Samples: A Spanish Case Study. International Journal of Computational Intelligence Systems, Vol. 11 (2018), Páginas 1192 a 1209.
-* Enlace al repositorio de GitHub donde se encuentra cargado el código fuente de la solución implementada.
-* Enlace a las encuestas utilizadas como fuentes de datos.
 *  Papers como: https://www.researchgate.net/publication/289469100_Teachers_salary_data_analysis_using_data_mining_techniques
 * https://sueldos.openqube.io/encuesta-sueldos-2021.02/ 
 * https://seppo0010.github.io/sysarmy-sueldos-2020.1/text/prediccion-de-sueldo/index.html
