@@ -261,7 +261,11 @@ Buscando responder uno de los objetivos de este estudio, se entrenan y ajustan d
 
 
 ### Regresión lineal múltiple
-En principio se ajustó una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante del proceso de preprocesado, obteniendo un coeficiente R2 de solo 0,4206 lo que sugiere que no estamos logrando representar toda la variabilidad de la variable predicha, por lo que se agrega una componente de regularización usando Ridge (o Lasso) que mejora el desempeño del modelo aumentado a XXX% la variabilidad cubierta.
+TODO: Poner descripción de regresión lineal
+
+En principio se ajustó una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante del proceso de preprocesado, obteniendo un coeficiente R2 de solo 0,4206 lo que sugiere que no estamos logrando representar toda la variabilidad de la variable predicha, 
+
+TODO: verificar si esto se va a hacer (yo digo que no): por lo que se agrega una componente de regularización usando Ridge (o Lasso) que mejora el desempeño del modelo aumentado a XXX% la variabilidad cubierta.
 Posteriormente, y dado no estar consiguiendo una mejora significativa en la capacidad predictiva del modelo se decide comprobar los supuestos bajo los cuales se construye la regresión lineal múltiple:
 
 * Variables con distribución normal ¡??: 
@@ -270,7 +274,12 @@ Posteriormente, y dado no estar consiguiendo una mejora significativa en la capa
 
 
 ### Random Forests
-Yyyyy
+Un bosque aleatorio (mejor conocido en ingles como random forest) es esencialmente una colección de árboles de decisión, donde cada árbol es ligeramente diferente de los demás. La idea detrás de los bosques aleatorios es que cada árbol puede hacer un trabajo relatiavemente bueno de predicción, pero es probable que se sobreajuste a una parte de los datos. Si se construyen muchos árboles, los cuales funcionan bien y se sobreajustan  de diferentes maneras, podemos reducir la cantidad de sobreajuste promediando sus resultados. Esta reducción en el sobreajuste, mientras se conserva el poder predictivo de los árboles, se puede demostrar usando matemáticas rigurosas.
+Para implementar esta estrategia, se requiere construir muchos árboles de decisión. Cada árbol debe hacer un trabajo aceptable de predecir el objetivo, y también debe ser diferente de los demás árboles. Los bosques aleatorios obtienen su nombre de la inyección de aleatoriedad en la construcción de los árboles para asegurar que cada árbol es diferente. Hay dos formas en que los árboles son aleatorizados en un bosque aleatorio: seleccionando los puntos de datos utilizados para construir un árbol y seleccionando las características (variables) en cada división. [@ref:book3]
+
+Este modelo puede ser utilizado tanto para problemas de clasificación así como de regresión. Suele funcionar bastante bien con variables a predecir con comportamiento no lineal, sin embargo al incluir aleatoriedad y una gran cantidad de predictores (árboles de decisión) ensamblados la interpretabilidad del modelo no es la mejor.
+
+Este modelo tiene muchos parámetros que se pueden ajustar, sin embargo los más relevantes son la _cantidad de árboles a construir_, que a mayor sea mejores resultados de predicción se obtendrán, sin embargo,  impactará también en el procesamiento total requerido en el entranamiento (más tiempo de computo entrenando el modelo), así como la _cantidad de variables_ (max features) a utilizar en cada árbol, empiricamente se conoce que un buen número de partida es log2(n_features) donde n_features es el total de variables del dataset, y la _cantidad de muestras_ (filas) a utilizar para generar cada arbol. Los últimos dos parámetros son los que a la postre definen el nivel de azar que se maneja al construir el bosque aleatorio.
 
 
 ## Comparación de los modelos
@@ -293,17 +302,19 @@ Se utilizará entonce el MSE para comparar los dos modelos regresores implementa
 ## Importancia de los features (feature engineering):
 A continuación, aplicamos el algoritmo **XXX** para cuantificar que tanto contribuye los features o variables medidas en las diferentes encuestas, tal que nos provea argumentos sólidos para recomendar cuales son los aspectos más importantes que un trabajador en el mercado del desarrollo de software debe tener en cuenta dentro del contexto económico argentino.
 
+TODO: Completar
+
 
 # Conclusiones
 * Tener la variable de interés (dependiente) que se quiere analizar/predecir dentro del análisis de reducción de dimensiones puede llevar a resultados donde esta sea la que en mayor medida explique la variabilidad total del conjunto de datos, produciendo resultados en los cuales solo la primera componente tiene más del 90% de la variabilidad total. Esto nos puede llevar a conclusiones triviales y erradas que se deben evitar. Un gráfico biplot (para el caso de dos componentes) en este escenario mostrará claramente la variable que está explicando la mayor variabilidad y que debería ser removida en caso de ser la variable a predecir.
  
 * Como era de esperarse las actividades de preprocesamiento fueron las que más tiempo requirieron (tomando un 84% del tiempo total utilizado en este estudio) debido a múltiples razones, entre las más importantes están que las respuestas a varias preguntas no fueron adecuadamente restringidas desde el mismo diseño de la encuesta, así como numerosas preguntas que no fueron respondidas, produciendo valores perdidos, que en principio no se quisieron descartar pues la cantidad de observaciones tampoco era muy grande. (Comentarios sobre los resultados obtenidos en la limpieza y exploración inicial de los conjuntos de datos).
 
-* (Conclusiones sobre la dimensionalidad de los conjuntos de datos, específicamente sobre las variables que parecen ser más relevantes, describiendo la mayor cantidad de la variabilidad en los datos).
+TODO: * (Conclusiones sobre la dimensionalidad de los conjuntos de datos, específicamente sobre las variables que parecen ser más relevantes, describiendo la mayor cantidad de la variabilidad en los datos).
 
 * El modelo de random forest presentó resultados marginalmente superiores que la regresión lineal múltiple, posiblemente debido a que está última no tenía ningún tipo de regularización. Como trabajo futuro podría implementarse y analizar una regresión Ridge y Lasso para confirmar que efectivamente el MSE (coeficiente utilizado para comparar los modelos) aumenta. (Conclusiones sobre el funcionamiento de los dos modelos utilizados.)
 
-* (Conclusiones del desempeño de los modelos utilizados utilizando la dimensionalidad reducida, los valores estandarizados, la imputación de los valores perdidos y quizá también omitiendo el ajuste de outliers).
+TODO: * (Conclusiones del desempeño de los modelos utilizados utilizando la dimensionalidad reducida, los valores estandarizados, la imputación de los valores perdidos y quizá también omitiendo el ajuste de outliers).
 
 * Los resultados obtenidos en los análisis de reducción de dimensionalidad y de importancia de las variables en cada uno de los modelos implementado nos evidencian que las variables externas al trabajo en IT no tienen la influencia que mediáticamente se supone. Variables como el género, la localización, cantidad de hijos, etc no son las que más aportan en la predicción del salario mensual, mientras que los años de experiencia, las personas a cargo y algunas tecnologías son las que predominan en ambos modelos. Los modelos fueron entrenados excluyendo las variables género y localización, para posteriormente confirmar el mínimo impacto en la capacidad predictora de los modelos, utilizando para ello el RMSE como índice de comparación. (Conclusiones sobre el mercado laboral en desarrollo de software y tecnologías de la información en Argentina).
 
