@@ -204,7 +204,12 @@ Ahora con el dataset libre de outliers, valores faltantes y alta cardinalidad se
 En el presente trabajo se realizan dos transformaciones que tienen un gran impacto especialmente en el análisis de componentes principales y las regresiones lineales, sin  embargo, vale la pena aclarar que el proceso de exploración de datos (EDA por sus siglas en ingles) es iterativo y debe ser revisitado cada vez que se ajusten nuevos modelos, nuevos datos o nuevas transformaciones.
 
 ### Escalado de variables continuas
-TODO: yyy
+TODO: WIP
+Dado que las variables numéricas pueden tener diferentes unidades según la pregunta de la encuesta a la que correspondan, por ejemplo, años, pesos, dolares, etc se realiza una standarización o escalado de los valores de estas variables. Con esto se evitan posibles impactos negativos en algunos modelos y algoritmos de analisis de datos que son sensibles a la magnitud de los valores.
+
+Existen múltiples maneras de escalar las variables continuas, por ejemplo, se puede realizar una normalización estándar, que resta la media muestral y luego la divide en la desviación estándar a cada valor de la muestra, o se puede utilizar un escalado en el que se aplica la función de escala de valores mínimos y máximos a cada columna. 
+
+En el presente estudio se realizó la standarización utilizando la función StandardScaler de la librería sklearn.
 
 ### Tokenización de variables categóricas
 TODO: zzz
@@ -351,7 +356,7 @@ TODO: * (Conclusiones del desempeño de los modelos utilizados utilizando la dim
 
 * Los resultados obtenidos en los análisis de reducción de dimensionalidad y de importancia de las variables en cada uno de los modelos implementado nos evidencian que las variables externas al trabajo en IT no tienen la influencia que mediáticamente se supone. Variables como el género, la localización, cantidad de hijos, etc no son las que más aportan en la predicción del salario mensual, mientras que los años de experiencia, las personas a cargo y algunas tecnologías son las que predominan en ambos modelos. Los modelos fueron entrenados excluyendo las variables género y localización, para posteriormente confirmar el mínimo impacto en la capacidad predictora de los modelos, utilizando para ello el RMSE como índice de comparación. (Conclusiones sobre el mercado laboral en desarrollo de software y tecnologías de la información en Argentina).
 
-TODO: Pulir: * Se evidencia como se concluye en [@ref:article3], que esta encuesta es suceptible a las falencias comunes en este tipo sondeos, pues xxxx no es claro, las opciones utilizadas para los roles no siguen un estandar reconocido en el ámbito IT, de hecho es una pregunta abierta en la que los encuestados podían colocar cualquier valor.
+* Siguiendo la línea propuesta por [@ref:article3], se evidencia que la encuesta analizada es suceptible a las falencias comunes en este tipo sondeos. Especialmente el no tener estandarizadas las diferentes posiciones o grados existentes en la industria IT impacta en la comparabilidad de los resultados. Lo que justifica también que los resultados de los modelos regresores implementados no sean especialmente sobresalientes. Basicamente la data tiene problemas que provenien directamente desde la construcción de la encuesta. Sin mencionar que las variables económicas, sociales y políticas del país, la muestra conseguida y el diseño de varias de las preguntas son factores que también afectan el presente estudio.
 
 
 # Trabajo futuro {#sec:sec6}
