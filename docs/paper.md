@@ -212,7 +212,8 @@ Existen múltiples maneras de escalar las variables continuas, por ejemplo, se p
 En el presente estudio se realizó la standarización utilizando la función StandardScaler de la librería sklearn.
 
 ### Tokenización de variables categóricas
-TODO: zzz
+TODO: WIP
+Muchos modelos predictores y regresores de machine learning son sensibles a la cardinalidad de los datos cuando hablamos de variables categóricas, en algunos de ellos ni siquiera es posible utilizar este tipo de variables, por lo que se realiza una tokenización de las variables categóricas presente en el dataset analizado. La transformación implementada consiste en crear una variable numérica que puede tomar unicamente los valores de 0 o 1 por cada una de las categorías existentes en cada una de las variables categoricas, de esta manera todas las variables de entrada serán númericas, aunque con la desventaja que nuestro modelo ahora receibirá una mayor cantidad de variables, aumentando la complejidad y el tiempo de entrenamiento del mismo.
 
 
 ## Análisis de dimensionalidad de los datasets
