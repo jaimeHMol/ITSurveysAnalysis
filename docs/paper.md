@@ -339,7 +339,12 @@ TODO: Usar esta referencia [@ref:book5]
 
 
 ## Importancia de los features (feature engineering):
-A continuación, aplicamos el algoritmo **XXX** para cuantificar que tanto contribuye los features o variables medidas en las diferentes encuestas, tal que nos provea argumentos sólidos para recomendar cuales son los aspectos más importantes que un trabajador en el mercado del desarrollo de software debe tener en cuenta dentro del contexto económico argentino.
+A continuación, se compara la importancia de las variables también conocidas como features calculada en cada uno de los dos modelos implementados,  para cuantificar que tanto contribuyen las variables medidas en encuesta procesada, tal que nos provea argumentos sólidos para por ejemplo recomendar cuales son los aspectos más importantes que un trabajador en el mercado del desarrollo de software debe tener en cuenta dentro del contexto económico argentino.
+
+En el caso de la regresión lineal, la importancia de las variables esta determinada por el coeficiente que acompaña a cada variable en la ecuación resultante del modelo, de nuevo reafirmando la importancia de previamente haber escalado/estandarizado las variables númericos del dataset. Notese que el impacto de cada variable de entrada en la variable a predecir es relevante sin importar el signo positivo o negativo que el coeficiente tenga, por lo que es el valor absoluto de los coeficientes el que determina la importancia de cada variable.
+
+En cuanto al modelo de random forest, la importancia de las variables es proporcionada por el modelo y está determinada por la cantidad de información aportada por cada variable cuando es utilizada en la creación de los árboles de decisión que componen el random forest. La librería Scikit Learn proporciona este cálculo luego de que se haya ajustado el modelo. # TODO: Agregar una fuente donde de un poco más de detalle al respecto de como se calcula esto.
+
 
 TODO: Completar
 
