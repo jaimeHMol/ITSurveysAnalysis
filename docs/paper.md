@@ -341,11 +341,16 @@ TODO: Usar esta referencia [@ref:book5]
 ## Importancia de los features (feature engineering):
 A continuación, se compara la importancia de las variables también conocidas como features calculada en cada uno de los dos modelos implementados,  para cuantificar que tanto contribuyen las variables medidas en encuesta procesada, tal que nos provea argumentos sólidos para por ejemplo recomendar cuales son los aspectos más importantes que un trabajador en el mercado del desarrollo de software debe tener en cuenta dentro del contexto económico argentino.
 
-En el caso de la regresión lineal, la importancia de las variables esta determinada por el coeficiente que acompaña a cada variable en la ecuación resultante del modelo, de nuevo reafirmando la importancia de previamente haber escalado/estandarizado las variables númericos del dataset. Notese que el impacto de cada variable de entrada en la variable a predecir es relevante sin importar el signo positivo o negativo que el coeficiente tenga, por lo que es el valor absoluto de los coeficientes el que determina la importancia de cada variable.
+En el caso de la regresión lineal, la importancia de las variables esta determinada por el coeficiente que acompaña a cada variable en la ecuación resultante del modelo, de nuevo reafirmando la importancia de previamente haber escalado/estandarizado las variables númericos del dataset. Notese que el impacto de cada variable de entrada en la variable a predecir es relevante sin importar el signo positivo o negativo que el coeficiente tenga, por lo que es el valor absoluto de los coeficientes el que determina la importancia de cada variable. 
+En la [Figura @fig:figure4] se observa la importancia de cada una de las variables utilizadas en la regresión lineal,teniendo en cuenta que las variables categóricas fueron tokenizadas y que las variables numéricas fueron escaladas/estandarizadas tal y como se explicó en [@sec:sec3].
 
-En cuanto al modelo de random forest, la importancia de las variables es proporcionada por el modelo y está determinada por la cantidad de información aportada por cada variable cuando es utilizada en la creación de los árboles de decisión que componen el random forest. La librería Scikit Learn proporciona este cálculo luego de que se haya ajustado el modelo. # TODO: Agregar una fuente donde de un poco más de detalle al respecto de como se calcula esto.
+![Importancia de las variables en la regresión lineal entrenada](variable_importance_linear_regression.jpg){#fig:figure4}
 
+En cuanto al modelo de random forest, al tratarse de una combinación de múltiples árboles, no es posible obtener una representación gráfica sencilla del modelo y no es inmediato identificar de forma visual que predictores son más importantes. Sin embargo, se han desarrollado nuevas estrategias para cuantificar la importancia de los predictores que hacen de los modelos de bagging (Random Forest) una herramienta muy potente, no solo para predecir, sino también para el análisis exploratorio. Dos de estas medidas son: importancia por permutación e impureza de nodos. [@ref:web6]
+En general, estos métodos buscan medir la cantidad de información aportada por cada variable cuando es utilizada en la creación de los árboles de decisión que componen el random forest.
+En la [Figura @fig:figure5] se presenta la importancia de las variables según el modelo de random forest entrenado, obtenidos directamente de la implementación realizada por la librearía Scikit Learn. 
 
+![Importancia de las variables en el random forest entrenado](variable_importance_random_forest.jpg){#fig:figure5}
 TODO: Completar
 
 
