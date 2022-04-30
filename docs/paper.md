@@ -351,7 +351,9 @@ En general, estos métodos buscan medir la cantidad de información aportada por
 En la [Figura @fig:figure5] se presenta la importancia de las variables según el modelo de random forest entrenado, obtenidos directamente de la implementación realizada por la librearía Scikit Learn. 
 
 ![Importancia de las variables en el random forest entrenado](variable_importance_random_forest.jpg){#fig:figure5}
+
 TODO: Completar
+Si bien es cierto que la importancia de los variables varía según el modelo implementado, existen algunas que coinciden en los puestos de mayor relevancia, como xxx, yyy, zzz. En general las variables relacionadas a (la preparación académica del candidato || la experiencia del candidato || las condiciones demográficas) son las que más aportan a la predicción del salario en ambos modelos, mientras que las variables asociadas a la información personal del candidato hacen parte de las que menos aportan, sugiriendo que no existe discriminación o brecha salarial asociada a tales variables, haciendo la salvedad, que algunas de estas están desbalanceadas lo que puede estar impactando la perfomance general de los modelos y por ende también la importancia calculada de las variables.
 
 
 # Conclusiones {#sec:sec5}
