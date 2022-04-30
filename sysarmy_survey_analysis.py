@@ -1,11 +1,12 @@
 import logging
 import os
 from pathlib import Path
+
 import numpy as np
 from numpy.core.numeric import False_
 
-from data_process import DataProcess
 import mappings as maps
+from data_process import DataProcess
 
 project_path = Path(os.getcwd())
 output_path = project_path / "data/prepared/"
@@ -38,8 +39,8 @@ cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
 
 
-# Create tecnologies column unifying multiple related columns
-sysarmy_analysis.unify_cols(maps.cols_to_unify, "tecnologies", maps.tecs_to_replace)
+# Create technologies column unifying multiple related columns
+sysarmy_analysis.unify_cols(maps.cols_to_unify, "technologies", maps.tecs_to_replace)
 sysarmy_analysis.drop_cols(maps.cols_to_unify)
 
 
@@ -102,7 +103,7 @@ sysarmy_analysis.handle_outliers(["personas_a_cargo"], method="drop_5_95")
 cols_numeric.append("personas_a_cargo")
 
 
-# sysarmy_analysis.drop_cols(["tecnologies"])
+# sysarmy_analysis.drop_cols(["technologies"])
 # print(set(sysarmy_analysis.dataset))
 # print(set(sysarmy_analysis.dataset[cols_to_standard]))
 # print(set(sysarmy_analysis.dataset) - set(sysarmy_analysis.dataset[cols_to_standard]))
@@ -124,7 +125,7 @@ sysarmy_analysis.dummy_cols_from_category(
         "contribucion_open_source",
         "programacion_hobbie",
     ],
-    drop_first=True,
+    drop_first=False,
 )
 
 sysarmy_analysis.describe(graph=True)
@@ -153,6 +154,7 @@ sysarmy_analysis.standardize(cols_to_standard, "z_score")
 
 # Bartlett test to know if PCA could be done
 import scipy.stats as stats
+
 stats.bartlett(*[sysarmy_analysis.dataset[col].tolist() for col in cols_to_standard])
 # BartlettResult(statistic=774806.2025723966, pvalue=0.0)
 # According to the pvalue (less than 0.05) we have enough evidence to reject the null
@@ -172,7 +174,7 @@ sysarmy_analysis.reduction_dims(
 # Applies only for categoric columns
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_categoric = sysarmy_analysis.get_cols_by_type(cols_by_type, ["object"])
-cols_categoric.remove("tecnologies") # This column is removed because it was manually created and it has a very high cardinality
+cols_categoric.remove("technologies") # This column is removed because it was manually created and it has a very high cardinality
 sysarmy_analysis.reduction_dims(
     cols_categoric,
     method="mca",
@@ -186,11 +188,12 @@ sysarmy_analysis.clusterization(
     visualize=True
 )
 
-sysarmy_analysis.dummy_cols_from_text(col="tecnologies", sep=",", n_cols=15)
+sysarmy_analysis.dummy_cols_from_text(col="technologies", sep=",", n_cols=15)
 print(sysarmy_analysis)
 
 
 # Salary prediction with linear regression with cleaned columns, no dim reduction
+# the method automatically select the numeric columns.
 sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars", 
     cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"], 
@@ -201,7 +204,7 @@ sysarmy_analysis.linear_regression(
 # Salary prediction with random forest with cleaned columns, no dim reduction
 sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars", 
-    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+    cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"] + cols_categoric,
     graph=True,
 )
 
