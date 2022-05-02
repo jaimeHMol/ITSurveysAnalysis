@@ -1,25 +1,21 @@
 import logging
-import pandas as pd
-from pandas.api.types import is_numeric_dtype
-import numpy as np
-import matplotlib.pyplot as plt
 import math
+import webbrowser
 
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-from sklearn.cluster import DBSCAN
-from sklearn_extra.cluster import KMedoids
-from sklearn.metrics import silhouette_score
-from sklearn.metrics import mean_squared_error
-from sklearn.metrics import r2_score
-from sklearn.linear_model import LinearRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
-
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from kneed import KneeLocator
+from pandas.api.types import is_numeric_dtype
 from pandas_profiling import ProfileReport
 from prince import MCA
-import webbrowser
+from sklearn.cluster import DBSCAN, KMeans
+from sklearn.decomposition import PCA
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score, silhouette_score
+from sklearn.model_selection import train_test_split
+from sklearn_extra.cluster import KMedoids
 
 # TOIMPROVE: Add optional argument "cols" to all the method that do some process over the self.dataset
 logger = logging.getLogger(__name__)
@@ -573,7 +569,7 @@ class DataProcess(object):
             self.dataset = pd.concat([self.dataset, dummy_df], axis=1, sort=False)    
 
 
-    def linear_regression(self, col_to_predict, cols=[], cols_to_remove=[], graph=True):
+    def linear_regression(self, col_to_predict, cols=[], cols_to_remove=[], graph=True, num_vars_graph=10):
         if cols:
             cols_numeric = cols
         else:
@@ -612,11 +608,12 @@ class DataProcess(object):
         logger.info(f"The error (MSE) in test is: {mse}")
         logger.info(f"")
 
-        # get importance
-        importances = reg.coef_
-        # summarize feature importance.
+        # Get importance. In this model the absolute value measures the importance of 
+        # each feature.
+        importances = tuple(abs(item) for item in reg.coef_)
+        # Summarize feature importance.
         cols_importance = list(zip(cols_numeric, importances))
-        cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
+        cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
 
         for col, importance in cols_importance_ordered:
             logger.info(f"Feature: {col}, Score: {importance}")
@@ -624,12 +621,15 @@ class DataProcess(object):
         if graph:
             plt.figure(figsize=(20,10))
             plt.title("Feature Importance - Linear Regression")
-            plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
+            plt.bar(
+                list(zip(*cols_importance_ordered))[0][:num_vars_graph],
+                list(zip(*cols_importance_ordered))[1][:num_vars_graph],
+            )
             plt.xticks(rotation=90)
             plt.show()
 
 
-    def random_forest(self, col_to_predict, cols=[], cols_to_remove=[], graph=True):
+    def random_forest(self, col_to_predict, cols=[], cols_to_remove=[], graph=True, num_vars_graph=10):
         if cols:
             cols_input = cols
         else:
@@ -667,11 +667,11 @@ class DataProcess(object):
         logger.info(f"")
 
 
-        # get importance
+        # Get importance
         importances = model.feature_importances_
-        # summarize feature importance.
+        # Summarize feature importance.
         cols_importance = list(zip(cols_input, importances))
-        cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1])
+        cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
 
         for col, importance in cols_importance_ordered:
             logger.info(f"Feature: {col}, Score: {importance}")
@@ -679,7 +679,10 @@ class DataProcess(object):
         if graph:
             plt.figure(figsize=(20,10))
             plt.title("Feature Importance - Random Forest")
-            plt.bar(list(zip(*cols_importance_ordered))[0], list(zip(*cols_importance_ordered))[1])
+            plt.bar(
+                list(zip(*cols_importance_ordered))[0][:num_vars_graph],
+                list(zip(*cols_importance_ordered))[1][:num_vars_graph],
+            )
             plt.xticks(rotation=90)
             plt.show()
 

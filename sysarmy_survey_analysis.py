@@ -14,7 +14,10 @@ USD_ARS = 105
 
 # ----------------------------------------------------------------------------------
 # Data load
-sysarmy_survey = project_path / "data/raw/2021.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
+sysarmy_survey = (
+    project_path
+    / "data/raw/2021.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
+)
 sysarmy_analysis = DataProcess(sysarmy_survey, "csv", logging.INFO)
 
 
@@ -34,7 +37,16 @@ sysarmy_analysis.enforce_numeric(["sueldo_mensual_bruto_ars"])
 print(sysarmy_analysis)
 # sysarmy_analysis.describe(graph=True)
 
-numeric_types = ["int8", "int16", "int32", "int64", "float8", "float16", "float32", "float64"]
+numeric_types = [
+    "int8",
+    "int16",
+    "int32",
+    "int64",
+    "float8",
+    "float16",
+    "float32",
+    "float64",
+]
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_numeric = sysarmy_analysis.get_cols_by_type(cols_by_type, numeric_types)
 
@@ -84,7 +96,9 @@ cols_fix_missings = [
     "contribucion_open_source",
     "programacion_hobbie",
 ]
-sysarmy_analysis.handle_missing([cols_fix_missings], method="constant", constant="No responde")
+sysarmy_analysis.handle_missing(
+    [cols_fix_missings], method="constant", constant="No responde"
+)
 cols_check_missings = [i for i in cols_check_missings if i not in cols_fix_missings]
 
 sysarmy_analysis.handle_missing(cols_check_missings, method="drop")
@@ -95,26 +109,24 @@ sysarmy_analysis.handle_missing(cols_check_missings, method="drop")
 # so it refers to a value in dollars
 # TODO: does it worth to be in data_process.py?
 col = "sueldo_mensual_bruto_ars"
-sysarmy_analysis.dataset[col] = np.where(sysarmy_analysis.dataset[col] <= 10000, sysarmy_analysis.dataset[col] * USD_ARS, sysarmy_analysis.dataset[col])
+sysarmy_analysis.dataset[col] = np.where(
+    sysarmy_analysis.dataset[col] <= 10000,
+    sysarmy_analysis.dataset[col] * USD_ARS,
+    sysarmy_analysis.dataset[col],
+)
 
-cols_numeric.remove("personas_a_cargo") # The "outliers" here are real values so another method is used
+cols_numeric.remove(
+    "personas_a_cargo"
+)  # The "outliers" here are real values so another method is used
 sysarmy_analysis.handle_outliers(cols_numeric, method="drop_iqr")
 sysarmy_analysis.handle_outliers(["personas_a_cargo"], method="drop_5_95")
 cols_numeric.append("personas_a_cargo")
 
 
-# sysarmy_analysis.drop_cols(["technologies"])
-# print(set(sysarmy_analysis.dataset))
-# print(set(sysarmy_analysis.dataset[cols_to_standard]))
-# print(set(sysarmy_analysis.dataset) - set(sysarmy_analysis.dataset[cols_to_standard]))
-# sysarmy_analysis.drop_cols(list(set(sysarmy_analysis.dataset) - set(sysarmy_analysis.dataset[cols_to_standard])))
-# print(list(sysarmy_analysis.dataset))
-# sysarmy_analysis.explore(name_postfix="temp")
-
-
 # Create dummy columns from categorical columns
 sysarmy_analysis.dummy_cols_from_category(
-    cols=["genero",
+    cols=[
+        "genero",
         "violencia_laboral",
         "tipo_contrato",
         "max_nivel_estudios",
@@ -131,20 +143,20 @@ sysarmy_analysis.dummy_cols_from_category(
 sysarmy_analysis.describe(graph=True)
 # sysarmy_analysis.explore(name_postfix="processed")
 
-            
+
 # ----------------------------------------------------------------------------------
 # Data processing
 # ----------------------------------------------------------------------------------
 all_cols_to_standard = cols_numeric
 
 cols_to_standard = [
-    "edad", 
-    "experiencia_anios" ,
+    "edad",
+    "experiencia_anios",
     "empresa_actual_anios",
     "personas_a_cargo",
     # "sueldo_conformidad",
-    # "sueldo_mensual_bruto_ars", 
-    "sueldo_ajuste_total_2021", 
+    # "sueldo_mensual_bruto_ars",
+    "sueldo_ajuste_total_2021",
     "recomendacion_laboral",
     "politicas_diversidad",
     "pandemia_percepcion",
@@ -164,48 +176,43 @@ stats.bartlett(*[sysarmy_analysis.dataset[col].tolist() for col in cols_to_stand
 # Dimensionality reduction using PCA:
 # Applies only for numeric columns, requires standardized values
 sysarmy_analysis.reduction_dims(
-    cols_to_standard,
-    method="pca",
-    final_number_dims=2, 
-    visualize=True
+    cols_to_standard, method="pca", final_number_dims=2, visualize=True
 )
 
 # Dimensionality reduction using MCA:
 # Applies only for categoric columns
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_categoric = sysarmy_analysis.get_cols_by_type(cols_by_type, ["object"])
-cols_categoric.remove("technologies") # This column is removed because it was manually created and it has a very high cardinality
+cols_categoric.remove(
+    "technologies"
+)  # This column is removed because it was manually created and it has a very high cardinality
 sysarmy_analysis.reduction_dims(
-    cols_categoric,
-    method="mca",
-    final_number_dims=5, 
-    visualize=True
+    cols_categoric, method="mca", final_number_dims=5, visualize=True
 )
 
-sysarmy_analysis.clusterization(
-    cols_to_standard,
-    method="dbscan", 
-    visualize=True
-)
+sysarmy_analysis.clusterization(cols_to_standard, method="dbscan", visualize=True)
 
 sysarmy_analysis.dummy_cols_from_text(col="technologies", sep=",", n_cols=15)
 print(sysarmy_analysis)
 
 
-# Salary prediction with linear regression with cleaned columns, no dim reduction
+# Salary prediction using linear regression with cleaned columns, no dim reduction
 # the method automatically select the numeric columns.
 sysarmy_analysis.linear_regression(
-    col_to_predict="sueldo_mensual_bruto_ars", 
-    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"], 
+    col_to_predict="sueldo_mensual_bruto_ars",
+    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
+    num_vars_graph=15,
 )
 
 
-# Salary prediction with random forest with cleaned columns, no dim reduction
+# Salary prediction using random forest with cleaned columns, no dim reduction
 sysarmy_analysis.random_forest(
-    col_to_predict="sueldo_mensual_bruto_ars", 
-    cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"] + cols_categoric,
+    col_to_predict="sueldo_mensual_bruto_ars",
+    cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
+    + cols_categoric,
     graph=True,
+    num_vars_graph=15,
 )
 
 

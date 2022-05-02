@@ -21,6 +21,7 @@ date: "2021-12-01"
 keywords: [Data science, Machine learning, Regresión]
 ---
 
+<!-- To build PDF run: pandoc -F pandoc-crossref --pdf-engine xelatex temp_paper.md -o article.pdf --citeproc -->
 
 \maketitle
 \thispagestyle{empty}
@@ -289,14 +290,13 @@ Buscando responder uno de los objetivos de este estudio, se entrenan y ajustan d
 La regresión lineal es el método de "aprendizaje de máquina" más representativo para construir modelos para la predicción y clasificación de valores a partir de datos de entrenamiento. Su estudio ofrece varios contrastes:
 
 * La regresión lineal tiene una hermosa base teórica pero, en la práctica, esta formulación algebraica generalmente se descarta en favor de optimizaciones más heurísticas y más rápidas.
-
 * Los modelos de regresión lineal son, por definición, lineales. Esto proporciona una oportunidad de presenciar las limitaciones de tales modelos, así como desarrollar técnicas inteligentes para generalizar a otras formas.
-
 * La regresión lineal al mismo tiempo fomenta la construcción de modelos con cientos de variables, y técnicas de regularización para asegurar que la mayoría de ellas sean ignoradas.
 
 La regresión lineal es una técnica de modelado básica que debería servir como una aproximación base para crear modelos basados ​​en datos. Estos modelos son típicamente fáciles de construir, sencillos de interpretar y, a menudo, funcionan bastante bien en la práctica. Con suficiente habilidad y esfuerzo, técnicas de aprendizaje automático más avanzadas podrían producir un mejor rendimiento, pero la posible recompensa a menudo no vale la pena el esfuerzo. Construya sus modelos de regresión lineal primero, luego decida si vale la pena trabajar más duro para lograr mejores resultados. [@ref:book4]
 
 Siguiendo la recomendación de Steven autor de la introducción citada en esta sección, se aborda el problema de regresión planteado comenzando con el modelo base por excelencia, una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante de la etapa de preprocesado (recordando que las variables categóricas fueron transformadas a numéricas al tokenizar cada una de las categorías de cada variable), obteniendo un coeficiente R2 de solo 0,4206 lo que sugiere que no estamos logrando representar toda la variabilidad de la variable predicha, 
+
 
 TODO: verificar si esto se va a hacer (yo digo que no): por lo que se agrega una componente de regularización usando Ridge (o Lasso) que mejora el desempeño del modelo aumentado a XXX% la variabilidad cubierta.
 Posteriormente, y dado no estar consiguiendo una mejora significativa en la capacidad predictiva del modelo se decide comprobar los supuestos bajo los cuales se construye la regresión lineal múltiple:
@@ -342,15 +342,17 @@ TODO: Usar esta referencia [@ref:book5]
 A continuación, se compara la importancia de las variables también conocidas como features calculada en cada uno de los dos modelos implementados,  para cuantificar que tanto contribuyen las variables medidas en encuesta procesada, tal que nos provea argumentos sólidos para por ejemplo recomendar cuales son los aspectos más importantes que un trabajador en el mercado del desarrollo de software debe tener en cuenta dentro del contexto económico argentino.
 
 En el caso de la regresión lineal, la importancia de las variables esta determinada por el coeficiente que acompaña a cada variable en la ecuación resultante del modelo, de nuevo reafirmando la importancia de previamente haber escalado/estandarizado las variables númericos del dataset. Notese que el impacto de cada variable de entrada en la variable a predecir es relevante sin importar el signo positivo o negativo que el coeficiente tenga, por lo que es el valor absoluto de los coeficientes el que determina la importancia de cada variable. 
-En la [Figura @fig:figure4] se observa la importancia de cada una de las variables utilizadas en la regresión lineal,teniendo en cuenta que las variables categóricas fueron tokenizadas y que las variables numéricas fueron escaladas/estandarizadas tal y como se explicó en [@sec:sec3].
 
-![Importancia de las variables en la regresión lineal entrenada](variable_importance_linear_regression.jpg){#fig:figure4}
+En la [Figura @fig:figure4] se observa la importancia de las 15 variables más relevantes de la regresión lineal, teniendo en cuenta que las variables categóricas fueron tokenizadas y que las variables numéricas fueron escaladas/estandarizadas tal y como se explicó en [@sec:sec3].
+
+![Importancia de las variables en la regresión lineal entrenada](variable_importance_linear_regression.png){#fig:figure4}
 
 En cuanto al modelo de random forest, al tratarse de una combinación de múltiples árboles, no es posible obtener una representación gráfica sencilla del modelo y no es inmediato identificar de forma visual que predictores son más importantes. Sin embargo, se han desarrollado nuevas estrategias para cuantificar la importancia de los predictores que hacen de los modelos de bagging (Random Forest) una herramienta muy potente, no solo para predecir, sino también para el análisis exploratorio. Dos de estas medidas son: importancia por permutación e impureza de nodos. [@ref:web6]
 En general, estos métodos buscan medir la cantidad de información aportada por cada variable cuando es utilizada en la creación de los árboles de decisión que componen el random forest.
-En la [Figura @fig:figure5] se presenta la importancia de las variables según el modelo de random forest entrenado, obtenidos directamente de la implementación realizada por la librearía Scikit Learn. 
 
-![Importancia de las variables en el random forest entrenado](variable_importance_random_forest.jpg){#fig:figure5}
+En la [Figura @fig:figure5] se presenta la importancia del top 15 de las variables según el modelo de random forest entrenado, obtenidos directamente de la implementación realizada por la librearía Scikit Learn. 
+
+![Importancia de las variables en el random forest entrenado](variable_importance_random_forest.png){#fig:figure5}
 
 TODO: Completar
 Si bien es cierto que la importancia de los variables varía según el modelo implementado, existen algunas que coinciden en los puestos de mayor relevancia, como xxx, yyy, zzz. En general las variables relacionadas a (la preparación académica del candidato || la experiencia del candidato || las condiciones demográficas) son las que más aportan a la predicción del salario en ambos modelos, mientras que las variables asociadas a la información personal del candidato hacen parte de las que menos aportan, sugiriendo que no existe discriminación o brecha salarial asociada a tales variables, haciendo la salvedad, que algunas de estas están desbalanceadas lo que puede estar impactando la perfomance general de los modelos y por ende también la importancia calculada de las variables.
