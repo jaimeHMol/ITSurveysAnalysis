@@ -21,7 +21,7 @@ date: "2021-12-01"
 keywords: [Data science, Machine learning, Regresión]
 ---
 
-<!-- To build PDF run: pandoc -F pandoc-crossref --pdf-engine xelatex temp_paper.md -o article.pdf --citeproc -->
+<!-- To build PDF run: pandoc -F pandoc-crossref --pdf-engine xelatex paper.md -o article.pdf --citeproc -->
 
 \maketitle
 \thispagestyle{empty}

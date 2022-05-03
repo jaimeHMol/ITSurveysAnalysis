@@ -622,11 +622,11 @@ class DataProcess(object):
         if graph:
             x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
             y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
-            plt.figure(figsize=(6,3))
+            plt.figure(figsize=(9,4))
             plt.title("Feature Importance - Linear Regression")
             plt.bar(x_axis, y_axis)
             plt.xticks(rotation=90)
-            plt.margins(0)
+            plt.margins(x=0, y=0.1)
             plt.show()
 
 
@@ -680,11 +680,11 @@ class DataProcess(object):
         if graph:
             x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
             y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
-            plt.figure(figsize=(6,3))
+            plt.figure(figsize=(9,4))
             plt.title("Feature Importance - Random Forest")
             plt.bar(x_axis, y_axis)
             plt.xticks(rotation=90)
-            plt.margins(0)
+            plt.margins(x=0, y=0.1)
             plt.show()
 
 
