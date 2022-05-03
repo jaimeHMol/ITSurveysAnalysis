@@ -1,6 +1,7 @@
 import logging
 import math
 import webbrowser
+from textwrap import wrap
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -619,13 +620,13 @@ class DataProcess(object):
             logger.info(f"Feature: {col}, Score: {importance}")
 
         if graph:
-            plt.figure(figsize=(20,10))
+            x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
+            y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
+            plt.figure(figsize=(6,3))
             plt.title("Feature Importance - Linear Regression")
-            plt.bar(
-                list(zip(*cols_importance_ordered))[0][:num_vars_graph],
-                list(zip(*cols_importance_ordered))[1][:num_vars_graph],
-            )
+            plt.bar(x_axis, y_axis)
             plt.xticks(rotation=90)
+            plt.margins(0)
             plt.show()
 
 
@@ -677,13 +678,13 @@ class DataProcess(object):
             logger.info(f"Feature: {col}, Score: {importance}")
 
         if graph:
-            plt.figure(figsize=(20,10))
+            x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
+            y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
+            plt.figure(figsize=(6,3))
             plt.title("Feature Importance - Random Forest")
-            plt.bar(
-                list(zip(*cols_importance_ordered))[0][:num_vars_graph],
-                list(zip(*cols_importance_ordered))[1][:num_vars_graph],
-            )
+            plt.bar(x_axis, y_axis)
             plt.xticks(rotation=90)
+            plt.margins(0)
             plt.show()
 
 
