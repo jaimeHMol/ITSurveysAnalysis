@@ -628,6 +628,9 @@ class DataProcess(object):
             plt.xticks(rotation=90)
             plt.margins(x=0, y=0.1)
             plt.show()
+            reg.top_vars_graph = zip(x_axis, y_axis)
+        
+        return reg
 
 
     def random_forest(self, col_to_predict, cols=[], cols_to_remove=[], graph=True, num_vars_graph=10):
@@ -676,7 +679,7 @@ class DataProcess(object):
 
         for col, importance in cols_importance_ordered:
             logger.info(f"Feature: {col}, Score: {importance}")
-
+        
         if graph:
             x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
             y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
@@ -686,6 +689,9 @@ class DataProcess(object):
             plt.xticks(rotation=90)
             plt.margins(x=0, y=0.1)
             plt.show()
+            model.top_vars_graph = zip(x_axis, y_axis)
+
+        return model
 
 
     def reset (self):

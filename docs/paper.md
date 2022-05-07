@@ -278,6 +278,7 @@ Debido a la alta correlación existente entre numerosas variables del dataset, q
 
 Resulta interesante entonces tener en cuenta las nuevas dimensiones encontradas para los modelos de predictores que se implementan en próximos capítulos, a pesar de que perdemos explicabilidad del modelo, al ser estas variables generadas artificialmente buscando únicamente aumentar la varianza de los datos sobre cada eje, podemos aumentar la efectividad predictora de los modelos al reducir la correlación y colinealidad entre las variables de entrada utilizadas en el modelado. 
 
+# TODO: Review chart because it looks like sueldo conformidad is not showed.
 ![Mapa de calor con el nivel de correlación bivariada entre las 8 variables numéricas utilizando el coeficiente de correlación de Pearson](correlation_heat_map.jpg){#fig:figure3}
 
 
@@ -295,7 +296,7 @@ La regresión lineal es el método de "aprendizaje de máquina" más representat
 
 La regresión lineal es una técnica de modelado básica que debería servir como una aproximación base para crear modelos basados ​​en datos. Estos modelos son típicamente fáciles de construir, sencillos de interpretar y, a menudo, funcionan bastante bien en la práctica. Con suficiente habilidad y esfuerzo, técnicas de aprendizaje automático más avanzadas podrían producir un mejor rendimiento, pero la posible recompensa a menudo no vale la pena el esfuerzo. Construya sus modelos de regresión lineal primero, luego decida si vale la pena trabajar más duro para lograr mejores resultados. [@ref:book4]
 
-Siguiendo la recomendación de Steven autor de la introducción citada en esta sección, se aborda el problema de regresión planteado comenzando con el modelo base por excelencia, una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante de la etapa de preprocesado (recordando que las variables categóricas fueron transformadas a numéricas al tokenizar cada una de las categorías de cada variable), obteniendo un coeficiente R2 de solo 0,4206 lo que sugiere que no estamos logrando representar toda la variabilidad de la variable predicha, 
+Siguiendo la recomendación de Steven, autor de la introducción citada en esta sección, se aborda el problema de regresión planteado comenzando con el modelo base por excelencia, una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante de la etapa de preprocesado (recordando que las variables categóricas fueron transformadas a numéricas al tokenizar cada una de las categorías de cada variable), obteniendo un coeficiente R2 de solo 0,4206 lo que sugiere que no estamos logrando representar toda la variabilidad de la variable predicha, 
 
 
 TODO: verificar si esto se va a hacer (yo digo que no): por lo que se agrega una componente de regularización usando Ridge (o Lasso) que mejora el desempeño del modelo aumentado a XXX% la variabilidad cubierta.
@@ -354,8 +355,16 @@ En la [Figura @fig:figure5] se presenta la importancia del top 15 de las variabl
 
 ![Importancia de las variables en el random forest entrenado](variable_importance_random_forest.png){#fig:figure5}
 
+Si bien es cierto que la importancia de los variables varía según el modelo implementado, existen 6 que coinciden en dentro del top 15 de mayor relevancia en ambos modelos:
+* tipo_contrato_Remoto (empresa de otro país)
+* sueldo_conformidad # TODO: Looks like irrelevant variable, should be removed?
+* sueldo_bonos_3+ sueldos
+* sueldo_bonos_De uno a tres sueldos
+* sueldo_bonos_No
+* amazonwebservices
+
 TODO: Completar
-Si bien es cierto que la importancia de los variables varía según el modelo implementado, existen algunas que coinciden en los puestos de mayor relevancia, como xxx, yyy, zzz. En general las variables relacionadas a (la preparación académica del candidato || la experiencia del candidato || las condiciones demográficas) son las que más aportan a la predicción del salario en ambos modelos, mientras que las variables asociadas a la información personal del candidato hacen parte de las que menos aportan, sugiriendo que no existe discriminación o brecha salarial asociada a tales variables, haciendo la salvedad, que algunas de estas están desbalanceadas lo que puede estar impactando la perfomance general de los modelos y por ende también la importancia calculada de las variables.
+En general las variables relacionadas a (la preparación académica del candidato || la experiencia del candidato || las condiciones demográficas) son las que más aportan a la predicción del salario en ambos modelos, mientras que las variables asociadas a la información personal del candidato hacen parte de las que menos aportan, sugiriendo que no existe discriminación o brecha salarial asociada a tales variables, haciendo la salvedad, que algunas de estas están desbalanceadas lo que puede estar impactando la perfomance general de los modelos y por ende también la importancia calculada de las variables.
 
 
 # Conclusiones {#sec:sec5}

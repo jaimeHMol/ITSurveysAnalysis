@@ -198,7 +198,7 @@ print(sysarmy_analysis)
 
 # Salary prediction using linear regression with cleaned columns, no dim reduction
 # the method automatically select the numeric columns.
-sysarmy_analysis.linear_regression(
+linear_regression = sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
@@ -207,13 +207,23 @@ sysarmy_analysis.linear_regression(
 
 
 # Salary prediction using random forest with cleaned columns, no dim reduction
-sysarmy_analysis.random_forest(
+random_forest = sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
     + cols_categoric,
     graph=True,
     num_vars_graph=15,
 )
+
+# Common variables on the top 15 more important variables between the two models.
+common_vars_dict = {}
+top_vars_linear_regression = dict(linear_regression.top_vars_graph)
+top_vars_random_forest = dict(random_forest.top_vars_graph)
+common_vars_set = set(top_vars_linear_regression) & set(top_vars_random_forest)
+for var in common_vars_set:
+    # common_vars_dict[var] = (list(top_vars_linear_regression).index(var), list(top_vars_random_forest).index(var))
+    common_vars_dict[var] = list(top_vars_linear_regression).index(var) + list(top_vars_random_forest).index(var)
+print(common_vars_dict)
 
 
 # ----------------------------------------------------------------------------------
