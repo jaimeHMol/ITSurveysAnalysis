@@ -40,6 +40,7 @@ cols_to_drop = [
     "Unnamed: 63",
     "Unnamed: 64",
     "Unnamed: 65",
+    "¿Qué tan conforme estás con tu sueldo?",
 ]
 cols_to_rename = {
     "Me identifico": "genero",
@@ -61,7 +62,7 @@ cols_to_rename = {
     "Salario mensual o retiro BRUTO (en tu moneda local)": "sueldo_mensual_bruto_ars",
     # "Sueldo dolarizado?": "sueldo_dolarizado",
     "¿Tuviste ajustes por inflación durante 2021?": "sueldo_ajuste_2021",
-    "¿Qué tan conforme estás con tu sueldo?": "sueldo_conformidad",
+    # "¿Qué tan conforme estás con tu sueldo?": "sueldo_conformidad",
     "Recibís algún tipo de bono": "sueldo_bonos",
     "¿Tuviste ajustes por inflación en lo que va de 2021?": "sueldo_ajustes_inflacion",
     "¿De qué % fue el ajuste total?": "sueldo_ajuste_total_2021",

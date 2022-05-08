@@ -186,7 +186,7 @@ Como se puede observar hay varias tareas de preprocesado básico muy importantes
 
 * El renombrado de las columnas, para tener nombres más cortos, fáciles de entender, evitando caracteres especiales como espacios o signos de interrogación, convirtiendo nombres como **¿Sufriste o presenciaste situaciones de violencia laboral?** en **violencia_laboral**, o **Me identifico** en **genero** por poner solo algunos ejemplos. El mapeo completo puede ser consultado en archivo _mappings.py_ de la solución desarrollada [@ref:web4].
 
-* La eliminación de columnas irrelevantes como por ejemplo **¿Salir o seguir contestando?**, **ID** o **Unnamed: 60**. 
+* La eliminación de columnas irrelevantes desde las perspectiva con la que estamos abordando el problema, como por ejemplo **¿Salir o seguir contestando?**, **¿Qué tan conforme estás con tu sueldo?**, **ID** o **Unnamed: 60**. 
 
 Luego de tener el dataset en un mejor estado, se procede a analizar más en profundidad las variables numéricas, pues se sospecha que la existencia de outliers y valores faltantes puede ser un problema para el análisis posterior.
 
@@ -278,7 +278,7 @@ Debido a la alta correlación existente entre numerosas variables del dataset, q
 
 Resulta interesante entonces tener en cuenta las nuevas dimensiones encontradas para los modelos de predictores que se implementan en próximos capítulos, a pesar de que perdemos explicabilidad del modelo, al ser estas variables generadas artificialmente buscando únicamente aumentar la varianza de los datos sobre cada eje, podemos aumentar la efectividad predictora de los modelos al reducir la correlación y colinealidad entre las variables de entrada utilizadas en el modelado. 
 
-# TODO: Review chart because it looks like sueldo conformidad is not showed.
+
 ![Mapa de calor con el nivel de correlación bivariada entre las 8 variables numéricas utilizando el coeficiente de correlación de Pearson](correlation_heat_map.jpg){#fig:figure3}
 
 
@@ -290,9 +290,15 @@ Buscando responder uno de los objetivos de este estudio, se entrenan y ajustan d
 ### Regresión lineal múltiple
 La regresión lineal es el método de "aprendizaje de máquina" más representativo para construir modelos para la predicción y clasificación de valores a partir de datos de entrenamiento. Su estudio ofrece varios contrastes:
 
+
 * La regresión lineal tiene una hermosa base teórica pero, en la práctica, esta formulación algebraica generalmente se descarta en favor de optimizaciones más heurísticas y más rápidas.
+
+
 * Los modelos de regresión lineal son, por definición, lineales. Esto proporciona una oportunidad de presenciar las limitaciones de tales modelos, así como desarrollar técnicas inteligentes para generalizar a otras formas.
+
+
 * La regresión lineal al mismo tiempo fomenta la construcción de modelos con cientos de variables, y técnicas de regularización para asegurar que la mayoría de ellas sean ignoradas.
+
 
 La regresión lineal es una técnica de modelado básica que debería servir como una aproximación base para crear modelos basados ​​en datos. Estos modelos son típicamente fáciles de construir, sencillos de interpretar y, a menudo, funcionan bastante bien en la práctica. Con suficiente habilidad y esfuerzo, técnicas de aprendizaje automático más avanzadas podrían producir un mejor rendimiento, pero la posible recompensa a menudo no vale la pena el esfuerzo. Construya sus modelos de regresión lineal primero, luego decida si vale la pena trabajar más duro para lograr mejores resultados. [@ref:book4]
 
@@ -357,14 +363,12 @@ En la [Figura @fig:figure5] se presenta la importancia del top 15 de las variabl
 
 Si bien es cierto que la importancia de los variables varía según el modelo implementado, existen 6 que coinciden en dentro del top 15 de mayor relevancia en ambos modelos:
 * tipo_contrato_Remoto (empresa de otro país)
-* sueldo_conformidad # TODO: Looks like irrelevant variable, should be removed?
 * sueldo_bonos_3+ sueldos
 * sueldo_bonos_De uno a tres sueldos
-* sueldo_bonos_No
 * amazonwebservices
+* docker
 
-TODO: Completar
-En general las variables relacionadas a (la preparación académica del candidato || la experiencia del candidato || las condiciones demográficas) son las que más aportan a la predicción del salario en ambos modelos, mientras que las variables asociadas a la información personal del candidato hacen parte de las que menos aportan, sugiriendo que no existe discriminación o brecha salarial asociada a tales variables, haciendo la salvedad, que algunas de estas están desbalanceadas lo que puede estar impactando la perfomance general de los modelos y por ende también la importancia calculada de las variables.
+En general las variables relacionadas a las condiciones de contratación como el tipo contrato o la cantidad de bonos a recibir son las que más aportan a la predicción de la salario en ambos modelos, mientras que las variables asociadas a la información personal y académica del candidato hacen parte de las que menos aportan, sugiriendo que no existe discriminación o brecha salarial asociada a tales variables, haciendo la salvedad, que algunas de estas están desbalanceadas lo que puede estar impactando la perfomance general de los modelos y por ende también la importancia calculada de las variables.
 
 
 # Conclusiones {#sec:sec5}
