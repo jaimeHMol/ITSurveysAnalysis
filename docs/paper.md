@@ -302,17 +302,19 @@ La regresión lineal es el método de "aprendizaje de máquina" más representat
 
 La regresión lineal es una técnica de modelado básica que debería servir como una aproximación base para crear modelos basados ​​en datos. Estos modelos son típicamente fáciles de construir, sencillos de interpretar y, a menudo, funcionan bastante bien en la práctica. Con suficiente habilidad y esfuerzo, técnicas de aprendizaje automático más avanzadas podrían producir un mejor rendimiento, pero la posible recompensa a menudo no vale la pena el esfuerzo. Construya sus modelos de regresión lineal primero, luego decida si vale la pena trabajar más duro para lograr mejores resultados. [@ref:book4]
 
-Siguiendo la recomendación de Steven, autor de la introducción citada en esta sección, se aborda el problema de regresión planteado comenzando con el modelo base por excelencia, una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante de la etapa de preprocesado (recordando que las variables categóricas fueron transformadas a numéricas al tokenizar cada una de las categorías de cada variable), obteniendo un coeficiente R2 de solo 0,4206 lo que sugiere que no estamos logrando representar toda la variabilidad de la variable predicha, 
+Siguiendo la recomendación de Steven, autor de la introducción citada en esta sección, se aborda el problema de regresión planteado comenzando con el modelo base por excelencia, una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante de la etapa de preprocesado (recordando que las variables categóricas fueron transformadas a numéricas al tokenizar cada una de las categorías de cada variable), obteniendo un coeficiente R2 de 0,4206 lo que sugiere que no se está logrando representar toda la variabilidad de la variable predicha. Esto puede deberse a que el modelo tiene demasiada complejidad (muchas variables), que nuestra muestra de datos (cantidad de filas) no es lo suficientemente representativa como para modelar el problema, o que no se esten compliendo los supuestos de la regrasión lineal que son:
+
+* Las variables de entrada deben tener distribución normal.
+* Las variables de entrada deben tener la misma varianza (homocedasticidad).
+* La variables de entrada no deben presentar colinealidad entre ellas.
+
+Finalmente, buscando mejorar el desempeño de la regresión lineal, también se puede considerar agregar una componente de regularización usando técnicas como Lasso o Ridge, tal que el modelo pueda generalizar mejor a nuevos datos, inclusive cuando estos sean más extremos o singulares.
 
 
-TODO: verificar si esto se va a hacer (yo digo que no): por lo que se agrega una componente de regularización usando Ridge (o Lasso) que mejora el desempeño del modelo aumentado a XXX% la variabilidad cubierta.
+<!-- verificar si esto se va a hacer (yo digo que no): por lo que se agrega una componente de regularización usando Ridge (o Lasso) que mejora el desempeño del modelo aumentado a XXX% la variabilidad cubierta.
 Posteriormente, y dado no estar consiguiendo una mejora significativa en la capacidad predictiva del modelo se decide comprobar los supuestos bajo los cuales se construye la regresión lineal múltiple:
 
-* Variables con distribución normal ¡??: 
-* Homocedasticidad: Misma varianza para todas las variables!??
-* No colinealidad entre sus variables!??
-
-TODO: Detalles finales de la implementación.
+ Detalles finales de la implementación. -->
 
 
 ### Random Forests
