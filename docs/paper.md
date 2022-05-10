@@ -308,7 +308,7 @@ Siguiendo la recomendación de Steven, autor de la introducción citada en esta 
 * Las variables de entrada deben tener la misma varianza (homocedasticidad).
 * La variables de entrada no deben presentar colinealidad entre ellas.
 
-Finalmente, buscando mejorar el desempeño de la regresión lineal, también se puede considerar agregar una componente de regularización usando técnicas como Lasso o Ridge, tal que el modelo pueda generalizar mejor a nuevos datos, inclusive cuando estos sean más extremos o singulares.
+Finalmente, buscando mejorar el desempeño de la regresión lineal, también se puede considerar agregar una componente de regularización usando técnicas como Lasso o Ridge, tal que el modelo pueda minimizar el riesgo de overfitting, reducir la varianza y el efecto de la correlación entre las variables de entrada especialmente de aquellas variables menos relevantes.
 
 
 <!-- verificar si esto se va a hacer (yo digo que no): por lo que se agrega una componente de regularización usando Ridge (o Lasso) que mejora el desempeño del modelo aumentado a XXX% la variabilidad cubierta.
