@@ -582,6 +582,7 @@ class DataProcess(object):
         for col in cols_to_remove:
             if col in cols_numeric: cols_numeric.remove(col)
 
+        logger.info("Training linear regression model...")
         X_train, X_test, y_train, y_test = train_test_split(
             self.dataset[cols_numeric],
             self.dataset[col_to_predict],
@@ -593,7 +594,7 @@ class DataProcess(object):
         # reg.fit(xs[cols_numeric], y)
         reg.fit(X_train, y_train)
         logger.info("")
-        logger.info("R2 coefficient (Using train): ")
+        logger.info("R2 coefficient (Using training data): ")
         logger.info("")
         # logger.info(reg.score(xs[cols_numeric], y))
         logger.info(reg.score(X_train, y_train))
@@ -643,6 +644,7 @@ class DataProcess(object):
         for col in cols_to_remove:
             if col in cols_input: cols_input.remove(col)
 
+        logger.info("Training random forest model...")
         X_train, X_test, y_train, y_test = train_test_split(
             self.dataset[cols_input],
             self.dataset[col_to_predict],
@@ -659,6 +661,11 @@ class DataProcess(object):
         )
 
         model.fit(X_train, y_train)
+        logger.info("")
+        logger.info("R2 coefficient (Using training data): ")
+        logger.info("")
+        # logger.info(reg.score(xs[cols_numeric], y))
+        logger.info(r2_score(X_train, y_train))
 
         prediction = model.predict(X = X_test)
 
