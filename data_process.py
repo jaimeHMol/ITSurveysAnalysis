@@ -595,7 +595,6 @@ class DataProcess(object):
 
         logger.info("")
         logger.info("R2 coefficient (Using training data): ")
-        logger.info("")
         logger.info(r2_score(y_true=y_test, y_pred=prediction))
 
         mse = mean_squared_error(
@@ -603,8 +602,9 @@ class DataProcess(object):
             y_pred  = prediction,
             squared = False
         )
-        logger.info(f"The error (MSE) in test is: {mse}")
-        logger.info(f"")
+        logger.info("The error (MSE) in test is: ")
+        logger.info("mse")
+        logger.info("")
 
         # Get importance. In this model the absolute value measures the importance of 
         # each feature.
@@ -661,7 +661,6 @@ class DataProcess(object):
 
         logger.info("")
         logger.info("R2 coefficient (Using test data): ")
-        logger.info("")
         logger.info(r2_score(y_true=y_test, y_pred=prediction))
 
         mse = mean_squared_error(
@@ -669,7 +668,8 @@ class DataProcess(object):
             y_pred  = prediction,
             squared = False
         )
-        logger.info(f"The error (MSE) in test is: {mse}")
+        logger.info("The error (MSE) in test is: ")
+        logger.info(mse)
         logger.info(f"")
 
 

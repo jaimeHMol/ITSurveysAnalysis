@@ -302,7 +302,7 @@ La regresión lineal es el método de "aprendizaje de máquina" más representat
 
 La regresión lineal es una técnica de modelado básica que debería servir como una aproximación base para crear modelos basados ​​en datos. Estos modelos son típicamente fáciles de construir, sencillos de interpretar y, a menudo, funcionan bastante bien en la práctica. Con suficiente habilidad y esfuerzo, técnicas de aprendizaje automático más avanzadas podrían producir un mejor rendimiento, pero la posible recompensa a menudo no vale la pena el esfuerzo. Construya sus modelos de regresión lineal primero, luego decida si vale la pena trabajar más duro para lograr mejores resultados. [@ref:book4]
 
-Siguiendo la recomendación de Steven, autor de la introducción citada en esta sección, se aborda el problema de regresión planteado comenzando con el modelo base por excelencia, una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante de la etapa de preprocesado (recordando que las variables categóricas fueron transformadas a numéricas al tokenizar cada una de las categorías de cada variable), obteniendo un coeficiente R2 de 0,4206 lo que sugiere que no se está logrando representar toda la variabilidad de la variable predicha. Esto puede deberse a que el modelo tiene demasiada complejidad (muchas variables), que nuestra muestra de datos (cantidad de filas) no es lo suficientemente representativa como para modelar el problema, o que no se esten compliendo los supuestos de la regrasión lineal que son:
+Siguiendo la recomendación de Steven, autor de la introducción citada en esta sección, se aborda el problema de regresión planteado comenzando con el modelo base por excelencia, una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante de la etapa de preprocesado (recordando que las variables categóricas fueron transformadas a numéricas al tokenizar cada una de las categorías de cada variable), obteniendo un coeficiente R2 de 0.3424 lo que sugiere que no se está logrando representar toda la variabilidad de la variable predicha. Esto puede deberse a que el modelo tiene demasiada complejidad (muchas variables), que nuestra muestra de datos (cantidad de filas) no es lo suficientemente representativa como para modelar el problema, o que no se esten compliendo los supuestos de la regrasión lineal que son:
 
 * Las variables de entrada deben tener distribución normal.
 * Las variables de entrada deben tener la misma varianza (homocedasticidad).
@@ -325,7 +325,7 @@ Este modelo puede ser utilizado tanto para problemas de clasificación así como
 
 Este modelo tiene muchos parámetros que se pueden ajustar, sin embargo los más relevantes son la _cantidad de árboles a construir_, que a mayor sea mejores resultados de predicción se obtendrán, sin embargo,  impactará también en el procesamiento total requerido en el entranamiento (más tiempo de computo entrenando el modelo), así como la _cantidad de variables_ (max features) a utilizar en cada árbol, empiricamente se conoce que un buen número de partida es log2(n_features) donde n_features es el total de variables del dataset, y la _cantidad de muestras_ (filas) a utilizar para generar cada arbol. Los últimos dos parámetros son los que a la postre definen el nivel de azar que se maneja al construir el bosque aleatorio.
 
-TODO: Detalles finales de la implementación.
+Con un R2 de 0.3417 se evidencia que no se está captando toda la variablidad de los datos por lo que un ajuste de los parámetros propios del modelo (externos a la data en sí) podría mejorar el desempeño.  Este proceso se conoce como optimización de hiperparámetros y es es una de las actividades propuestas como trabajo futuro para mejorar la performance de los modelos implementados.
 
 
 ## Comparación de los modelos
@@ -340,11 +340,11 @@ Se utilizará entonce el MSE para comparar los dos modelos regresores implementa
 
 | Modelo | Número de predictores | MSE |
 |:-------------|:--------------|
-| Regresión lineal múltiple | 58 | 72584.7045  |
-| Random Forest | 58 | 74264.2954  |
-: Comparativa del rendimientode los dos modelos predictoresutilizados {#tbl:table7}
+| Regresión lineal múltiple | 58 | 74440.1067  |
+| Random Forest | 58 | 74475.8994  |
+: Comparativa del rendimientode los dos modelos regresores utilizados {#tbl:table7}
 
-TODO: Usar esta referencia [@ref:book5]
+TODO: Usar esta referencia [@ref:book5] y finalizar comparación.
 
 
 ## Importancia de los features (feature engineering):
