@@ -603,7 +603,7 @@ class DataProcess(object):
             squared = False
         )
         logger.info("The error (MSE) in test is: ")
-        logger.info("mse")
+        logger.info(mse)
         logger.info("")
 
         # Get importance. In this model the absolute value measures the importance of 

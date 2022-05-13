@@ -196,21 +196,22 @@ sysarmy_analysis.dummy_cols_from_text(col="technologies", sep=",", n_cols=15)
 print(sysarmy_analysis)
 
 
-# Salary prediction using linear regression with cleaned columns, no dim reduction
+# Salary prediction using linear regression with cleaned colaumns, no dim reduction
 # the method automatically select the numeric columns.
 linear_regression = sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars",
-    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+    # cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+    cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
     num_vars_graph=15,
 )
 
-
 # Salary prediction using random forest with cleaned columns, no dim reduction
 random_forest = sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars",
-    cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
-    + cols_categoric,
+    # cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
+    # + cols_categoric,
+    cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
     num_vars_graph=15,
 )
