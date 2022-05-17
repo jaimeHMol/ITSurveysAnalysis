@@ -216,15 +216,15 @@ random_forest = sysarmy_analysis.random_forest(
     num_vars_graph=15,
 )
 
-# Common variables on the top 15 more important variables between the two models.
-common_vars_dict = {}
-top_vars_linear_regression = dict(linear_regression.top_vars_graph)
-top_vars_random_forest = dict(random_forest.top_vars_graph)
-common_vars_set = set(top_vars_linear_regression) & set(top_vars_random_forest)
-for var in common_vars_set:
-    # common_vars_dict[var] = (list(top_vars_linear_regression).index(var), list(top_vars_random_forest).index(var))
-    common_vars_dict[var] = list(top_vars_linear_regression).index(var) + list(top_vars_random_forest).index(var)
-print(common_vars_dict)
+# # Common variables on the top 15 more important between the two models.
+# common_vars_dict = {}
+# top_vars_linear_regression = dict(linear_regression.top_vars_graph)
+# top_vars_random_forest = dict(random_forest.top_vars_graph)
+# common_vars_set = set(top_vars_linear_regression) & set(top_vars_random_forest)
+# for var in common_vars_set:
+#     # common_vars_dict[var] = (list(top_vars_linear_regression).index(var), list(top_vars_random_forest).index(var))
+#     common_vars_dict[var] = list(top_vars_linear_regression).index(var) + list(top_vars_random_forest).index(var)
+# print(common_vars_dict)
 
 
 # ----------------------------------------------------------------------------------

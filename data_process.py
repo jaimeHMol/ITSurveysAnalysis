@@ -15,7 +15,8 @@ from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score, silhouette_score
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import (ShuffleSplit, cross_validate,
+                                     train_test_split)
 from sklearn_extra.cluster import KMedoids
 
 # TOIMPROVE: Add optional argument "cols" to all the method that do some process over the self.dataset
@@ -570,7 +571,7 @@ class DataProcess(object):
             self.dataset = pd.concat([self.dataset, dummy_df], axis=1, sort=False)    
 
 
-    def linear_regression(self, col_to_predict, cols=[], cols_to_remove=[], graph=True, num_vars_graph=10):
+    def linear_regression(self, col_to_predict, cols=[], cols_to_remove=[], num_splits=5, graph=True, num_vars_graph=10):
         if cols:
             cols_numeric = cols
         else:
@@ -590,47 +591,62 @@ class DataProcess(object):
         )
 
         reg = LinearRegression()
-        reg.fit(X_train, y_train)
-        prediction = reg.predict(X = X_test)
-
-        logger.info("")
-        logger.info("R2 coefficient (Using training data): ")
-        logger.info(r2_score(y_true=y_test, y_pred=prediction))
-
-        mse = mean_squared_error(
-            y_true  = y_test,
-            y_pred  = prediction,
-            squared = False
+        cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=0)
+        output = cross_validate(
+            reg, 
+            self.dataset[cols_numeric], 
+            self.dataset[col_to_predict], 
+            cv=cv, 
+            scoring=["r2", "neg_mean_squared_error"],
+            return_estimator=True,
         )
-        logger.info("The error (MSE) in test is: ")
-        logger.info(mse)
-        logger.info("")
+        print("""For this test, using only the reduction dims the original mse was: 85744.91345704456
+        and R2 0.12750968089899317""")
+        print(f"*** Now this is the r2 using cross validation: {output}")
+        return output
 
-        # Get importance. In this model the absolute value measures the importance of 
-        # each feature.
-        importances = tuple(abs(item) for item in reg.coef_)
-        # Summarize feature importance.
-        cols_importance = list(zip(cols_numeric, importances))
-        cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
 
-        for col, importance in cols_importance_ordered:
-            logger.info(f"Feature: {col}, Score: {importance}")
+        # reg.fit(X_train, y_train)
+        # prediction = reg.predict(X = X_test)
 
-        if graph:
-            x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
-            y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
-            plt.figure(figsize=(9,4))
-            plt.title("Feature Importance - Linear Regression")
-            plt.bar(x_axis, y_axis)
-            plt.xticks(rotation=90)
-            plt.margins(x=0, y=0.1)
-            plt.show()
-            reg.top_vars_graph = zip(x_axis, y_axis)
+        # logger.info("")
+        # logger.info("R2 coefficient (Using training data): ")
+        # logger.info(r2_score(y_true=y_test, y_pred=prediction))
+
+        # mse = mean_squared_error(
+        #     y_true  = y_test,
+        #     y_pred  = prediction,
+        #     squared = False
+        # )
+        # logger.info("The error (MSE) in test is: ")
+        # logger.info(mse)
+        # logger.info("")
+
+        # # Get importance. In this model the absolute value measures the importance of 
+        # # each feature.
+        # importances = tuple(abs(item) for item in reg.coef_)
+        # # Summarize feature importance.
+        # cols_importance = list(zip(cols_numeric, importances))
+        # cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
+
+        # for col, importance in cols_importance_ordered:
+        #     logger.info(f"Feature: {col}, Score: {importance}")
+
+        # if graph:
+        #     x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
+        #     y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
+        #     plt.figure(figsize=(9,4))
+        #     plt.title("Feature Importance - Linear Regression")
+        #     plt.bar(x_axis, y_axis)
+        #     plt.xticks(rotation=90)
+        #     plt.margins(x=0, y=0.1)
+        #     plt.show()
+        #     reg.top_vars_graph = zip(x_axis, y_axis)
         
-        return reg
+        # return reg
 
 
-    def random_forest(self, col_to_predict, cols=[], cols_to_remove=[], graph=True, num_vars_graph=10):
+    def random_forest(self, col_to_predict, cols=[], cols_to_remove=[], num_splits=5, graph=True, num_vars_graph=10):
         if cols:
             cols_input = cols
         else:
