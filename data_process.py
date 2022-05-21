@@ -571,7 +571,7 @@ class DataProcess(object):
             self.dataset = pd.concat([self.dataset, dummy_df], axis=1, sort=False)    
 
 
-    def linear_regression(self, col_to_predict, cols=[], cols_to_remove=[], num_splits=5, graph=True, num_vars_graph=10):
+    def linear_regression(self, col_to_predict, cols=[], cols_to_remove=[], num_splits=25, graph=True, num_vars_graph=10):
         if cols:
             cols_numeric = cols
         else:
@@ -584,15 +584,15 @@ class DataProcess(object):
             if col in cols_numeric: cols_numeric.remove(col)
 
         logger.info("*** Training linear regression model...")
-        X_train, X_test, y_train, y_test = train_test_split(
-            self.dataset[cols_numeric],
-            self.dataset[col_to_predict],
-            random_state = 777
-        )
+        # X_train, X_test, y_train, y_test = train_test_split(
+        #     self.dataset[cols_numeric],
+        #     self.dataset[col_to_predict],
+        #     random_state=777,
+        # )
 
         reg = LinearRegression()
         cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=0)
-        output = cross_validate(
+        output_models = cross_validate(
             reg, 
             self.dataset[cols_numeric], 
             self.dataset[col_to_predict], 
@@ -600,15 +600,17 @@ class DataProcess(object):
             scoring=["r2", "neg_mean_squared_error"],
             return_estimator=True,
         )
+        # TODO: Remove this:
         print("""For this test, using only the reduction dims the original mse was: 85744.91345704456
         and R2 0.12750968089899317""")
-        print(f"*** Now this is the r2 using cross validation: {output}")
-        return output
 
+        max_estimator = np.amax(output_models["test_r2"])
+        max_estimator_index = np.where(output_models["test_r2"] == max_estimator)[0][0]
+        best_model = output_models["estimator"][max_estimator_index]
+        print(f"*** The r2 for the best model (using cross validation) is: {max_estimator}")
+        print(f"*** The r2 for the best model (using cross validation) is: {max_estimator}")
 
-        # reg.fit(X_train, y_train)
-        # prediction = reg.predict(X = X_test)
-
+        # prediction = best_model.predict(X = X_test)
         # logger.info("")
         # logger.info("R2 coefficient (Using training data): ")
         # logger.info(r2_score(y_true=y_test, y_pred=prediction))
@@ -622,31 +624,31 @@ class DataProcess(object):
         # logger.info(mse)
         # logger.info("")
 
-        # # Get importance. In this model the absolute value measures the importance of 
-        # # each feature.
-        # importances = tuple(abs(item) for item in reg.coef_)
-        # # Summarize feature importance.
-        # cols_importance = list(zip(cols_numeric, importances))
-        # cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
+        # Get importance. In this model the absolute value measures the importance of 
+        # each feature.
+        importances = tuple(abs(item) for item in best_model.coef_)
+        # Summarize feature importance.
+        cols_importance = list(zip(cols_numeric, importances))
+        cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
 
-        # for col, importance in cols_importance_ordered:
-        #     logger.info(f"Feature: {col}, Score: {importance}")
+        for col, importance in cols_importance_ordered:
+            logger.info(f"Feature: {col}, Score: {importance}")
 
-        # if graph:
-        #     x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
-        #     y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
-        #     plt.figure(figsize=(9,4))
-        #     plt.title("Feature Importance - Linear Regression")
-        #     plt.bar(x_axis, y_axis)
-        #     plt.xticks(rotation=90)
-        #     plt.margins(x=0, y=0.1)
-        #     plt.show()
-        #     reg.top_vars_graph = zip(x_axis, y_axis)
+        if graph:
+            x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
+            y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
+            plt.figure(figsize=(9,4))
+            plt.title("Feature Importance - Linear Regression")
+            plt.bar(x_axis, y_axis)
+            plt.xticks(rotation=90)
+            plt.margins(x=0, y=0.1)
+            plt.show()
+            best_model.top_vars_graph = zip(x_axis, y_axis)
         
-        # return reg
+        return best_model
 
 
-    def random_forest(self, col_to_predict, cols=[], cols_to_remove=[], num_splits=5, graph=True, num_vars_graph=10):
+    def random_forest(self, col_to_predict, cols=[], cols_to_remove=[], num_splits=25, graph=True, num_vars_graph=10):
         if cols:
             cols_input = cols
         else:
@@ -662,7 +664,7 @@ class DataProcess(object):
             self.dataset[col_to_predict],
             random_state = 777
         )
-        model = RandomForestRegressor(
+        output_model = RandomForestRegressor(
             n_estimators = 10,
             criterion    = 'mse',
             max_depth    = None,
@@ -672,8 +674,8 @@ class DataProcess(object):
             random_state = 777
         )
 
-        model.fit(X_train, y_train)
-        prediction = model.predict(X = X_test)
+        output_model.fit(X_train, y_train)
+        prediction = output_model.predict(X = X_test)
 
         logger.info("")
         logger.info("R2 coefficient (Using test data): ")
@@ -690,7 +692,7 @@ class DataProcess(object):
 
 
         # Get importance
-        importances = model.feature_importances_
+        importances = output_model.feature_importances_
         # Summarize feature importance.
         cols_importance = list(zip(cols_input, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
@@ -707,9 +709,9 @@ class DataProcess(object):
             plt.xticks(rotation=90)
             plt.margins(x=0, y=0.1)
             plt.show()
-            model.top_vars_graph = zip(x_axis, y_axis)
+            output_model.top_vars_graph = zip(x_axis, y_axis)
 
-        return model
+        return output_model
 
 
     def reset (self):
