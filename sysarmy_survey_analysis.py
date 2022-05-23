@@ -172,12 +172,12 @@ stats.bartlett(*[sysarmy_analysis.dataset[col].tolist() for col in cols_to_stand
 # According to the pvalue (less than 0.05) we have enough evidence to reject the null
 # hypothesis hence the variances is different among all the numeric (continuos) variables
 
-
 # Dimensionality reduction using PCA:
 # Applies only for numeric columns, requires standardized values
 sysarmy_analysis.reduction_dims(
     cols_to_standard, method="pca", final_number_dims=2, visualize=True
 )
+
 
 # Dimensionality reduction using MCA:
 # Applies only for categoric columns
@@ -196,22 +196,29 @@ sysarmy_analysis.dummy_cols_from_text(col="technologies", sep=",", n_cols=15)
 print(sysarmy_analysis)
 
 
-# Salary prediction using linear regression with cleaned colaumns, no dim reduction
-# the method automatically select the numeric columns.
+# ----------------------------------------------------------------------------------
+# Data modelling
+# ----------------------------------------------------------------------------------
+# TODO: Remove this:
+print("""For this test, using only the "reducted" dims the original MSE 
+was: 85744.91345704456 and R2 0.12750968089899317""")
+
+# Salary prediction using linear regression with cleaned columns, the method automatically
+# select the numeric columns.
 linear_regression = sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars",
-    # cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
-    cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+    # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
     num_vars_graph=15,
 )
 
-# Salary prediction using random forest with cleaned columns, no dim reduction
+# Salary prediction using random forest with cleaned columns.
 random_forest = sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars",
-    # cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
-    # + cols_categoric,
-    cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+    cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
+    + cols_categoric,
+    # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
     num_vars_graph=15,
 )

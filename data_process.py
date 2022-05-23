@@ -1,6 +1,7 @@
 import logging
 import math
 import webbrowser
+from cmath import log
 from textwrap import wrap
 
 import matplotlib.pyplot as plt
@@ -589,48 +590,48 @@ class DataProcess(object):
         #     self.dataset[col_to_predict],
         #     random_state=777,
         # )
-
-        reg = LinearRegression()
-        cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=0)
-        output_models = cross_validate(
-            reg, 
-            self.dataset[cols_numeric], 
-            self.dataset[col_to_predict], 
-            cv=cv, 
-            scoring=["r2", "neg_mean_squared_error"],
-            return_estimator=True,
-        )
-        # TODO: Remove this:
-        print("""For this test, using only the reduction dims the original mse was: 85744.91345704456
-        and R2 0.12750968089899317""")
-
-        max_estimator = np.amax(output_models["test_r2"])
-        max_estimator_index = np.where(output_models["test_r2"] == max_estimator)[0][0]
-        best_model = output_models["estimator"][max_estimator_index]
-        print(f"*** The r2 for the best model (using cross validation) is: {max_estimator}")
-        print(f"*** The r2 for the best model (using cross validation) is: {max_estimator}")
-
         # prediction = best_model.predict(X = X_test)
-        # logger.info("")
-        # logger.info("R2 coefficient (Using training data): ")
-        # logger.info(r2_score(y_true=y_test, y_pred=prediction))
-
+        # r2 = r2_score(y_true=y_test, y_pred=prediction)
+        # logger.info(f"R2 coefficient (Using training data): {r2}")
         # mse = mean_squared_error(
         #     y_true  = y_test,
         #     y_pred  = prediction,
         #     squared = False
         # )
-        # logger.info("The error (MSE) in test is: ")
-        # logger.info(mse)
-        # logger.info("")
 
-        # Get importance. In this model the absolute value measures the importance of 
-        # each feature.
+        reg = LinearRegression()
+        cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=777)
+        output_models = cross_validate(
+            reg, 
+            self.dataset[cols_numeric], 
+            self.dataset[col_to_predict], 
+            cv=cv, 
+            scoring=["r2", "neg_mean_squared_error"], # The smallest the number the better
+            return_estimator=True,
+        )
+
+        # Use abs since the scoring metric neg_mean_squared_error is negative in order
+        # to follow the convention higher return values are better than lower return 
+        # values when evaluating the models.
+        model_mean = abs(np.mean(output_models["test_neg_mean_squared_error"]))
+        model_standard_deviation = abs(np.std(output_models["test_neg_mean_squared_error"]))
+        max_r2 = np.amax(output_models["test_r2"])
+        logger.info(f"*** After {num_splits} folds using cross validation:")
+        logger.info(f"    The average MSE is: {model_standard_deviation}")
+        logger.info(f"    The standard deviation of the MSE is: {model_mean}")
+        logger.info(f"    The maximum R2 is: {max_r2}")
+
+        # Choose the best model to show variable importance and graphs
+        max_estimator = np.amax(output_models["test_neg_mean_squared_error"])
+        max_estimator_index = np.where(output_models["test_neg_mean_squared_error"] == max_estimator)[0][0]
+        best_model = output_models["estimator"][max_estimator_index]
+
+        # Get the variable importance of the best model found. In this model the absolute 
+        # value measures the importance of each feature.
         importances = tuple(abs(item) for item in best_model.coef_)
         # Summarize feature importance.
         cols_importance = list(zip(cols_numeric, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
-
         for col, importance in cols_importance_ordered:
             logger.info(f"Feature: {col}, Score: {importance}")
 
@@ -659,12 +660,22 @@ class DataProcess(object):
             if col in cols_input: cols_input.remove(col)
 
         logger.info("*** Training random forest model...")
-        X_train, X_test, y_train, y_test = train_test_split(
-            self.dataset[cols_input],
-            self.dataset[col_to_predict],
-            random_state = 777
-        )
-        output_model = RandomForestRegressor(
+        # X_train, X_test, y_train, y_test = train_test_split(
+        #     self.dataset[cols_input],
+        #     self.dataset[col_to_predict],
+        #     random_state = 777
+        # )
+        # output_model.fit(X_train, y_train)
+        # prediction = output_model.predict(X = X_test)
+        # r2 = r2_score(y_true=y_test, y_pred=prediction)
+        # logger.info(f"R2 coefficient (Using training data): {r2}")
+        # mse = mean_squared_error(
+        #     y_true  = y_test,
+        #     y_pred  = prediction,
+        #     squared = False
+        # )
+
+        model = RandomForestRegressor(
             n_estimators = 10,
             criterion    = 'mse',
             max_depth    = None,
@@ -674,25 +685,34 @@ class DataProcess(object):
             random_state = 777
         )
 
-        output_model.fit(X_train, y_train)
-        prediction = output_model.predict(X = X_test)
-
-        logger.info("")
-        logger.info("R2 coefficient (Using test data): ")
-        logger.info(r2_score(y_true=y_test, y_pred=prediction))
-
-        mse = mean_squared_error(
-            y_true  = y_test,
-            y_pred  = prediction,
-            squared = False
+        cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=777)
+        output_models = cross_validate(
+            model, 
+            self.dataset[cols_input], 
+            self.dataset[col_to_predict], 
+            cv=cv, 
+            scoring=["r2", "neg_mean_squared_error"], # The smallest the number the better
+            return_estimator=True,
         )
-        logger.info("The error (MSE) in test is: ")
-        logger.info(mse)
-        logger.info(f"")
 
+        # Use abs since the scoring metric neg_mean_squared_error is negative in order
+        # to follow the convention higher return values are better than lower return 
+        # values when evaluating the models.
+        model_mean = abs(np.mean(output_models["test_neg_mean_squared_error"]))
+        model_standard_deviation = abs(np.std(output_models["test_neg_mean_squared_error"]))
+        max_r2 = np.amax(output_models["test_r2"])
+        logger.info(f"*** After {num_splits} folds using cross validation:")
+        logger.info(f"    The average MSE is: {model_standard_deviation}")
+        logger.info(f"    The standard deviation of the MSE is: {model_mean}")
+        logger.info(f"    The maximum R2 is: {max_r2}")
 
-        # Get importance
-        importances = output_model.feature_importances_
+        # Choose the best model to show variable importance and graphs
+        max_estimator = np.amax(output_models["test_neg_mean_squared_error"])
+        max_estimator_index = np.where(output_models["test_neg_mean_squared_error"] == max_estimator)[0][0]
+        best_model = output_models["estimator"][max_estimator_index]
+
+        # Get the variable importance of the best model found.
+        importances = best_model.feature_importances_
         # Summarize feature importance.
         cols_importance = list(zip(cols_input, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
@@ -709,9 +729,9 @@ class DataProcess(object):
             plt.xticks(rotation=90)
             plt.margins(x=0, y=0.1)
             plt.show()
-            output_model.top_vars_graph = zip(x_axis, y_axis)
+            best_model.top_vars_graph = zip(x_axis, y_axis)
 
-        return output_model
+        return best_model
 
 
     def reset (self):

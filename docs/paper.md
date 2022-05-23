@@ -343,7 +343,7 @@ Se utilizará entonce el MSE para comparar los dos modelos regresores implementa
 
 | Modelo | Número de predictores | MSE |
 |:-------------|:--------------|
-| Regresión lineal múltiple | 58 | 74440.1067  |
+| Regresión lineal múltiple | 58 |  440.1067  |
 | Random Forest | 58 | 74475.8994  |
 : Comparativa del rendimientode los dos modelos regresores utilizados {#tbl:table7}
 

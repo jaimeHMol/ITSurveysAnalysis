@@ -253,7 +253,7 @@ genders_to_replace = {
     "Varón ": "Masculino",
     ".": "No responde",
     "x": "No responde",
-    "?": "Otro",
+    "?": "No responde",
 }
 courses_to_replace={
     "No, Sí, de forma particular": "Si", # Transformed as affirmative cause contains "Si" even though it looks contradictory
