@@ -221,7 +221,7 @@ Muchos modelos predictores y regresores de machine learning son sensibles a la c
 
 
 ## Análisis de dimensionalidad de los datasets
-Luego de tener un entendimiento base de los datasets estudiados, el siguiente paso es realizar un análisis de componentes principales, comúnmente abreviado como PCA (por sus siglas en inglés), buscando conocer las implicaciones de una reducción de la dimensionalidad, que se observa necesaria pues el conjunto de datos original tiene una gran cantidad de atributos (64 preguntas en total) que no se quieren descartar arbitrariamente. Esta técnica aplica solo para variables numéricas, que luego del pre-proceso explicado en secciones previas terminaron siendo un total de 8:
+Luego de tener un entendimiento base de los datasets estudiados, el siguiente paso es realizar un análisis de componentes principales, comúnmente abreviado como PCA (por sus siglas en inglés), buscando conocer las implicaciones de una reducción de la dimensionalidad, que se observa necesaria pues el conjunto de datos original tiene una gran cantidad de atributos (64 preguntas en total) que no se quieren descartar arbitrariamente. Esta técnica aplica solo para variables numéricas, que luego del pre-proceso explicado en secciones previas terminaron siendo un total de 7:
 
 * edad
 * experiencia_anios
@@ -230,7 +230,7 @@ Luego de tener un entendimiento base de los datasets estudiados, el siguiente pa
 * sueldo_ajuste_total_2021
 * recomendacion_laboral
 * politicas_diversidad
-* pandemia_percepcion
+<!-- * pandemia_percepcion -->
 
 Nótese que la variable que se buscará predecir no fue incluida en la lista.
 El proceso de PCA es una técnica exploratoria que no establece supuestos y siempre peude utilizarse para identificar las direcciones con mayor varianza con las cuales se puede transformar un nuevo espacio vectorial. Como la varianza de una variable se mide en sus mismas unidades elevadas al cuadrado, si antes de calcular las componentes no se estandarizan todas las variables para que tengan media cero y desviación estándar de uno, aquellas variables cuya escala sea mayor dominarán al resto. Por lo que antes de realizar el llamado de la función que ejecuta el cálculo de PCA se realizó la estandarización de las mencionadas variables [@ref:web2], tal y como se mostró previametne en el apartado de transformaciones.

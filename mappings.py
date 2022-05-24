@@ -41,6 +41,7 @@ cols_to_drop = [
     "Unnamed: 64",
     "Unnamed: 65",
     "¿Qué tan conforme estás con tu sueldo?",
+    "¿Cómo venís llevando la pandemia?",
 ]
 cols_to_rename = {
     "Me identifico": "genero",
@@ -69,7 +70,7 @@ cols_to_rename = {
     "¿Sufriste o presenciaste situaciones de violencia laboral?": "violencia_laboral",
     "¿La recomendás como un buen lugar para trabajar?": "recomendacion_laboral",
     "¿Cómo calificás las políticas de diversidad e inclusión?": "politicas_diversidad",
-    "¿Cómo venís llevando la pandemia?": "pandemia_percepcion",
+    # "¿Cómo venís llevando la pandemia?": "pandemia_percepcion",
 }
 cols_to_unify = [
     "Plataformas",

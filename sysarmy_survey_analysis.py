@@ -80,9 +80,10 @@ col_fix_missings = "guardias"
 sysarmy_analysis.handle_missing([col_fix_missings], method="constant", constant="No")
 cols_check_missings.remove(col_fix_missings)
 
-col_fix_missings = "pandemia_percepcion"
-sysarmy_analysis.handle_missing([col_fix_missings], method="median")
-cols_check_missings.remove(col_fix_missings)
+# This variable doesn't seem relevant for salary prediction
+# col_fix_missings = "pandemia_percepcion"
+# sysarmy_analysis.handle_missing([col_fix_missings], method="median")
+# cols_check_missings.remove(col_fix_missings)
 
 col_fix_missings = "sueldo_mensual_bruto_ars"
 sysarmy_analysis.handle_missing([col_fix_missings], method="median")
@@ -159,7 +160,7 @@ cols_to_standard = [
     "sueldo_ajuste_total_2021",
     "recomendacion_laboral",
     "politicas_diversidad",
-    "pandemia_percepcion",
+    # "pandemia_percepcion",
 ]
 sysarmy_analysis.standardize(cols_to_standard, "z_score")
 
@@ -205,7 +206,7 @@ was: 85744.91345704456 and R2 0.12750968089899317""")
 
 # Salary prediction using linear regression with cleaned columns, the method automatically
 # select the numeric columns.
-linear_regression = sysarmy_analysis.linear_regression(
+linear_regression, cv_models  = sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
@@ -214,7 +215,7 @@ linear_regression = sysarmy_analysis.linear_regression(
 )
 
 # Salary prediction using random forest with cleaned columns.
-random_forest = sysarmy_analysis.random_forest(
+random_forest, cv_models = sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
     + cols_categoric,
@@ -223,15 +224,15 @@ random_forest = sysarmy_analysis.random_forest(
     num_vars_graph=15,
 )
 
-# # Common variables on the top 15 more important between the two models.
-# common_vars_dict = {}
-# top_vars_linear_regression = dict(linear_regression.top_vars_graph)
-# top_vars_random_forest = dict(random_forest.top_vars_graph)
-# common_vars_set = set(top_vars_linear_regression) & set(top_vars_random_forest)
-# for var in common_vars_set:
-#     # common_vars_dict[var] = (list(top_vars_linear_regression).index(var), list(top_vars_random_forest).index(var))
-#     common_vars_dict[var] = list(top_vars_linear_regression).index(var) + list(top_vars_random_forest).index(var)
-# print(common_vars_dict)
+# Common variables on the top 15 more important between the two models.
+common_vars_dict = {}
+top_vars_linear_regression = dict(linear_regression.top_vars_graph)
+top_vars_random_forest = dict(random_forest.top_vars_graph)
+common_vars_set = set(top_vars_linear_regression) & set(top_vars_random_forest)
+for var in common_vars_set:
+    # common_vars_dict[var] = (list(top_vars_linear_regression).index(var), list(top_vars_random_forest).index(var))
+    common_vars_dict[var] = list(top_vars_linear_regression).index(var) + list(top_vars_random_forest).index(var)
+print(f"The common top more important variables between the two models are: {common_vars_dict}")
 
 
 # ----------------------------------------------------------------------------------

@@ -646,7 +646,7 @@ class DataProcess(object):
             plt.show()
             best_model.top_vars_graph = zip(x_axis, y_axis)
         
-        return best_model
+        return best_model, output_models
 
 
     def random_forest(self, col_to_predict, cols=[], cols_to_remove=[], num_splits=25, graph=True, num_vars_graph=10):
@@ -731,7 +731,7 @@ class DataProcess(object):
             plt.show()
             best_model.top_vars_graph = zip(x_axis, y_axis)
 
-        return best_model
+        return best_model, output_models
 
 
     def reset (self):
