@@ -617,8 +617,8 @@ class DataProcess(object):
         model_standard_deviation = abs(np.std(output_models["test_neg_mean_squared_error"]))
         max_r2 = np.amax(output_models["test_r2"])
         logger.info(f"*** After {num_splits} folds using cross validation:")
-        logger.info(f"    The average MSE is: {model_standard_deviation}")
-        logger.info(f"    The standard deviation of the MSE is: {model_mean}")
+        logger.info(f"    The average MSE is: {model_mean}")
+        logger.info(f"    The standard deviation of the MSE is: {model_standard_deviation}")
         logger.info(f"    The maximum R2 is: {max_r2}")
 
         # Choose the best model to show variable importance and graphs
@@ -702,8 +702,8 @@ class DataProcess(object):
         model_standard_deviation = abs(np.std(output_models["test_neg_mean_squared_error"]))
         max_r2 = np.amax(output_models["test_r2"])
         logger.info(f"*** After {num_splits} folds using cross validation:")
-        logger.info(f"    The average MSE is: {model_standard_deviation}")
-        logger.info(f"    The standard deviation of the MSE is: {model_mean}")
+        logger.info(f"    The average MSE is: {model_mean}")
+        logger.info(f"    The standard deviation of the MSE is: {model_standard_deviation}")
         logger.info(f"    The maximum R2 is: {max_r2}")
 
         # Choose the best model to show variable importance and graphs

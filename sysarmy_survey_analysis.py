@@ -206,7 +206,7 @@ was: 85744.91345704456 and R2 0.12750968089899317""")
 
 # Salary prediction using linear regression with cleaned columns, the method automatically
 # select the numeric columns.
-linear_regression, cv_models  = sysarmy_analysis.linear_regression(
+linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
@@ -215,7 +215,7 @@ linear_regression, cv_models  = sysarmy_analysis.linear_regression(
 )
 
 # Salary prediction using random forest with cleaned columns.
-random_forest, cv_models = sysarmy_analysis.random_forest(
+random_forest, cv_rf_models = sysarmy_analysis.random_forest(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
     + cols_categoric,

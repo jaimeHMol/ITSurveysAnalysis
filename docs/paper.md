@@ -53,8 +53,8 @@ La encuesta posee 66 preguntas con respuestas de tipo continuo (numéricas) y ca
 
 Con este análisis se pretende entender y caracterizar el mercado laboral Argentino en tecnología haciendo especial foco en la detección de características y patrones importantes que influyan en el aumento o disminución del salario mensual que ganan los trabajadores del sector, de tal manera que pueda llegar a ser una herramienta de consulta a la hora de evaluar la situación salarial de los empleados, así como los aspectos en los que debería hacer énfasis para aumentar su percepción económica a la hora de salir a buscar una nueva oportunidad laboral. Desde la perspectiva de las empresas y reclutadores puede ser útil también para comprender las características más importantes del talento que están buscando suplir en sus empresas y que resulta una tarea cada vez más ardua y compleja.
 
-Existen en internet algunos análisis y aplicaciones que han abordado este tema desde distintas perspectivas tales como: **TODO: Poner referencias!!**, sin embargo en ninguno de ellos se ha encontrado un estudio centrado en la importancia de las variables que pueden definir el salario de un trabajador en el área de IT por lo que con este trabajo más que reemplazar se busca complementar la información ya existente al respecto.
-TODO: Terminar
+Existen en internet algunos análisis y aplicaciones que han abordado este tema desde distintas perspectivas tales como: [@ref:web7] y [@ref:web8], sin embargo en ninguno de ellos se ha encontrado un estudio centrado en la importancia de las variables que pueden definir el salario de un trabajador en el área de IT por lo que con este trabajo más que reemplazar se busca complementar la información ya existente al respecto.
+
 
 # Metodología {#sec:sec2}
 En primer lugar, se realiza una etapa de limpieza y exploración de los datos, pues a pesar de que existe cierto nivel de calidad en los datos, se busca asegurar que los datos brinden información confiable en la etapa de exploración en la cual calcularemos distintas métricas y visualizaciones estadísticas tales como medidas de dispersión, centralidad, diagramas de cajas, detección y revisión de outliers, independencia y correlación de las diferentes variables medidas. 
@@ -407,11 +407,10 @@ El presente trabajo es solo el preambulo de todo lo que se puede explorar y anal
 
 # Bibliografía
 *  Papers como: https://www.researchgate.net/publication/289469100_Teachers_salary_data_analysis_using_data_mining_techniques
-* https://sueldos.openqube.io/encuesta-sueldos-2021.02/ 
-* https://seppo0010.github.io/sysarmy-sueldos-2020.1/text/prediccion-de-sueldo/index.html
+
 * https://towardsdatascience.com/a-simple-guide-to-beautiful-visualizations-in-python-f564e6b9d392
 * https://towardsdatascience.com/a-straightforward-guide-to-cleaning-and-preparing-data-in-python-8c82f209ae33 
-* https://www.youtube.com/watch?v=1uhPYIsJD3s
+(* https://www.youtube.com/watch?v=1uhPYIsJD3s)
 
 
 # Referencias
