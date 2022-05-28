@@ -74,9 +74,9 @@ Con los objetivos funcionales claros, a continuación, se presenta un diagrama d
 
 ![Pipeline de datos a implementar](data_pipeline.jpg){#fig:figure1}
 
-En el desarrollo de este pipeline de datos se prioriza la reutilización y mantenibilidad del código implementado, para facilmente procesar en el futuro las nuevas versiones (semestralmente) de la encuesta estudiada, así como también otros datasets similares, tales como la encuesta de Stackoverflow y la de Jetbrains, por citar las más famosas. El código fuente implementado es público, abierto y esta alojado en GitHub: [https://github.com/jaimeHMol/ITSurveysAnalysis](https://github.com/jaimeHMol/ITSurveysAnalysis)  [@ref:web5].
+En el desarrollo de este pipeline de datos se prioriza la reutilización y mantenibilidad del código implementado, para facilmente procesar en el futuro las nuevas versiones (semestralmente) de la encuesta estudiada, así como también otros datasets similares, tales como la encuesta de Stackoverflow y la de Jetbrains, por citar las más famosas. El código fuente implementado es público, abierto y esta alojado en GitHub: [https://github.com/jaimeHMol/ITSurveysAnalysis](https://github.com/jaimeHMol/ITSurveysAnalysis) [@ref:web5].
 
-Finalmente, y apuntando al usuario final que pueda estar interesado en consultar una prediccíon del salario que podría ganar a modo de referencia según su situación actual, respondiendo las preguntas como parámetros de entrada de los modelos, se provee una aplicación web que puede ser utilizada en el enlace: []() #TODO: **COMPLETAR ESTE LINK**
+Finalmente, y apuntando al usuario final que pueda estar interesado en consultar una prediccíon del salario que podría devengar, a modo de referencia según su situación actual, respondiendo las preguntas como parámetros de entrada de los modelos, se provee una aplicación web que puede ser utilizada en el enlace: [IT Salary Prediction in Argentina](https://share.streamlit.io/jaimehmol/itsurveysanalysis).
 
 
 # Análisis exploratorio de los datos (EDA) {#sec:sec3}
