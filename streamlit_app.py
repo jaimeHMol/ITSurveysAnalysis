@@ -5,6 +5,11 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 
+st.set_page_config(
+    page_title="Predictor de salarios.",
+    page_icon="💸",
+)
+
 """
 # Predictor de sueldos en TI
 
@@ -20,10 +25,7 @@ Para obtener más detalles del modelo implementado puedes entrar [aquí](https:/
 @jaimehmol
 """
 
-st.set_page_config(
-    page_title="Predictor de salarios.",
-    page_icon="💸",
-)
+
 
 c1, c2 = st.columns([2, 3])
 
