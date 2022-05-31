@@ -10,12 +10,23 @@ st.set_page_config(
     page_icon="💸",
 )
 
+with st.sidebar:
+    st.markdown("### Variables del modelo")
+    input_edad = st.slider("Edad", 1, 80, 10)
+    input_experiencia_anios = st.slider("Experiencia en años", 1, 80, 10)
+    input_empresa_actual_anios = st.slider("Tiempo en empresa actual en años", 1, 80, 10)
+    input_personas_a_cargo = st.slider("Personas a cargo", 1, 80, 10)
+    input_sueldo_ajuste_total_2021 = st.slider("Ajuste de sueldo total en 2021", 1, 80, 10)
+    input_recomendacion_laboral = st.slider("Nivel de recomendación de la empresa actual", 1, 80, 10)
+    input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 1, 80, 10)
+    input_pandemia_percepcion = st.slider("Percepción de la pandemia", 1, 80, 10)
+
 """
 # Predictor de sueldos en TI
 
 Hola, aquí podrás obtener una predicción del sueldo bruto mensual en pesos argentinos que 
-ganarías según el valor de las XXX variables de entrada que puedes ingresar en el panel de
-la izquierda.
+ganarías según el valor de las XXX variables de entrada que puedes ingresar en el panel 
+desplegable de la izquierda.
 
 Los modelos regresores se realizaron tomando como base los datos de la encuesta de sueldos
 llevada a cabo por la comunidad de sysarmy en el segundo semestre del 2021.
@@ -37,19 +48,7 @@ with st.form("Model prediction parameters"):
         st.write("Tu sueldo debería ser:", 100000, "pesos argentinos", input_edad)
 
 
-# c1, c2 = st.columns([2, 3])
 
-with st.sidebar:
-    input_edad = st.slider("Edad", 1, 80, 10)
-    input_experiencia_anios = st.slider("Experiencia en años", 1, 80, 10)
-    input_empresa_actual_anios = st.slider("Tiempo en empresa actual en años", 1, 80, 10)
-    input_personas_a_cargo = st.slider("Personas a cargo", 1, 80, 10)
-    input_sueldo_ajuste_total_2021 = st.slider("Ajuste de sueldo total en 2021", 1, 80, 10)
-    input_recomendacion_laboral = st.slider("Nivel de recomendación de la empresa actual", 1, 80, 10)
-    input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 1, 80, 10)
-    input_pandemia_percepcion = st.slider("Percepción de la pandemia", 1, 80, 10)
-
-# with c2:
 
 
 with st.echo(code_location='below'):
