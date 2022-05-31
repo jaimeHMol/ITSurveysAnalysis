@@ -25,11 +25,21 @@ Para obtener más detalles del modelo implementado puedes entrar [aquí](https:/
 @jaimehmol
 """
 
+with st.form("Model prediction parameters"):
+    ModelType = st.radio(
+        "Choose your model",
+        ["Linear Regression", "Random Forest"],
+        help="At present, you can choose between 2 models (Linear Regression or \
+        Random Forest) to predict the salary.",
+    )
+    predict = st.form_submit_button("Predecir")
+    if predict:
+        st.write("Tu sueldo debería ser:", 100000, "pesos argentinos", input_edad)
 
 
-c1, c2 = st.columns([2, 3])
+# c1, c2 = st.columns([2, 3])
 
-with c1:
+with st.sidebar:
     input_edad = st.slider("Edad", 1, 80, 10)
     input_experiencia_anios = st.slider("Experiencia en años", 1, 80, 10)
     input_empresa_actual_anios = st.slider("Tiempo en empresa actual en años", 1, 80, 10)
@@ -39,17 +49,7 @@ with c1:
     input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 1, 80, 10)
     input_pandemia_percepcion = st.slider("Percepción de la pandemia", 1, 80, 10)
 
-with c2:
-    with st.form("Model prediction parameters"):
-        ModelType = st.radio(
-            "Choose your model",
-            ["Linear Regression", "Random Forest"],
-            help="At present, you can choose between 2 models (Linear Regression or \
-            Random Forest) to predict the salary.",
-        )
-        predict = st.form_submit_button("Predecir")
-        if predict:
-            st.write("Tu sueldo debería ser:", 100000, "pesos argentinos", input_edad)
+# with c2:
 
 
 with st.echo(code_location='below'):
