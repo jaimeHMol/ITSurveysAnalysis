@@ -21,6 +21,11 @@ with st.sidebar:
     input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 1, 80, 10)
     input_pandemia_percepcion = st.slider("Percepción de la pandemia", 1, 80, 10)
 
+    options = st.multiselect(
+        "Qué tecnologías dominas?",
+        ["git", "aws", "docker", "python", "java", "c++", "c#", "javascript", "kotlin", "php", "ruby", "swift"],
+    )
+
 """
 # Predictor de sueldos en TI
 
@@ -44,6 +49,7 @@ with st.form("Model prediction parameters"):
         Random Forest) to predict the salary.",
     )
     predict = st.form_submit_button("Predecir")
+
     if predict:
         st.write("Tu sueldo debería ser:", 100000, "pesos argentinos", input_edad)
 
@@ -51,28 +57,20 @@ with st.form("Model prediction parameters"):
 
 
 
-with st.echo(code_location='below'):
+# with st.echo(code_location="below"):
+#     Point = namedtuple("Point", "x y")
+#     data = []
 
+#     points_per_turn = input_edad / input_experiencia_anios
 
+#     for curr_point_num in range(input_edad):
+#         curr_turn, i = divmod(curr_point_num, points_per_turn)
+#         angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
+#         radius = curr_point_num / input_edad
+#         x = radius * math.cos(angle)
+#         y = radius * math.sin(angle)
+#         data.append(Point(x, y))
 
-
-
-
-
-
-    Point = namedtuple('Point', 'x y')
-    data = []
-
-    points_per_turn = input_edad / input_experiencia_anios
-
-    for curr_point_num in range(input_edad):
-        curr_turn, i = divmod(curr_point_num, points_per_turn)
-        angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-        radius = curr_point_num / input_edad
-        x = radius * math.cos(angle)
-        y = radius * math.sin(angle)
-        data.append(Point(x, y))
-
-    st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-        .mark_circle(color='#0068c9', opacity=0.5)
-        .encode(x='x:Q', y='y:Q'))
+#     st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
+#         .mark_circle(color="#0068c9", opacity=0.5)
+#         .encode(x="x:Q", y="y:Q"))
