@@ -235,6 +235,9 @@ for var in common_vars_set:
 print(f"The common top more important variables between the two models are: {common_vars_dict}")
 
 
+# The number of variables (features) used by both models are 66.
+
+
 # ----------------------------------------------------------------------------------
 # sysarmy_analysis.reset()
 # print(sysarmy_analysis)
