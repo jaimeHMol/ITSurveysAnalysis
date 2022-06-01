@@ -49,10 +49,8 @@ llevada a cabo por la comunidad de sysarmy en el segundo semestre del 2021.
 Para obtener más detalles del modelo implementado puedes entrar [aquí](https://www.jaimehmol.me).
 
 @jaimehmol
-<br>
-
-
 """
+st.write("###")
 
 with st.form("Model prediction parameters"):
     ModelType = st.radio(
@@ -62,9 +60,12 @@ with st.form("Model prediction parameters"):
         Random Forest) to predict the salary.",
     )
     predict = st.form_submit_button("Predecir")
-
     if predict:
         st.write("Tu sueldo debería ser:", 100000, "pesos argentinos", input_edad)
+
+    clear_inputs = st.button('Limpiar entradas')
+
+
 
 
 
