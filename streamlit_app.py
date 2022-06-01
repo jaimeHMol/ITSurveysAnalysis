@@ -4,6 +4,7 @@ from collections import namedtuple
 import altair as alt
 import pandas as pd
 import streamlit as st
+from numpy import ones_like
 
 st.set_page_config(
     page_title="Predictor de salarios.",
@@ -12,7 +13,7 @@ st.set_page_config(
 
 with st.sidebar:
     st.markdown("### Variables del modelo")
-    input_edad = st.slider("Edad", 15, 70, 15)
+    input_edad = st.slider("Edad", 15, 70, 15, key="edad")
     input_experiencia_anios = st.slider("Experiencia en años", 0, 50, 0)
     input_empresa_actual_anios = st.slider("Tiempo en empresa actual en años", 0, 50, 0)
     input_personas_a_cargo = st.slider("Personas a cargo", 0, 100, 0)
@@ -63,8 +64,10 @@ with st.form("Model prediction parameters"):
     if predict:
         st.write("Tu sueldo debería ser:", 100000, "pesos argentinos", input_edad)
 
-    clear_inputs = st.button('Limpiar entradas')
+st.button("Limpiar entradas", on_click=clear_inputs)
 
+def clear_inputs():
+    st.session_state["edad"] = 15
 
 
 
