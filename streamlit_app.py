@@ -11,6 +11,11 @@ st.set_page_config(
     page_icon="💸",
 )
 
+
+def clear_inputs():
+    st.session_state["edad"] = 15
+
+
 with st.sidebar:
     st.markdown("### Variables del modelo")
     input_edad = st.slider("Edad", 15, 70, 15, key="edad")
@@ -30,12 +35,11 @@ with st.sidebar:
     input_sueldo_bonos = st.selectbox("Recibes bonos adicionales al sueldo?", ("Menos de un sueldo", "Un sueldo", "De uno a tres sueldos", "Más de tres sueldos", "No"))
     input_tipo_contrato = st.selectbox("Que tipo de contrato tienes?", ("Full-Time", "Part-Time", "Remoto", "Tercerizado", "Freelance", "Participación societaria en cooperativa"))
     input_violencia_laboral = st.selectbox("Has vivido violencia laboral?", ("Jamás", "En mi trabajo actual", "En un trabajo anterior", "No responde"))
-
-
-    options = st.multiselect(
+    input_tecnologias = st.multiselect(
         "Qué tecnologías dominas?",
         ["amazonwebservices", "css", "docker", "html", "java", "javascript", "linux", "mysql", "nodejs", "postgresql", "python", "reactjs", "sql", "sqlserver", "visualstudiocode"],
     )
+
 
 """
 # Predictor de sueldos en TI
@@ -65,9 +69,6 @@ with st.form("Model prediction parameters"):
         st.write("Tu sueldo debería ser:", 100000, "pesos argentinos", input_edad)
 
 st.button("Limpiar entradas", on_click=clear_inputs)
-
-def clear_inputs():
-    st.session_state["edad"] = 15
 
 
 
