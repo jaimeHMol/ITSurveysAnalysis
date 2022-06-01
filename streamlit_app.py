@@ -13,22 +13,22 @@ st.set_page_config(
 with st.sidebar:
     st.markdown("### Variables del modelo")
     input_edad = st.slider("Edad", 15, 70, 15)
-    input_genero = st.selectbox("Genero", ["Femenino", "Masculino", "Otro", "No Responde"])
     input_experiencia_anios = st.slider("Experiencia en años", 0, 50, 0)
     input_empresa_actual_anios = st.slider("Tiempo en empresa actual en años", 0, 50, 0)
     input_personas_a_cargo = st.slider("Personas a cargo", 0, 100, 0)
-    input_sueldo_ajuste_total_2021 = st.slider("Ajuste de sueldo total en 2021", 0, 100, 0)
+    input_sueldo_ajuste_total_2021 = st.slider("Porcentaje total de ajuste del sueldo en 2021", 0, 100, 0)
     input_recomendacion_laboral = st.slider("Nivel de recomendación de la empresa actual", 0, 10, 5)
     input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 0, 10, 5)
-    input_contribucion_open_source = st.selectbox("Contribución Open Source", ["Si", "No", "No Responde"])
-    input_cursos_especializacion = st.selectbox("Cursos de especialización", ["Si", "No", "No Responde"])
-    input_guardias = st.selectbox("Tienes guardias", ["Si, activa",  "Si, pasiva", "No"])
-    input_max_nivel_estudios = st.selectbox("Nivel máximo de estudios alcanzado", ["Primario", "Secundario", "Terciario", "Universitario", "Posgrado", "Doctorado", "Posdoctorado", "No Responde"])
-    input_programacion_hobbie = st.selectbox("Programas como hobbie?", ["Si", "No", "No Responde"])
-    input_sueldo_ajuste_2021 = st.selectbox("Cuantos ajustes de sueldo tuviste durante el 2021?", ["Uno", "Dos", "Tres", "Más de tres", "No"])
-    input_sueldo_bonos = st.selectbox("Recibes bonos adicionales al sueldo?", ["Menos de un sueldo", "Un sueldo", "De uno a tres sueldos", "Más de tres sueldos", "No"])
-    input_tipo_contrato = st.selectbox("Que tipo de contrato tienes?", ["Full-Time", "Part-Time", "Remoto", "Tercerizado", "Freelance", "Participación societaria en cooperativa"])
-    input_violencia_laboral = st.selectbox("Has vivido violencia laboral?", ["Jamás", "En mi trabajo actual", "En un trabajo anterior", "No responde"])
+    input_genero = st.selectbox("Genero", ["Femenino", "Masculino", "Otro", "No Responde"])
+    input_contribucion_open_source = st.selectbox("Contribución Open Source", ("Si", "No", "No Responde"))
+    input_cursos_especializacion = st.selectbox("Cursos de especialización", ("Si", "No", "No Responde"))
+    input_guardias = st.selectbox("Tienes guardias", ("No", "Si, activa",  "Si, pasiva"))
+    input_max_nivel_estudios = st.selectbox("Nivel máximo de estudios alcanzado", ("Primario", "Secundario", "Terciario", "Universitario", "Posgrado", "Doctorado", "Posdoctorado", "No Responde"))
+    input_programacion_hobbie = st.selectbox("Programas como hobbie?", ("Si", "No", "No Responde"))
+    input_sueldo_ajuste_2021 = st.selectbox("Cuantos ajustes de sueldo tuviste durante el 2021?", ("Ninguno", "Uno", "Dos", "Tres", "Más de tres"))
+    input_sueldo_bonos = st.selectbox("Recibes bonos adicionales al sueldo?", ("Menos de un sueldo", "Un sueldo", "De uno a tres sueldos", "Más de tres sueldos", "No"))
+    input_tipo_contrato = st.selectbox("Que tipo de contrato tienes?", ("Full-Time", "Part-Time", "Remoto", "Tercerizado", "Freelance", "Participación societaria en cooperativa"))
+    input_violencia_laboral = st.selectbox("Has vivido violencia laboral?", ("Jamás", "En mi trabajo actual", "En un trabajo anterior", "No responde"))
 
 
     options = st.multiselect(
@@ -49,6 +49,9 @@ llevada a cabo por la comunidad de sysarmy en el segundo semestre del 2021.
 Para obtener más detalles del modelo implementado puedes entrar [aquí](https://www.jaimehmol.me).
 
 @jaimehmol
+<br>
+
+
 """
 
 with st.form("Model prediction parameters"):
