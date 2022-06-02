@@ -52,7 +52,7 @@ with st.sidebar:
     input_sueldo_bonos = st.selectbox("Recibes bonos adicionales al sueldo?", ("No", "Menos de un sueldo", "Un sueldo", "De uno a tres sueldos", "Más de tres sueldos"), key="input_sueldo_bonos")
     input_tipo_contrato = st.selectbox("Que tipo de contrato tienes?", ("Full-Time", "Part-Time", "Remoto", "Tercerizado", "Freelance", "Participación societaria en cooperativa"), key="input_tipo_contrato")
     input_violencia_laboral = st.selectbox("Has vivido violencia laboral?", ("Jamás", "En mi trabajo actual", "En un trabajo anterior", "No responde"), key="input_violencia_laboral")
-    input_tecnologias = st.input_multiselect(
+    input_tecnologias = st.multiselect(
         "Qué tecnologías dominas?",
         ["amazonwebservices", "css", "docker", "html", "java", "javascript", "linux", "mysql", "nodejs", "postgresql", "python", "reactjs", "sql", "sqlserver", "visualstudiocode"],
         key="input_tecnologias",
