@@ -11,53 +11,56 @@ st.set_page_config(
     page_icon="💸",
 )
 
+run_id = 1
 
 def clear_inputs():
-    st.session_state["input_edad"] = 15
-    st.session_state["input_experiencia_anios"] = 0
-    st.session_state["input_empresa_actual_anios"] = 0
-    st.session_state["input_personas_a_cargo"] = 0
-    st.session_state["input_sueldo_ajuste_total_2021"] = 0
-    st.session_state["input_recomendacion_laboral"] = 5
-    st.session_state["input_politicas_diversidad"] = 5
-    # st.session_state.input_genero = ()
-    # st.session_state["input_genero"] = ""
-    # st.session_state["input_contribucion_open_source"] = ""
-    # st.session_state["input_cursos_especializacion"] = ""
-    # st.session_state["input_guardias"] = ""
-    # st.session_state["input_max_nivel_estudios"] = ""
-    # st.session_state["input_programacion_hobbie"] = ""
-    # st.session_state["input_sueldo_ajuste_2021"] = ""
-    # st.session_state["input_sueldo_bonos"] = ""
-    # st.session_state["input_tipo_contrato"] = ""
-    # st.session_state["input_violencia_laboral"] = ""
-    st.session_state.input_tecnologias = []
-    return
+    run_id += 1
+
+    # st.session_state["input_edad"] = 15
+    # st.session_state["input_experiencia_anios"] = 0
+    # st.session_state["input_empresa_actual_anios"] = 0
+    # st.session_state["input_personas_a_cargo"] = 0
+    # st.session_state["input_sueldo_ajuste_total_2021"] = 0
+    # st.session_state["input_recomendacion_laboral"] = 5
+    # st.session_state["input_politicas_diversidad"] = 5
+    # # st.session_state.input_genero = ()
+    # # st.session_state["input_genero"] = ""
+    # # st.session_state["input_contribucion_open_source"] = ""
+    # # st.session_state["input_cursos_especializacion"] = ""
+    # # st.session_state["input_guardias"] = ""
+    # # st.session_state["input_max_nivel_estudios"] = ""
+    # # st.session_state["input_programacion_hobbie"] = ""
+    # # st.session_state["input_sueldo_ajuste_2021"] = ""
+    # # st.session_state["input_sueldo_bonos"] = ""
+    # # st.session_state["input_tipo_contrato"] = ""
+    # # st.session_state["input_violencia_laboral"] = ""
+    # st.session_state.input_tecnologias = []
+    # return
 
 
 with st.sidebar:
     st.markdown("### Variables del modelo")
-    input_edad = st.slider("Edad", 15, 70, 15, key="input_edad")
-    input_experiencia_anios = st.slider("Experiencia en años", 0, 50, 0, key="input_experiencia_anios")
-    input_empresa_actual_anios = st.slider("Tiempo en empresa actual en años", 0, 50, 0, key="input_empresa_actual_anios")
-    input_personas_a_cargo = st.slider("Personas a cargo", 0, 100, 0, key="input_personas_a_cargo")
-    input_sueldo_ajuste_total_2021 = st.slider("Porcentaje total de ajuste del sueldo en 2021", 0, 100, 0, key="input_sueldo_ajuste_total_2021")
-    input_recomendacion_laboral = st.slider("Nivel de recomendación de la empresa actual", 0, 10, 5, key="input_recomendacion_laboral")
-    input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 0, 10, 5, key="input_politicas_diversidad")
-    input_genero = st.selectbox("Genero", ["Femenino", "Masculino", "Otro", "No Responde"], key="input_genero")
-    input_contribucion_open_source = st.selectbox("Contribución Open Source", ("Si", "No", "No Responde"), key="input_contribucion_open_source")
-    input_cursos_especializacion = st.selectbox("Cursos de especialización", ("Si", "No", "No Responde"), key="input_cursos_especializacion")
-    input_guardias = st.selectbox("Tienes guardias", ("No", "Si, activa",  "Si, pasiva"), key="input_guardias")
-    input_max_nivel_estudios = st.selectbox("Nivel máximo de estudios alcanzado", ("Primario", "Secundario", "Terciario", "Universitario", "Posgrado", "Doctorado", "Posdoctorado", "No Responde"), key="input_max_nivel_estudios")
-    input_programacion_hobbie = st.selectbox("Programas como hobbie?", ("Si", "No", "No Responde"), key="input_programacion_hobbie")
-    input_sueldo_ajuste_2021 = st.selectbox("Cuantos ajustes de sueldo tuviste durante el 2021?", ("Ninguno", "Uno", "Dos", "Tres", "Más de tres"), key="input_sueldo_ajuste_2021")
-    input_sueldo_bonos = st.selectbox("Recibes bonos adicionales al sueldo?", ("No", "Menos de un sueldo", "Un sueldo", "De uno a tres sueldos", "Más de tres sueldos"), key="input_sueldo_bonos")
-    input_tipo_contrato = st.selectbox("Que tipo de contrato tienes?", ("Full-Time", "Part-Time", "Remoto", "Tercerizado", "Freelance", "Participación societaria en cooperativa"), key="input_tipo_contrato")
-    input_violencia_laboral = st.selectbox("Has vivido violencia laboral?", ("Jamás", "En mi trabajo actual", "En un trabajo anterior", "No responde"), key="input_violencia_laboral")
+    input_edad = st.slider("Edad", 15, 70, 15, key=f"input_edad{run_id}")
+    input_experiencia_anios = st.slider("Experiencia en años", 0, 50, 0, key=f"input_experiencia_anios{run_id}")
+    input_empresa_actual_anios = st.slider("Tiempo en empresa actual en años", 0, 50, 0, key=f"input_empresa_actual_anios{run_id}")
+    input_personas_a_cargo = st.slider("Personas a cargo", 0, 100, 0, key=f"input_personas_a_cargo{run_id}")
+    input_sueldo_ajuste_total_2021 = st.slider("Porcentaje total de ajuste del sueldo en 2021", 0, 100, 0, key=f"input_sueldo_ajuste_total_2021{run_id}")
+    input_recomendacion_laboral = st.slider("Nivel de recomendación de la empresa actual", 0, 10, 5, key=f"input_recomendacion_laboral{run_id}")
+    input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 0, 10, 5, key=f"input_politicas_diversidad{run_id}")
+    input_genero = st.selectbox("Genero", ["Femenino", "Masculino", "Otro", "No Responde"], key=f"input_genero{run_id}")
+    input_contribucion_open_source = st.selectbox("Contribución Open Source", ("Si", "No", "No Responde"), key=f"input_contribucion_open_source{run_id}")
+    input_cursos_especializacion = st.selectbox("Cursos de especialización", ("Si", "No", "No Responde"), key=f"input_cursos_especializacion{run_id}")
+    input_guardias = st.selectbox("Tienes guardias", ("No", "Si, activa",  "Si, pasiva"), key=f"input_guardias{run_id}")
+    input_max_nivel_estudios = st.selectbox("Nivel máximo de estudios alcanzado", ("Primario", "Secundario", "Terciario", "Universitario", "Posgrado", "Doctorado", "Posdoctorado", "No Responde"), key=f"input_max_nivel_estudios{run_id}")
+    input_programacion_hobbie = st.selectbox("Programas como hobbie?", ("Si", "No", "No Responde"), key=f"input_programacion_hobbie{run_id}")
+    input_sueldo_ajuste_2021 = st.selectbox("Cuantos ajustes de sueldo tuviste durante el 2021?", ("Ninguno", "Uno", "Dos", "Tres", "Más de tres"), key=f"input_sueldo_ajuste_2021{run_id}")
+    input_sueldo_bonos = st.selectbox("Recibes bonos adicionales al sueldo?", ("No", "Menos de un sueldo", "Un sueldo", "De uno a tres sueldos", "Más de tres sueldos"), key=f"input_sueldo_bonos{run_id}")
+    input_tipo_contrato = st.selectbox("Que tipo de contrato tienes?", ("Full-Time", "Part-Time", "Remoto", "Tercerizado", "Freelance", "Participación societaria en cooperativa"), key=f"input_tipo_contrato{run_id}")
+    input_violencia_laboral = st.selectbox("Has vivido violencia laboral?", ("Jamás", "En mi trabajo actual", "En un trabajo anterior", "No responde"), key=f"input_violencia_laboral{run_id}")
     input_tecnologias = st.multiselect(
         "Qué tecnologías dominas?",
         ["amazonwebservices", "css", "docker", "html", "java", "javascript", "linux", "mysql", "nodejs", "postgresql", "python", "reactjs", "sql", "sqlserver", "visualstudiocode"],
-        key="input_tecnologias",
+        key=f"input_tecnologias{run_id}",
     )
 
 
