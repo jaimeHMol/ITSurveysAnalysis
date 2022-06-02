@@ -32,6 +32,7 @@ def clear_inputs():
     # st.session_state["input_tipo_contrato"] = ""
     # st.session_state["input_violencia_laboral"] = ""
     st.session_state.multiselect = []
+    return
 
 
 with st.sidebar:
