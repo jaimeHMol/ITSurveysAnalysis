@@ -20,16 +20,17 @@ def clear_inputs():
     st.session_state["input_sueldo_ajuste_total_2021"] = 0
     st.session_state["input_recomendacion_laboral"] = 5
     st.session_state["input_politicas_diversidad"] = 5
-    st.session_state["input_genero"] = ""
-    st.session_state["input_contribucion_open_source"] = ""
-    st.session_state["input_cursos_especializacion"] = ""
-    st.session_state["input_guardias"] = ""
-    st.session_state["input_max_nivel_estudios"] = ""
-    st.session_state["input_programacion_hobbie"] = ""
-    st.session_state["input_sueldo_ajuste_2021"] = ""
-    st.session_state["input_sueldo_bonos"] = ""
-    st.session_state["input_tipo_contrato"] = ""
-    st.session_state["input_violencia_laboral"] = ""
+    st.session_state.selectbox = ()
+    # st.session_state["input_genero"] = ""
+    # st.session_state["input_contribucion_open_source"] = ""
+    # st.session_state["input_cursos_especializacion"] = ""
+    # st.session_state["input_guardias"] = ""
+    # st.session_state["input_max_nivel_estudios"] = ""
+    # st.session_state["input_programacion_hobbie"] = ""
+    # st.session_state["input_sueldo_ajuste_2021"] = ""
+    # st.session_state["input_sueldo_bonos"] = ""
+    # st.session_state["input_tipo_contrato"] = ""
+    # st.session_state["input_violencia_laboral"] = ""
     st.session_state.multiselect = []
 
 
