@@ -11,11 +11,11 @@ st.set_page_config(
     page_icon="💸",
 )
 
-st.session_state["run_id"] = 1
+st.session_state.run_id = 1
 
 def clear_inputs():
     # run_id += 1
-    st.session_state["run_id"] += 1
+    st.session_state.run_id += 1
 
     # st.session_state["input_edad"] = 15
     # st.session_state["input_experiencia_anios"] = 0
@@ -40,7 +40,7 @@ def clear_inputs():
 
 
 with st.sidebar:
-    run_id = st.session_state["run_id"]
+    run_id = st.session_state.run_id
     st.markdown("### Variables del modelo")
     input_edad = st.slider("Edad", 15, 70, 15, key=f"input_edad{run_id}")
     input_experiencia_anios = st.slider("Experiencia en años", 0, 50, 0, key=f"input_experiencia_anios{run_id}")
