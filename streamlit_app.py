@@ -20,7 +20,7 @@ def clear_inputs():
     st.session_state["input_sueldo_ajuste_total_2021"] = 0
     st.session_state["input_recomendacion_laboral"] = 5
     st.session_state["input_politicas_diversidad"] = 5
-    st.session_state.selectbox = ()
+    st.session_state.input_genero = ()
     # st.session_state["input_genero"] = ""
     # st.session_state["input_contribucion_open_source"] = ""
     # st.session_state["input_cursos_especializacion"] = ""
@@ -31,7 +31,7 @@ def clear_inputs():
     # st.session_state["input_sueldo_bonos"] = ""
     # st.session_state["input_tipo_contrato"] = ""
     # st.session_state["input_violencia_laboral"] = ""
-    st.session_state.multiselect = []
+    st.session_state.input_tecnologias = []
     return
 
 
