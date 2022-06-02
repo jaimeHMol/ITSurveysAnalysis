@@ -54,7 +54,7 @@ with st.sidebar:
     input_violencia_laboral = st.selectbox("Has vivido violencia laboral?", ("Jamás", "En mi trabajo actual", "En un trabajo anterior", "No responde"), key="input_violencia_laboral")
     input_tecnologias = st.input_multiselect(
         "Qué tecnologías dominas?",
-        ("amazonwebservices", "css", "docker", "html", "java", "javascript", "linux", "mysql", "nodejs", "postgresql", "python", "reactjs", "sql", "sqlserver", "visualstudiocode"),
+        ["amazonwebservices", "css", "docker", "html", "java", "javascript", "linux", "mysql", "nodejs", "postgresql", "python", "reactjs", "sql", "sqlserver", "visualstudiocode"],
         key="input_tecnologias",
     )
 
