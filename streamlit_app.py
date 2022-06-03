@@ -1,10 +1,7 @@
-import math
-from collections import namedtuple
-
 import altair as alt
 import pandas as pd
 import streamlit as st
-from numpy import ones_like
+from joblib import load
 
 st.set_page_config(
     page_title="Predictor de salarios.",
@@ -36,6 +33,16 @@ def clear_inputs():
     # st.session_state["input_violencia_laboral"] = ""
     st.session_state["input_tecnologias"] = []
     return
+
+
+def predict_salary(model_type):
+    if model_type == "":
+        model_file = "export_linear_regression.joblib"
+    elif model_type == "":
+        model_file = "export_random_forest.joblib" 
+    predictor_model = load(model_file)
+
+    return predict_model.predict()
 
 
 with st.sidebar:
@@ -82,7 +89,7 @@ Para obtener más detalles del modelo implementado puedes entrar [aquí](https:/
 st.write("###")
 
 with st.form("Model prediction parameters"):
-    ModelType = st.radio(
+    model_type = st.radio(
         "Choose your model",
         ["Linear Regression", "Random Forest"],
         help="At present, you can choose between 2 models (Linear Regression or \
@@ -90,6 +97,7 @@ with st.form("Model prediction parameters"):
     )
     predict = st.form_submit_button("Predecir")
     if predict:
-        st.write("Tu sueldo debería ser:", 100000, "pesos argentinos", input_edad)
+        predicted_salary = predict_salary(model_type)
+        st.write(f"Tu sueldo esperado debería ser: {predicted_salary} pesos argentinos (ARS)")
 
 st.button("Limpiar entradas", on_click=clear_inputs)

@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 import numpy as np
-from numpy.core.numeric import False_
+from joblib import dump
 
 import mappings as maps
 from data_process import DataProcess
@@ -224,7 +224,7 @@ random_forest, cv_rf_models = sysarmy_analysis.random_forest(
     num_vars_graph=15,
 )
 
-# Common variables on the top 15 more important between the two models.
+# Common variables on the top 15 more important between the two models (66 total number of variables).
 common_vars_dict = {}
 top_vars_linear_regression = dict(linear_regression.top_vars_graph)
 top_vars_random_forest = dict(random_forest.top_vars_graph)
@@ -235,7 +235,9 @@ for var in common_vars_set:
 print(f"The common top more important variables between the two models are: {common_vars_dict}")
 
 
-# The number of variables (features) used by both models are 66.
+# Export the best models
+dump(linear_regression, "export_linear_regression.joblib") 
+dump(random_forest, "export_random_forest.joblib") 
 
 
 # ----------------------------------------------------------------------------------
