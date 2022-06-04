@@ -585,6 +585,8 @@ class DataProcess(object):
             if col in cols_numeric: cols_numeric.remove(col)
 
         logger.info("*** Training linear regression model...")
+        logger.info("*** Input features: ")
+        logger.info(cols_numeric)
         # X_train, X_test, y_train, y_test = train_test_split(
         #     self.dataset[cols_numeric],
         #     self.dataset[col_to_predict],
@@ -660,6 +662,8 @@ class DataProcess(object):
             if col in cols_input: cols_input.remove(col)
 
         logger.info("*** Training random forest model...")
+        logger.info("*** Input features: ")
+        logger.info(cols_input)
         # X_train, X_test, y_train, y_test = train_test_split(
         #     self.dataset[cols_input],
         #     self.dataset[col_to_predict],
