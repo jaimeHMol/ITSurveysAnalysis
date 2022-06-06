@@ -204,11 +204,12 @@ print(sysarmy_analysis)
 print("""For this test, using only the "reducted" dims the original MSE 
 was: 85744.91345704456 and R2 0.12750968089899317""")
 
-# Salary prediction using linear regression with cleaned columns, the method automatically
-# select the numeric columns.
+# Salary prediction using linear regression with numeric and cleaned columns
 linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars",
-    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+    cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
+    + cols_categoric,
+    # cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
     num_vars_graph=15,
@@ -223,6 +224,7 @@ random_forest, cv_rf_models = sysarmy_analysis.random_forest(
     graph=True,
     num_vars_graph=15,
 )
+
 
 # -----------------------------------------------------------------------------------
 # Common variables on the top 15 more important between the two models (66 total number of variables).

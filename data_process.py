@@ -574,21 +574,21 @@ class DataProcess(object):
 
     def linear_regression(self, col_to_predict, cols=[], cols_to_remove=[], num_splits=25, graph=True, num_vars_graph=10):
         if cols:
-            cols_numeric = cols
+            cols_input = cols
         else:
-            cols_by_type = self.group_cols_by_type()
+            cols_input = list(self.dataset)
             # Linear regression only works with numeric columns
-            cols_numeric = self.get_cols_by_type(cols_by_type, self.numeric_types)
-            # xs = self.dataset.drop([col_to_predict], axis=1)
-        if col_to_predict in cols_numeric: cols_numeric.remove(col_to_predict)
+            # cols_by_type = self.group_cols_by_type()
+            # cols_input = self.get_cols_by_type(cols_by_type, self.numeric_types)
+        if col_to_predict in cols_input: cols_input.remove(col_to_predict)
         for col in cols_to_remove:
-            if col in cols_numeric: cols_numeric.remove(col)
+            if col in cols_input: cols_input.remove(col)
 
         logger.info("*** Training linear regression model...")
         logger.info("*** Input features: ")
-        logger.info(cols_numeric)
+        logger.info(cols_input)
         # X_train, X_test, y_train, y_test = train_test_split(
-        #     self.dataset[cols_numeric],
+        #     self.dataset[cols_input],
         #     self.dataset[col_to_predict],
         #     random_state=777,
         # )
@@ -605,10 +605,10 @@ class DataProcess(object):
         cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=777)
         output_models = cross_validate(
             reg, 
-            self.dataset[cols_numeric], 
+            self.dataset[cols_input], 
             self.dataset[col_to_predict], 
             cv=cv, 
-            scoring=["r2", "neg_mean_squared_error"], # The smallest the number the better
+            scoring=["r2", "neg_mean_squared_error"], # The higher the number the better
             return_estimator=True,
         )
 
@@ -632,7 +632,7 @@ class DataProcess(object):
         # value measures the importance of each feature.
         importances = tuple(abs(item) for item in best_model.coef_)
         # Summarize feature importance.
-        cols_importance = list(zip(cols_numeric, importances))
+        cols_importance = list(zip(cols_input, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
         for col, importance in cols_importance_ordered:
             logger.info(f"Feature: {col}, Score: {importance}")
