@@ -194,7 +194,6 @@ sysarmy_analysis.reduction_dims(
 sysarmy_analysis.clusterization(cols_to_standard, method="dbscan", visualize=True)
 
 sysarmy_analysis.dummy_cols_from_text(col="technologies", sep=",", n_cols=15)
-print(sysarmy_analysis)
 
 
 # ----------------------------------------------------------------------------------
@@ -209,8 +208,13 @@ linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
     + cols_categoric,
-    # cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+    graph=True,
+    num_vars_graph=15,
+)
+linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression_only_num(
+    col_to_predict="sueldo_mensual_bruto_ars",
+    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
     num_vars_graph=15,
 )
