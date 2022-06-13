@@ -162,8 +162,8 @@ cols_to_standard = [
     "politicas_diversidad",
     # "pandemia_percepcion",
 ]
-sysarmy_analysis.standardize(cols_to_standard, "z_score")
 
+sysarmy_analysis.standardize(cols_to_standard, "z_score")
 
 # Bartlett test to know if PCA could be done
 import scipy.stats as stats
@@ -179,14 +179,12 @@ sysarmy_analysis.reduction_dims(
     cols_to_standard, method="pca", final_number_dims=2, visualize=True
 )
 
-
 # Dimensionality reduction using MCA:
 # Applies only for categoric columns
 cols_by_type = sysarmy_analysis.group_cols_by_type()
 cols_categoric = sysarmy_analysis.get_cols_by_type(cols_by_type, ["object"])
-cols_categoric.remove(
-    "technologies"
-)  # This column is removed because it was manually created and it has a very high cardinality
+# This column is removed because it was manually created and it has a very high cardinality
+cols_categoric.remove("technologies")
 sysarmy_analysis.reduction_dims(
     cols_categoric, method="mca", final_number_dims=5, visualize=True
 )
@@ -202,6 +200,7 @@ sysarmy_analysis.dummy_cols_from_text(col="technologies", sep=",", n_cols=15)
 # TODO: Remove this:
 print("""For this test, using only the "reducted" dims the original MSE 
 was: 85744.91345704456 and R2 0.12750968089899317""")
+sysarmy_analysis.explore(name_postfix="processed2")
 
 # Salary prediction using linear regression with numeric and cleaned columns
 linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression(

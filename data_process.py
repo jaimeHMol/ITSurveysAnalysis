@@ -352,7 +352,7 @@ class DataProcess(object):
             for col in cols:
                 # TODO: Confirm that this transformation is working correctly
                 # it doesn't look like is working with column "experiencia_anios"
-                self.dataset[col] = (self.dataset[col] - self.dataset[col].mean() / self.dataset[col].std())
+                self.dataset[col] = ((self.dataset[col] - self.dataset[col].mean()) / self.dataset[col].std())
             self.is_standardize = True            
         elif method == "0-1":
             # self.is_standardize = True
@@ -586,7 +586,9 @@ class DataProcess(object):
 
         logger.info("*** Training linear regression model...")
         logger.info("*** Input features: ")
-        logger.info(cols_input)
+        # logger.info(cols_input)
+        logger.info(self.dataset[cols_input])
+
         # X_train, X_test, y_train, y_test = train_test_split(
         #     self.dataset[cols_input],
         #     self.dataset[col_to_predict],
@@ -666,7 +668,9 @@ class DataProcess(object):
 
         logger.info("*** Training linear regression model...")
         logger.info("*** Input features: ")
-        logger.info(cols_input)
+        # logger.info(cols_input)
+        logger.info(self.dataset[['sueldo_ajuste_total_2021', 'experiencia_anios', 'empresa_actual_anios', 'personas_a_cargo']])
+
         # X_train, X_test, y_train, y_test = train_test_split(
         #     self.dataset[cols_input],
         #     self.dataset[col_to_predict],
