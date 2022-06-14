@@ -604,7 +604,7 @@ class DataProcess(object):
         # )
 
         reg = LinearRegression()
-        cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=777)
+        cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=123)
         output_models = cross_validate(
             reg, 
             self.dataset[cols_input], 
@@ -632,7 +632,11 @@ class DataProcess(object):
 
         # Get the variable importance of the best model found. In this model the absolute 
         # value measures the importance of each feature.
-        importances = tuple(abs(item) for item in best_model.coef_)
+
+
+
+        # importances = tuple(abs(item) for item in best_model.coef_)
+        importances = tuple(item for item in best_model.coef_)
         # Summarize feature importance.
         cols_importance = list(zip(cols_input, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
@@ -686,7 +690,7 @@ class DataProcess(object):
         # )
 
         reg = LinearRegression()
-        cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=777)
+        cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=123)
         output_models = cross_validate(
             reg, 
             self.dataset[cols_input], 
@@ -714,7 +718,10 @@ class DataProcess(object):
 
         # Get the variable importance of the best model found. In this model the absolute 
         # value measures the importance of each feature.
-        importances = tuple(abs(item) for item in best_model.coef_)
+
+
+        # importances = tuple(abs(item) for item in best_model.coef_)
+        importances = tuple(item for item in best_model.coef_)
         # Summarize feature importance.
         cols_importance = list(zip(cols_input, importances))
         cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)

@@ -156,7 +156,7 @@ cols_to_standard = [
     "empresa_actual_anios",
     "personas_a_cargo",
     # "sueldo_conformidad",
-    # "sueldo_mensual_bruto_ars",
+    "sueldo_mensual_bruto_ars",
     "sueldo_ajuste_total_2021",
     "recomendacion_laboral",
     "politicas_diversidad",
@@ -200,7 +200,7 @@ sysarmy_analysis.dummy_cols_from_text(col="technologies", sep=",", n_cols=15)
 # TODO: Remove this:
 print("""For this test, using only the "reducted" dims the original MSE 
 was: 85744.91345704456 and R2 0.12750968089899317""")
-sysarmy_analysis.explore(name_postfix="processed2")
+# sysarmy_analysis.explore(name_postfix="processed2")
 
 # Salary prediction using linear regression with numeric and cleaned columns
 linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression(
@@ -211,7 +211,7 @@ linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression(
     graph=True,
     num_vars_graph=15,
 )
-linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression_only_num(
+linear_regression2, cv_lr_models2  = sysarmy_analysis.linear_regression_only_num(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
