@@ -14,7 +14,7 @@ from prince import MCA
 from sklearn.cluster import DBSCAN, KMeans
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.metrics import mean_squared_error, r2_score, silhouette_score
 from sklearn.model_selection import (ShuffleSplit, cross_validate,
                                      train_test_split)
@@ -718,6 +718,91 @@ class DataProcess(object):
 
         # Get the variable importance of the best model found. In this model the absolute 
         # value measures the importance of each feature.
+
+
+        # importances = tuple(abs(item) for item in best_model.coef_)
+        importances = tuple(item for item in best_model.coef_)
+        # Summarize feature importance.
+        cols_importance = list(zip(cols_input, importances))
+        cols_importance_ordered = sorted(cols_importance, key=lambda x: x[1], reverse=True)
+        for col, importance in cols_importance_ordered:
+            logger.info(f"Feature: {col}, Score: {importance}")
+
+        if graph:
+            x_axis = ["\n".join(wrap(x, 20)) for x in list(zip(*cols_importance_ordered))[0][:num_vars_graph]]
+            y_axis = list(zip(*cols_importance_ordered))[1][:num_vars_graph]
+            plt.figure(figsize=(9,4))
+            plt.title("Feature Importance - Linear Regression")
+            plt.bar(x_axis, y_axis)
+            plt.xticks(rotation=90)
+            plt.margins(x=0, y=0.1)
+            plt.show()
+            best_model.top_vars_graph = zip(x_axis, y_axis)
+        
+        return best_model, output_models
+
+    
+    def linear_regression_ridge(self, col_to_predict, cols=None, cols_to_remove=None, num_splits=25, graph=True, num_vars_graph=10):
+        cols = [] if cols is None else cols
+        cols_to_remove = [] if cols_to_remove is None else cols_to_remove
+        
+        if cols:
+            cols_input = cols
+        else:
+            cols_input = list(self.dataset)
+        if col_to_predict in cols_input: cols_input.remove(col_to_predict)
+        for col in cols_to_remove:
+            if col in cols_input: cols_input.remove(col)
+
+        logger.info("*** Training linear regression model...")
+        logger.info("*** Input features: ")
+        # logger.info(cols_input)
+        logger.info(self.dataset[cols_input])
+
+        # X_train, X_test, y_train, y_test = train_test_split(
+        #     self.dataset[cols_input],
+        #     self.dataset[col_to_predict],
+        #     random_state=777,
+        # )
+        # prediction = best_model.predict(X = X_test)
+        # r2 = r2_score(y_true=y_test, y_pred=prediction)
+        # logger.info(f"R2 coefficient (Using training data): {r2}")
+        # mse = mean_squared_error(
+        #     y_true  = y_test,
+        #     y_pred  = prediction,
+        #     squared = False
+        # )
+
+        reg = Ridge()
+        cv = ShuffleSplit(n_splits=num_splits, test_size=0.3, random_state=123)
+        output_models = cross_validate(
+            reg, 
+            self.dataset[cols_input], 
+            self.dataset[col_to_predict], 
+            cv=cv, 
+            scoring=["r2", "neg_mean_squared_error"], # The higher the number the better
+            return_estimator=True,
+        )
+
+        # Use abs since the scoring metric neg_mean_squared_error is negative in order
+        # to follow the convention higher return values are better than lower return 
+        # values when evaluating the models.
+        model_mean = abs(np.mean(output_models["test_neg_mean_squared_error"]))
+        model_standard_deviation = abs(np.std(output_models["test_neg_mean_squared_error"]))
+        max_r2 = np.amax(output_models["test_r2"])
+        logger.info(f"*** After {num_splits} folds using cross validation:")
+        logger.info(f"    The average MSE is: {model_mean}")
+        logger.info(f"    The standard deviation of the MSE is: {model_standard_deviation}")
+        logger.info(f"    The maximum R2 is: {max_r2}")
+
+        # Choose the best model to show variable importance and graphs
+        max_estimator = np.amax(output_models["test_neg_mean_squared_error"])
+        max_estimator_index = np.where(output_models["test_neg_mean_squared_error"] == max_estimator)[0][0]
+        best_model = output_models["estimator"][max_estimator_index]
+
+        # Get the variable importance of the best model found. In this model the absolute 
+        # value measures the importance of each feature.
+
 
 
         # importances = tuple(abs(item) for item in best_model.coef_)
