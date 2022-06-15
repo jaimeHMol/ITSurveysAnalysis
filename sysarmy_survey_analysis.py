@@ -236,7 +236,7 @@ random_forest, cv_rf_models = sysarmy_analysis.random_forest(
     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
     num_vars_graph=15,
-) 
+)  
 
 
 # -----------------------------------------------------------------------------------
