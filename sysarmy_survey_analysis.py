@@ -219,10 +219,17 @@ linear_regression2, cv_lr_models2  = sysarmy_analysis.linear_regression_only_num
 )
 
 
-linear_regression_ridge, cv_lr_models  = sysarmy_analysis.linear_regression_ridge(
+linear_regression_ridge, cv_lrr_models  = sysarmy_analysis.linear_regression_ridge(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
     + cols_categoric,
+    # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+    graph=True,
+    num_vars_graph=15,
+)
+linear_regression_ridge2, cv_lrr_models2  = sysarmy_analysis.linear_regression_ridge_only_num(
+    col_to_predict="sueldo_mensual_bruto_ars",
+    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
     num_vars_graph=15,
