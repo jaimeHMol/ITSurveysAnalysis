@@ -249,12 +249,12 @@ random_forest, cv_rf_models = sysarmy_analysis.random_forest(
 # -----------------------------------------------------------------------------------
 # Common variables on the top 15 more important between the two models (66 total number of variables).
 common_vars_dict = {}
-top_vars_linear_regression = dict(linear_regression.top_vars_graph)
+top_vars_linear_regression_ridge = dict(linear_regression_ridge.top_vars_graph)
 top_vars_random_forest = dict(random_forest.top_vars_graph)
-common_vars_set = set(top_vars_linear_regression) & set(top_vars_random_forest)
+common_vars_set = set(top_vars_linear_regression_ridge) & set(top_vars_random_forest)
 for var in common_vars_set:
-    # common_vars_dict[var] = (list(top_vars_linear_regression).index(var), list(top_vars_random_forest).index(var))
-    common_vars_dict[var] = list(top_vars_linear_regression).index(var) + list(top_vars_random_forest).index(var)
+    # common_vars_dict[var] = (list(top_vars_linear_regression_ridge).index(var), list(top_vars_random_forest).index(var))
+    common_vars_dict[var] = list(top_vars_linear_regression_ridge).index(var) + list(top_vars_random_forest).index(var)
 print(f"The common top more important variables between the two models are: {common_vars_dict}")
 
 # Predict using the data from the row zero just for testing purposes
@@ -262,13 +262,16 @@ all_cols = list(sysarmy_analysis.dataset)
 cols_to_remove = ["sueldo_mensual_bruto_ars", "technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"] + cols_categoric
 for col in cols_to_remove:
     all_cols.remove(col) 
-X_to_predict = list(sysarmy_analysis.dataset[all_cols].iloc[0])
-y_real = sysarmy_analysis.dataset["sueldo_mensual_bruto_ars"].iloc[0]
-y_predict = random_forest.predict([X_to_predict])
+row_to_predict = 3440
+X_to_predict = list(sysarmy_analysis.dataset[all_cols].iloc[row_to_predict])
+y_real = sysarmy_analysis.dataset["sueldo_mensual_bruto_ars"].iloc[row_to_predict]
+y_predict_rf = random_forest.predict([X_to_predict])
+y_predict_lrr = linear_regression_ridge.predict([X_to_predict])
+{"y_real": y_real, "y_predict_rf": y_predict_rf, "y_predict_lrr": y_predict_lrr}
 
 
 # Export the best models
-dump(linear_regression, "export_linear_regression.joblib") 
+dump(linear_regression_ridge, "export_linear_regression_ridge.joblib") 
 dump(random_forest, "export_random_forest.joblib") 
 
 
