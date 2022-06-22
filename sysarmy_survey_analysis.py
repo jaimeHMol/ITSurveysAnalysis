@@ -156,14 +156,15 @@ cols_to_standard = [
     "empresa_actual_anios",
     "personas_a_cargo",
     # "sueldo_conformidad",
-    "sueldo_mensual_bruto_ars",
+    # "sueldo_mensual_bruto_ars",
     "sueldo_ajuste_total_2021",
     "recomendacion_laboral",
     "politicas_diversidad",
     # "pandemia_percepcion",
 ]
 
-sysarmy_analysis.standardize(cols_to_standard, "z_score")
+scaler_X = sysarmy_analysis.standardize(cols_to_standard, "z_score")
+scaler_y = sysarmy_analysis.standardize(["sueldo_mensual_bruto_ars"], "z_score")
 
 # Bartlett test to know if PCA could be done
 import scipy.stats as stats
@@ -203,20 +204,20 @@ was: 85744.91345704456 and R2 0.12750968089899317""")
 # sysarmy_analysis.explore(name_postfix="processed2")
 
 # Salary prediction using linear regression with numeric and cleaned columns
-linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression(
-    col_to_predict="sueldo_mensual_bruto_ars",
-    cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
-    + cols_categoric,
-    # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
-    graph=True,
-    num_vars_graph=15,
-)
-linear_regression2, cv_lr_models2  = sysarmy_analysis.linear_regression_only_num(
-    col_to_predict="sueldo_mensual_bruto_ars",
-    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
-    graph=True,
-    num_vars_graph=15,
-)
+# linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression(
+#     col_to_predict="sueldo_mensual_bruto_ars",
+#     cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
+#     + cols_categoric,
+#     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+#     graph=True,
+#     num_vars_graph=15,
+# )
+# linear_regression2, cv_lr_models2  = sysarmy_analysis.linear_regression_only_num(
+#     col_to_predict="sueldo_mensual_bruto_ars",
+#     cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+#     graph=True,
+#     num_vars_graph=15,
+# )
 
 
 linear_regression_ridge, cv_lrr_models  = sysarmy_analysis.linear_regression_ridge(
@@ -227,13 +228,13 @@ linear_regression_ridge, cv_lrr_models  = sysarmy_analysis.linear_regression_rid
     graph=True,
     num_vars_graph=15,
 )
-linear_regression_ridge2, cv_lrr_models2  = sysarmy_analysis.linear_regression_ridge_only_num(
-    col_to_predict="sueldo_mensual_bruto_ars",
-    cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
-    # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
-    graph=True,
-    num_vars_graph=15,
-)
+# linear_regression_ridge2, cv_lrr_models2  = sysarmy_analysis.linear_regression_ridge_only_num(
+#     col_to_predict="sueldo_mensual_bruto_ars",
+#     cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+#     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
+#     graph=True,
+#     num_vars_graph=15,
+# )
 
 # Salary prediction using random forest with cleaned columns.
 random_forest, cv_rf_models = sysarmy_analysis.random_forest(
@@ -262,12 +263,13 @@ all_cols = list(sysarmy_analysis.dataset)
 cols_to_remove = ["sueldo_mensual_bruto_ars", "technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"] + cols_categoric
 for col in cols_to_remove:
     all_cols.remove(col) 
-row_to_predict = 3440
+row_to_predict = 1
 X_to_predict = list(sysarmy_analysis.dataset[all_cols].iloc[row_to_predict])
 y_real = sysarmy_analysis.dataset["sueldo_mensual_bruto_ars"].iloc[row_to_predict]
 y_predict_rf = random_forest.predict([X_to_predict])
 y_predict_lrr = linear_regression_ridge.predict([X_to_predict])
 {"y_real": y_real, "y_predict_rf": y_predict_rf, "y_predict_lrr": y_predict_lrr}
+scaler_y.inverse_transform([y_real, y_predict_rf, y_predict_lrr])
 
 
 # Export the best models

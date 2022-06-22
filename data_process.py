@@ -18,6 +18,7 @@ from sklearn.linear_model import LinearRegression, Ridge
 from sklearn.metrics import mean_squared_error, r2_score, silhouette_score
 from sklearn.model_selection import (ShuffleSplit, cross_validate,
                                      train_test_split)
+from sklearn.preprocessing import StandardScaler
 from sklearn_extra.cluster import KMedoids
 
 # TOIMPROVE: Add optional argument "cols" to all the method that do some process over the self.dataset
@@ -349,11 +350,13 @@ class DataProcess(object):
 
     def standardize(self, cols, method="z_score"):
         if method == "z_score":
-            for col in cols:
-                # TODO: Confirm that this transformation is working correctly
-                # it doesn't look like is working with column "experiencia_anios"
-                self.dataset[col] = ((self.dataset[col] - self.dataset[col].mean()) / self.dataset[col].std())
-            self.is_standardize = True            
+            # for col in cols:
+            #     self.dataset[col] = ((self.dataset[col] - self.dataset[col].mean()) / self.dataset[col].std())
+            scaler = StandardScaler()
+            scaler.fit(self.dataset[cols])
+            self.dataset[cols] = scaler.transform(self.dataset[cols])
+            self.is_standardize = True
+            return scaler
         elif method == "0-1":
             # self.is_standardize = True
             pass
