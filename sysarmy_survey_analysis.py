@@ -10,6 +10,7 @@ from data_process import DataProcess
 
 project_path = Path(os.getcwd())
 output_path = project_path / "data/prepared/"
+export_path = project_path / "export/"
 USD_ARS = 105
 
 # ----------------------------------------------------------------------------------
@@ -273,9 +274,10 @@ scaler_y.inverse_transform([y_real, y_predict_rf, y_predict_lrr])
 
 
 # Export the best models
-dump(linear_regression_ridge, "export_linear_regression_ridge.joblib") 
-dump(random_forest, "export_random_forest.joblib") 
-
+dump(linear_regression_ridge, export_path / "export_linear_regression_ridge.joblib") 
+dump(random_forest, export_path / "export_random_forest.joblib") 
+dump(scaler_y, export_path / "export_scaler_output.joblib") 
+dump(scaler_X, export_path / "export_scaler_input.joblib") 
 
 # ----------------------------------------------------------------------------------
 # sysarmy_analysis.reset()

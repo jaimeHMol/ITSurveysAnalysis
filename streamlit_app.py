@@ -1,3 +1,6 @@
+import os
+from pathlib import Path
+
 import altair as alt
 import pandas as pd
 import streamlit as st
@@ -7,6 +10,13 @@ st.set_page_config(
     page_title="Predictor de salarios.",
     page_icon="💸",
 )
+
+project_path = Path(os.getcwd())
+export_path = project_path / "export/"
+
+# Import model and transformations to be applied on the input data
+scaler_y = load(export_path / "scaler_y.joblib")
+scaler_X = load(export_path / "scaler_X.joblib")
 
 # st.session_state.run_id = 1
 
@@ -36,13 +46,13 @@ def clear_inputs():
 
 
 def predict_salary(model_type):
-    if model_type == "":
-        model_file = "export_linear_regression.joblib"
-    elif model_type == "":
-        model_file = "export_random_forest.joblib" 
-    predictor_model = load(model_file)
+    if model_type == "Linear Regression Ridge":
+        model = load(export_path / "export_linear_regression_ridge.joblib")
+    elif model_type == "Random Forest":
+        model = load(export_path / "export_random_forest.joblib")
 
-    return predict_model.predict()
+    # return model.predict()
+    return scaler_y.transform(input_personas_a_cargo)
 
 
 with st.sidebar:
@@ -91,7 +101,7 @@ st.write("###")
 with st.form("Model prediction parameters"):
     model_type = st.radio(
         "Choose your model",
-        ["Linear Regression", "Random Forest"],
+        ["Linear Regression Ridge", "Random Forest"],
         help="At present, you can choose between 2 models (Linear Regression or \
         Random Forest) to predict the salary.",
     )
