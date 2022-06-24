@@ -52,7 +52,11 @@ def predict_salary(model_type):
     elif model_type == "Random Forest":
         model = load(export_path / "export_random_forest.joblib")
 
-    # return model.predict()
+    # X_to_predict = scaler_X.transform(X_input)
+    # y_predict_scaled = model.predict([X_to_predict])
+    # y_predict = scaler_y.inverse_transform([np.float_(y_predict_scaled)])[0]
+    # return y_predict
+    
     return scaler_y.inverse_transform([np.float_(input_personas_a_cargo)])[0]
 
 
