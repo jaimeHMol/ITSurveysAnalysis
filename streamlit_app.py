@@ -11,8 +11,7 @@ st.set_page_config(
     page_icon="💸",
 )
 
-project_path = Path(os.getcwd())
-export_path = project_path / "export/"
+export_path = Path("/export")
 
 # Import model and transformations to be applied on the input data
 scaler_y = load(export_path / "scaler_y.joblib")
