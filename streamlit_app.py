@@ -53,7 +53,7 @@ def predict_salary(model_type):
         model = load(export_path / "export_random_forest.joblib")
 
     # return model.predict()
-    return scaler_y.inverse_transform([np.float_(input_personas_a_cargo)])
+    return scaler_y.inverse_transform(np.float_(input_personas_a_cargo))
 
 
 with st.sidebar:
