@@ -60,7 +60,7 @@ def predict_salary(model_type):
     X_to_predict = list(X_numeric_scaled[0]) + X_input[7:]
     y_predict_scaled = model.predict([X_to_predict])
     y_predict = scaler_y.inverse_transform([y_predict_scaled])[0]
-    return X_numeric_scaled
+    return y_predict
 
     # return y_predict
     # return scaler_y.inverse_transform([np.float_(input_personas_a_cargo)])[0]
