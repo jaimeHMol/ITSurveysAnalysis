@@ -55,7 +55,7 @@ def predict_salary(model_type):
         model = load(export_path / "export_random_forest.joblib")
 
     X_input = arrange_inputs()
-    X_to_predict = scaler_X.transform(X_input)
+    X_to_predict = scaler_X.transform([X_input])
     y_predict_scaled = model.predict([X_to_predict])
     y_predict = scaler_y.inverse_transform([np.float_(y_predict_scaled)])[0]
     return X_input
