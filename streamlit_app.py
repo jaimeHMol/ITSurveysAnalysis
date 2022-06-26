@@ -60,7 +60,7 @@ def predict_salary(model_type):
     X_to_predict = list(X_numeric_scaled[0]) + X_input[7:]
     y_predict_scaled = model.predict([X_to_predict])
     y_predict = scaler_y.inverse_transform([y_predict_scaled])[0]
-    return y_predict
+    return y_predict[0]
 
     # return y_predict
     # return scaler_y.inverse_transform([np.float_(input_personas_a_cargo)])[0]
@@ -148,6 +148,6 @@ with st.form("Model prediction parameters"):
     predict = st.form_submit_button("Predecir")
     if predict:
         predicted_salary = predict_salary(model_type)
-        st.write(f"Tu sueldo esperado debería ser: {predicted_salary} pesos argentinos (ARS)")
+        st.write("Tu sueldo esperado es: **", predicted_salary, "** pesos argentinos (ARS)")
 
 st.button("Limpiar entradas", on_click=clear_inputs)
