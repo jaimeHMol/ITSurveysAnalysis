@@ -80,6 +80,88 @@ cols_to_unify = [
     "IDEs"
 ]
 
+genero = [
+    "Femenino",
+    "Masculino",
+    "No responde",
+    "Otro",
+]
+violencia_laboral = [
+    "En mi trabajo actual",
+    "En un trabajo anterior",
+    "Jamás",
+    "No responde",
+]
+tipo_contrato = [
+    "Freelance",
+    "Full-Time",
+    "Part-Time",
+    "Participación societaria en cooperativa",
+    "Remoto",
+    "Tercerizado",
+]
+max_nivel_estudios = [
+    "Doctorado",
+    "No responde",
+    "Posdoctorado",
+    "Posgrado",
+    "Primario",
+    "Secundario",
+    "Terciario",
+    "Universitario",
+]
+cursos_especializacion = [
+    "No",
+    "No responde",
+    "Si",
+]
+guardias = [
+    "No",
+    "Sí, activa",
+    "Sí, pasiva",
+]
+sueldo_bonos = [
+    "Más de tres sueldos",
+    "De uno a tres sueldos",
+    "Menos de un sueldo",
+    "No",
+    "Un sueldo",
+]
+sueldo_ajuste_2021 = [
+    "Dos",
+    "Más de tres",
+    "No",
+    "Tres",
+    "Uno",
+]
+contribucion_open_source = [
+    "No",
+    "No responde",
+    "Sí",
+]
+programacion_hobbie = [
+    "No",
+    "No responde",
+    "Sí",
+]
+tecnologias = [
+    "visualstudiocode",
+    "javascript",
+    "linux",
+    "sql",
+    "docker",
+    "mysql",
+    "html",
+    "amazonwebservices",
+    "python",
+    "sqlserver",
+    "java",
+    "css",
+    "reactjs",
+    "nodejs",
+    "postgresql",
+]
+
 # Mappings
 tecs_to_replace = {
     "ninguna de las anteriores": "", 

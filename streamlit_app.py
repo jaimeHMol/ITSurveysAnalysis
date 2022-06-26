@@ -7,6 +7,8 @@ import pandas as pd
 import streamlit as st
 from joblib import load
 
+import mappings as maps
+
 st.set_page_config(
     page_title="Predictor de salarios.",
     page_icon="💸",
@@ -52,14 +54,48 @@ def predict_salary(model_type):
     elif model_type == "Random Forest":
         model = load(export_path / "export_random_forest.joblib")
 
-    # X_to_predict = scaler_X.transform(X_input)
-    # y_predict_scaled = model.predict([X_to_predict])
-    # y_predict = scaler_y.inverse_transform([np.float_(y_predict_scaled)])[0]
+    X_input = arrange_inputs()
+    X_to_predict = scaler_X.transform(X_input)
+    y_predict_scaled = model.predict([X_to_predict])
+    y_predict = scaler_y.inverse_transform([np.float_(y_predict_scaled)])[0]
+    return X_input
+
     # return y_predict
+    # return scaler_y.inverse_transform([np.float_(input_personas_a_cargo)])[0]
+
+
+def arrange_inputs():
+    selection_genero = transpose_list_of_values(maps.genero, input_genero)
+    selection_contribucion_open_source = transpose_list_of_values(maps.contribucion_open_source, input_contribucion_open_source)
+    selection_cursos_especializacion = transpose_list_of_values(maps.cursos_especializacion, input_cursos_especializacion)
+    selection_guardias = transpose_list_of_values(maps.guardias, input_guardias)
+    selection_max_nivel_estudios = transpose_list_of_values(maps.max_nivel_estudios, input_max_nivel_estudios)
+    selection_programacion_hobbie = transpose_list_of_values(maps.programacion_hobbie, input_programacion_hobbie)
+    selection_sueldo_ajuste_2021 = transpose_list_of_values(maps.sueldo_ajuste_2021, input_sueldo_ajuste_2021)
+    selection_sueldo_bonos = transpose_list_of_values(maps.sueldo_bonos, input_sueldo_bonos)
+    selection_tipo_contrato = transpose_list_of_values(maps.tipo_contrato, input_tipo_contrato)
+    selection_violencia_laboral = transpose_list_of_values(maps.violencia_laboral, input_violencia_laboral)
+    selection_tecnologias = transpose_list_of_values(maps.tecnologias, input_tecnologias)
     
-    return scaler_y.inverse_transform([np.float_(input_personas_a_cargo)])[0]
+    X_input = [input_edad] + [input_experiencia_anios] + [input_empresa_actual_anios] 
+    + [input_personas_a_cargo] + [input_sueldo_ajuste_total_2021]
+    + [input_recomendacion_laboral] + [input_politicas_diversidad] + selection_genero 
+    + selection_contribucion_open_source + selection_cursos_especializacion 
+    + selection_guardias + selection_max_nivel_estudios + selection_programacion_hobbie 
+    + selection_sueldo_ajuste_2021 + selection_sueldo_bonos + selection_tipo_contrato 
+    + selection_violencia_laboral + selection_tecnologias
+    return X_input
 
 
+def transpose_list_of_values(list_of_values, selected_values):
+    output_list = [0 for _ in range(len(list_of_values))]
+    for selected_value in selected_values:
+        index = list_of_values.index(selected_value)
+        output_list[index] = 1
+    return output_list
+
+
+# Create the sidebar with all the input variables for the predictive model
 with st.sidebar:
     # run_id = st.session_state.run_id
     st.markdown("### Variables del modelo")
@@ -70,21 +106,17 @@ with st.sidebar:
     input_sueldo_ajuste_total_2021 = st.slider("Porcentaje total de ajuste del sueldo en 2021", 0, 100, 0, key="input_sueldo_ajuste_total_2021")
     input_recomendacion_laboral = st.slider("Nivel de recomendación de la empresa actual", 0, 10, 5, key="input_recomendacion_laboral")
     input_politicas_diversidad = st.slider("Nivel de políticas de diversidad en la empresa actual", 0, 10, 5, key="input_politicas_diversidad")
-    input_genero = st.selectbox("Genero", ["Femenino", "Masculino", "Otro", "No Responde"], key="input_genero")
-    input_contribucion_open_source = st.selectbox("Contribución Open Source", ("Si", "No", "No Responde"), key="input_contribucion_open_source")
-    input_cursos_especializacion = st.selectbox("Cursos de especialización", ("Si", "No", "No Responde"), key="input_cursos_especializacion")
-    input_guardias = st.selectbox("Tienes guardias", ("No", "Si, activa",  "Si, pasiva"), key="input_guardias")
-    input_max_nivel_estudios = st.selectbox("Nivel máximo de estudios alcanzado", ("Primario", "Secundario", "Terciario", "Universitario", "Posgrado", "Doctorado", "Posdoctorado", "No Responde"), key="input_max_nivel_estudios")
-    input_programacion_hobbie = st.selectbox("Programas como hobbie?", ("Si", "No", "No Responde"), key="input_programacion_hobbie")
-    input_sueldo_ajuste_2021 = st.selectbox("Cuantos ajustes de sueldo tuviste durante el 2021?", ("Ninguno", "Uno", "Dos", "Tres", "Más de tres"), key="input_sueldo_ajuste_2021")
-    input_sueldo_bonos = st.selectbox("Recibes bonos adicionales al sueldo?", ("No", "Menos de un sueldo", "Un sueldo", "De uno a tres sueldos", "Más de tres sueldos"), key="input_sueldo_bonos")
-    input_tipo_contrato = st.selectbox("Que tipo de contrato tienes?", ("Full-Time", "Part-Time", "Remoto", "Tercerizado", "Freelance", "Participación societaria en cooperativa"), key="input_tipo_contrato")
-    input_violencia_laboral = st.selectbox("Has vivido violencia laboral?", ("Jamás", "En mi trabajo actual", "En un trabajo anterior", "No responde"), key="input_violencia_laboral")
-    input_tecnologias = st.multiselect(
-        "Qué tecnologías dominas?",
-        ["amazonwebservices", "css", "docker", "html", "java", "javascript", "linux", "mysql", "nodejs", "postgresql", "python", "reactjs", "sql", "sqlserver", "visualstudiocode"],
-        key="input_tecnologias",
-    )
+    input_genero = st.selectbox("Genero", maps.genero, key="input_genero")
+    input_contribucion_open_source = st.selectbox("Contribución Open Source", maps.contribucion_open_source, key="input_contribucion_open_source")
+    input_cursos_especializacion = st.selectbox("Cursos de especialización", maps.cursos_especializacion, key="input_cursos_especializacion")
+    input_guardias = st.selectbox("Tienes guardias", maps.guardias, key="input_guardias")
+    input_max_nivel_estudios = st.selectbox("Nivel máximo de estudios alcanzado", maps.max_nivel_estudios, key="input_max_nivel_estudios")
+    input_programacion_hobbie = st.selectbox("Programas como hobbie?", maps.programacion_hobbie, key="input_programacion_hobbie")
+    input_sueldo_ajuste_2021 = st.selectbox("Cuantos ajustes de sueldo tuviste durante el 2021?", maps.sueldo_ajuste_2021, key="input_sueldo_ajuste_2021")
+    input_sueldo_bonos = st.selectbox("Recibes bonos adicionales al sueldo?", maps.sueldo_bonos, key="input_sueldo_bonos")
+    input_tipo_contrato = st.selectbox("Que tipo de contrato tienes?", maps.tipo_contrato, key="input_tipo_contrato")
+    input_violencia_laboral = st.selectbox("Has vivido violencia laboral?", maps.violencia_laboral, key="input_violencia_laboral")
+    input_tecnologias = st.multiselect("Qué tecnologías dominas?", maps.tecnologias, key="input_tecnologias")
 
 
 """
