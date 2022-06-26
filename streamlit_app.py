@@ -65,16 +65,16 @@ def predict_salary(model_type):
 
 
 def arrange_inputs():
-    selection_genero = transpose_list_of_values(maps.genero, input_genero)
-    selection_contribucion_open_source = transpose_list_of_values(maps.contribucion_open_source, input_contribucion_open_source)
-    selection_cursos_especializacion = transpose_list_of_values(maps.cursos_especializacion, input_cursos_especializacion)
-    selection_guardias = transpose_list_of_values(maps.guardias, input_guardias)
-    selection_max_nivel_estudios = transpose_list_of_values(maps.max_nivel_estudios, input_max_nivel_estudios)
-    selection_programacion_hobbie = transpose_list_of_values(maps.programacion_hobbie, input_programacion_hobbie)
-    selection_sueldo_ajuste_2021 = transpose_list_of_values(maps.sueldo_ajuste_2021, input_sueldo_ajuste_2021)
-    selection_sueldo_bonos = transpose_list_of_values(maps.sueldo_bonos, input_sueldo_bonos)
-    selection_tipo_contrato = transpose_list_of_values(maps.tipo_contrato, input_tipo_contrato)
-    selection_violencia_laboral = transpose_list_of_values(maps.violencia_laboral, input_violencia_laboral)
+    selection_genero = transpose_list_of_values(maps.genero, [input_genero])
+    selection_contribucion_open_source = transpose_list_of_values(maps.contribucion_open_source, [input_contribucion_open_source])
+    selection_cursos_especializacion = transpose_list_of_values(maps.cursos_especializacion, [input_cursos_especializacion])
+    selection_guardias = transpose_list_of_values(maps.guardias, [input_guardias])
+    selection_max_nivel_estudios = transpose_list_of_values(maps.max_nivel_estudios, [input_max_nivel_estudios])
+    selection_programacion_hobbie = transpose_list_of_values(maps.programacion_hobbie, [input_programacion_hobbie])
+    selection_sueldo_ajuste_2021 = transpose_list_of_values(maps.sueldo_ajuste_2021, [input_sueldo_ajuste_2021])
+    selection_sueldo_bonos = transpose_list_of_values(maps.sueldo_bonos, [input_sueldo_bonos])
+    selection_tipo_contrato = transpose_list_of_values(maps.tipo_contrato, [input_tipo_contrato])
+    selection_violencia_laboral = transpose_list_of_values(maps.violencia_laboral, [input_violencia_laboral])
     selection_tecnologias = transpose_list_of_values(maps.tecnologias, input_tecnologias)
     
     X_input = [input_edad] + [input_experiencia_anios] + [input_empresa_actual_anios] 
