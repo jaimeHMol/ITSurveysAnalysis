@@ -77,12 +77,12 @@ def arrange_inputs():
     selection_violencia_laboral = transpose_list_of_values(maps.violencia_laboral, [input_violencia_laboral])
     selection_tecnologias = transpose_list_of_values(maps.tecnologias, input_tecnologias)
     
-    X_input = [input_edad] + [input_experiencia_anios] + [input_empresa_actual_anios] 
-    + [input_personas_a_cargo] + [input_sueldo_ajuste_total_2021]
-    + [input_recomendacion_laboral] + [input_politicas_diversidad] + selection_genero 
-    + selection_contribucion_open_source + selection_cursos_especializacion 
-    + selection_guardias + selection_max_nivel_estudios + selection_programacion_hobbie 
-    + selection_sueldo_ajuste_2021 + selection_sueldo_bonos + selection_tipo_contrato 
+    X_input = [input_edad] + [input_experiencia_anios] + [input_empresa_actual_anios] \
+    + [input_personas_a_cargo] + [input_sueldo_ajuste_total_2021] \
+    + [input_recomendacion_laboral] + [input_politicas_diversidad] + selection_genero \
+    + selection_contribucion_open_source + selection_cursos_especializacion \
+    + selection_guardias + selection_max_nivel_estudios + selection_programacion_hobbie \
+    + selection_sueldo_ajuste_2021 + selection_sueldo_bonos + selection_tipo_contrato \
     + selection_violencia_laboral + selection_tecnologias
     return X_input
 
