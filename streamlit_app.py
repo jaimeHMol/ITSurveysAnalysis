@@ -57,6 +57,8 @@ def predict_salary(model_type):
     X_input = arrange_inputs()
     # Scale numeric inputs
     X_numeric_scaled = scaler_X.transform([X_input[0:7]])
+    print(f" 🛑🐛🔍👀 DEBUG X_numeric_scaled: {X_numeric_scaled}")
+    print(f" 🛑🐛🔍👀 DEBUG X_input[7:]: {X_input[7:]}")
     X_to_predict = [X_numeric_scaled[0] + X_input[7:]]
     y_predict_scaled = model.predict([X_to_predict])
     y_predict = scaler_y.inverse_transform([np.float_(y_predict_scaled)])[0]
