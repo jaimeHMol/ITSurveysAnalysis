@@ -152,15 +152,15 @@ sysarmy_analysis.describe(graph=True)
 all_cols_to_standard = cols_numeric
 
 cols_to_standard = [
-    "edad",
+    # "sueldo_mensual_bruto_ars",
+    "sueldo_ajuste_total_2021",
     "experiencia_anios",
     "empresa_actual_anios",
     "personas_a_cargo",
-    # "sueldo_conformidad",
-    # "sueldo_mensual_bruto_ars",
-    "sueldo_ajuste_total_2021",
     "recomendacion_laboral",
     "politicas_diversidad",
+    "edad",
+    # "sueldo_conformidad",
     # "pandemia_percepcion",
 ]
 
@@ -245,7 +245,7 @@ random_forest, cv_rf_models = sysarmy_analysis.random_forest(
     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
     graph=True,
     num_vars_graph=15,
-)  
+)
 
 
 # -----------------------------------------------------------------------------------
@@ -274,10 +274,10 @@ scaler_y.inverse_transform([y_real, y_predict_rf, y_predict_lrr])
 
 
 # Export the best models
-dump(linear_regression_ridge, export_path / "export_linear_regression_ridge.joblib") 
-dump(random_forest, export_path / "export_random_forest.joblib") 
-dump(scaler_y, export_path / "export_scaler_output.joblib") 
-dump(scaler_X, export_path / "export_scaler_input.joblib") 
+dump(linear_regression_ridge, export_path / "export_linear_regression_ridge.joblib")
+dump(random_forest, export_path / "export_random_forest.joblib")
+dump(scaler_y, export_path / "export_scaler_output.joblib")
+dump(scaler_X, export_path / "export_scaler_input.joblib")
 
 # ----------------------------------------------------------------------------------
 # sysarmy_analysis.reset()

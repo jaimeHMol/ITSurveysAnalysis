@@ -55,7 +55,8 @@ def predict_salary(model_type):
         model = load(export_path / "export_random_forest.joblib")
 
     X_input = arrange_inputs()
-    X_to_predict = scaler_X.transform([X_input])
+    # Scale numeric inputs
+    X_to_predict = scaler_X.transform([X_input[0:7]])
     y_predict_scaled = model.predict([X_to_predict])
     y_predict = scaler_y.inverse_transform([np.float_(y_predict_scaled)])[0]
     return X_input
@@ -77,13 +78,14 @@ def arrange_inputs():
     selection_violencia_laboral = transpose_list_of_values(maps.violencia_laboral, [input_violencia_laboral])
     selection_tecnologias = transpose_list_of_values(maps.tecnologias, input_tecnologias)
     
-    X_input = [input_edad] + [input_experiencia_anios] + [input_empresa_actual_anios] \
-    + [input_personas_a_cargo] + [input_sueldo_ajuste_total_2021] \
-    + [input_recomendacion_laboral] + [input_politicas_diversidad] + selection_genero \
-    + selection_contribucion_open_source + selection_cursos_especializacion \
-    + selection_guardias + selection_max_nivel_estudios + selection_programacion_hobbie \
-    + selection_sueldo_ajuste_2021 + selection_sueldo_bonos + selection_tipo_contrato \
-    + selection_violencia_laboral + selection_tecnologias
+    X_input = [input_sueldo_ajuste_total_2021] + [input_experiencia_anios] \
+    + [input_empresa_actual_anios] + [input_personas_a_cargo] \
+    + [input_recomendacion_laboral] + [input_politicas_diversidad] + [input_edad] \
+    + selection_genero + selection_violencia_laboral + selection_tipo_contrato \
+    + selection_max_nivel_estudios + selection_cursos_especializacion + selection_guardias \
+    + selection_sueldo_bonos + selection_sueldo_ajuste_2021 \
+    + selection_contribucion_open_source + selection_programacion_hobbie \
+    + selection_tecnologias
     return X_input
 
 
