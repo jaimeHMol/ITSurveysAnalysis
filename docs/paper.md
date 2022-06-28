@@ -37,7 +37,7 @@ keywords: [Data science, Machine learning, Regresión]
 **Abstract:**  
 El desarrollo de software y las tecnologías de la información es una industria que se hace cada vez más importante en el desarrollo económico y social no solo de los países sino de la humanidad en general, por lo que hacer un análisis cuantitativo apoyado en diversas herramientas que la ciencia de datos nos provee resulta no solo relevante sino también necesario.  Por lo tanto, en el presente estudio se analizan los datos recogidos en una de las encuestas más tradicionales y populares de Argentina, llevada a cabo por la comunidad SysArmy durante el segundo periodo del año 2021, aplicando en ese conjunto de datos técnicas exploratorias (medidas estadísticas de dispersión, centralidad, distribución y outliers), análisis dimensional (correlaciones y componentes principales) y regresiones (Regresión lineal múltiple y random forests) para extraer información que permita perfilar y comprender la evolución del sector poniendo especial foco en el contexto local Argentino.
 
-**keywords**: Desarrollo de software, PCA, Regresión lineal múltiple, random forests, Kmeans, DBScan, IT surveys, Sysarmy.
+**keywords**: Desarrollo de software, PCA, Regresión lineal múltiple ridge, random forests, DBScan, IT surveys, Sysarmy.
 \pagebreak
 
 
@@ -76,7 +76,9 @@ Con los objetivos funcionales claros, a continuación, se presenta un diagrama d
 
 En el desarrollo de este pipeline de datos se prioriza la reutilización y mantenibilidad del código implementado, para facilmente procesar en el futuro las nuevas versiones (semestralmente) de la encuesta estudiada, así como también otros datasets similares, tales como la encuesta de Stackoverflow y la de Jetbrains, por citar las más famosas. El código fuente implementado es público, abierto y esta alojado en GitHub: [https://github.com/jaimeHMol/ITSurveysAnalysis](https://github.com/jaimeHMol/ITSurveysAnalysis) [@ref:web5].
 
-Finalmente, y apuntando al usuario final que pueda estar interesado en consultar una prediccíon del salario que podría devengar, a modo de referencia según su situación actual, respondiendo las preguntas como parámetros de entrada de los modelos, se provee una aplicación web que puede ser utilizada en el enlace: [IT Salary Prediction in Argentina](https://share.streamlit.io/jaimehmol/itsurveysanalysis).
+Finalmente, y apuntando al usuario final que pueda estar interesado en consultar una prediccíon del salario que podría devengar, a modo de referencia según su situación actual, respondiendo las preguntas como parámetros de entrada de los modelos, se provee una aplicación web que puede ser utilizada en el enlace: [IT Salary Prediction in Argentina](https://share.streamlit.io/jaimehmol/itsurveysanalysis), donde como se observa en la [Figura @fig:figure7] las 18 variables de entrada se ingresan en el panel izquierdo para posteriormente, en el panel central seleccionar cual de los modelos regresores se quiere utilizar y calcular la predicción del salario.
+
+![Applicación web para predecir sueldo mensual basado en los modelos implementados en el presente estudio](prediction_tool.jpg){#fig:figure7}
 
 
 # Análisis exploratorio de los datos (EDA) {#sec:sec3}
@@ -208,12 +210,12 @@ Ahora con el dataset libre de outliers, valores faltantes y alta cardinalidad se
 En el presente trabajo se realizan dos transformaciones que tienen un gran impacto especialmente en el análisis de componentes principales y las regresiones lineales, sin  embargo, vale la pena aclarar que el proceso de exploración de datos (EDA por sus siglas en ingles) es iterativo y debe ser revisitado cada vez que se ajusten nuevos modelos, nuevos datos o nuevas transformaciones.
 
 ### Escalado de variables continuas
-TODO: WIP
 Dado que las variables numéricas pueden tener diferentes unidades según la pregunta de la encuesta a la que correspondan, por ejemplo, años, pesos, dolares, etc se realiza una standarización o escalado de los valores de estas variables. Con esto se evitan posibles impactos negativos en algunos modelos y algoritmos de analisis de datos que son sensibles a la magnitud de los valores.
 
 Existen múltiples maneras de escalar las variables continuas, por ejemplo, se puede realizar una normalización estándar, que resta la media muestral y luego la divide en la desviación estándar a cada valor de la muestra, o se puede utilizar un escalado en el que se aplica la función de escala de valores mínimos y máximos a cada columna. 
 
-En el presente estudio se realizó la standarización utilizando la función StandardScaler de la librería sklearn.
+En el presente estudio se realizó la estandarización utilizando la clase StandardScaler de la librería scikit learn, que se le aplica a todas las 7 variables numericas que tiene el dataset así como la variable que se busca predecir, teniendo en cuenta que las predicciones realizadas (con cualquier modelo que utilice las variables transformadas) se les deberá aplicar la transformación inversa para obtener los valores ajustados a sus unidades originales.
+
 
 ### Tokenización de variables categóricas
 TODO: WIP
@@ -239,6 +241,7 @@ Así mismo, el análisis de componentes principales es muy sensible a valores at
 
 Los resultados del porcentaje total de variabilidad explicada luego de calcular la segunda, tercera, cuarta y quinta componente principal se observa en la [Tabla @tbl:table5]. 
 
+# TODO: Ajustar esto!!!!
 | Cantidad de componentes principales | Variabilidad total explicada |
 |:-------------|:--------------|
 | 2 | 90.8921 %  |
@@ -289,6 +292,8 @@ Resulta interesante entonces tener en cuenta las nuevas dimensiones encontradas 
 ## Predicción del salario mensual
 Buscando responder uno de los objetivos de este estudio, se entrenan y ajustan dos modelos para predecir el salario mensual en pesos argentinos (ARS) que es una variable numérica continua por lo que nos encontramos ante un problema de regresión. Dadas las características del conjunto de datos y buscando contrastar dos aproximaciones diferentes para abordar la regresión, se ajustará un modelo proveniente de la estadística como lo es la regresión lineal múltiple y un modelo de árboles aleatorios (random forests) del área de las ciencias de la computación.
 
+En ambos casos se aplicó validación cruzada entrenando 25 modelos para cada uno dividiendo aleatoriamente el conjunto de datos en 70% de las filas para entrenamiento y el 30% restante para el set de pruebas, para posteriormente calcular el promedio de las metricas de evaluación utilizadas tales como el R2 y el MSE, buscando de esta manera trabajar con las características estables de cada modelo.
+
 
 ### Regresión lineal múltiple
 La regresión lineal es el método de "aprendizaje de máquina" más representativo para construir modelos para la predicción y clasificación de valores a partir de datos de entrenamiento. Su estudio ofrece varios contrastes:
@@ -305,7 +310,9 @@ La regresión lineal es el método de "aprendizaje de máquina" más representat
 
 La regresión lineal es una técnica de modelado básica que debería servir como una aproximación base para crear modelos basados ​​en datos. Estos modelos son típicamente fáciles de construir, sencillos de interpretar y, a menudo, funcionan bastante bien en la práctica. Con suficiente habilidad y esfuerzo, técnicas de aprendizaje automático más avanzadas podrían producir un mejor rendimiento, pero la posible recompensa a menudo no vale la pena el esfuerzo. Construya sus modelos de regresión lineal primero, luego decida si vale la pena trabajar más duro para lograr mejores resultados. [@ref:book4]
 
-Siguiendo la recomendación de Steven, autor de la introducción citada en esta sección, se aborda el problema de regresión planteado comenzando con el modelo base por excelencia, una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante de la etapa de preprocesado (recordando que las variables categóricas fueron transformadas a numéricas al tokenizar cada una de las categorías de cada variable), obteniendo un coeficiente R2 de 0.3424 lo que sugiere que no se está logrando representar toda la variabilidad de la variable predicha. Esto puede deberse a que el modelo tiene demasiada complejidad (muchas variables), que nuestra muestra de datos (cantidad de filas) no es lo suficientemente representativa como para modelar el problema, o que no se esten compliendo los supuestos de la regrasión lineal que son:
+
+# TODO: Ajustar esto al nuevo modelo implementado.
+Siguiendo la recomendación de Steven, autor de la introducción citada en esta sección, se aborda el problema de regresión planteado comenzando con el modelo base por excelencia, una regresión lineal múltiple clásica con todas las variables numéricas disponibles en el set de datos resultante de la etapa de preprocesado (recordando que las variables categóricas fueron transformadas a numéricas al tokenizar cada una de las categorías de cada variable), obteniendo un coeficiente R2 de 0.3988 lo que sugiere que no se está logrando representar toda la variabilidad de la variable predicha. Esto puede deberse a que el modelo tiene demasiada complejidad (muchas variables), que nuestra muestra de datos (cantidad de filas) no es lo suficientemente representativa como para modelar el problema, o que no se esten compliendo los supuestos de la regrasión lineal que son:
 
 * Las variables de entrada deben tener distribución normal.
 * Las variables de entrada deben tener la misma varianza (homocedasticidad).
@@ -328,7 +335,7 @@ Este modelo puede ser utilizado tanto para problemas de clasificación así como
 
 Este modelo tiene muchos parámetros que se pueden ajustar, sin embargo los más relevantes son la _cantidad de árboles a construir_, que a mayor sea mejores resultados de predicción se obtendrán, sin embargo,  impactará también en el procesamiento total requerido en el entranamiento (más tiempo de computo entrenando el modelo), así como la _cantidad de variables_ (max features) a utilizar en cada árbol, empiricamente se conoce que un buen número de partida es log2(n_features) donde n_features es el total de variables del dataset, y la _cantidad de muestras_ (filas) a utilizar para generar cada arbol. Los últimos dos parámetros son los que a la postre definen el nivel de azar que se maneja al construir el bosque aleatorio.
 
-Con un R2 de 0.3417 se evidencia que no se está captando toda la variablidad de los datos por lo que un ajuste de los parámetros propios del modelo (externos a la data en sí) podría mejorar el desempeño.  Este proceso se conoce como optimización de hiperparámetros y es es una de las actividades propuestas como trabajo futuro para mejorar la performance de los modelos implementados.
+Con un R2 de 0.3561 se evidencia que no se está captando toda la variablidad de los datos por lo que un ajuste de los parámetros propios del modelo (externos a la data en sí) podría mejorar el desempeño.  Este proceso se conoce como optimización de hiperparámetros y es es una de las actividades propuestas como trabajo futuro para mejorar la performance de los modelos implementados.
 
 
 ## Comparación de los modelos
@@ -343,8 +350,8 @@ Se utilizará entonce el MSE para comparar los dos modelos regresores implementa
 
 | Modelo | Número de predictores | MSE |
 |:-------------|:--------------|
-| Regresión lineal múltiple | 58 |  440.1067  |
-| Random Forest | 58 | 74475.8994  |
+| Regresión lineal múltiple ridge | 66 |  0.6385  |
+| Random Forest | 66 | 0.6843  |
 : Comparativa del rendimientode los dos modelos regresores utilizados {#tbl:table7}
 
 TODO: Usar esta referencia [@ref:book5] y finalizar comparación.
