@@ -241,18 +241,24 @@ Así mismo, el análisis de componentes principales es muy sensible a valores at
 
 Los resultados del porcentaje total de variabilidad explicada luego de calcular la segunda, tercera, cuarta y quinta componente principal se observa en la [Tabla @tbl:table5]. 
 
-# TODO: Ajustar esto!!!!
 | Cantidad de componentes principales | Variabilidad total explicada |
 |:-------------|:--------------|
-| 2 | 90.8921 %  |
-| 3 | 94.6825 %  |
-| 4 | 97.9410 %  |
-| 5 | 98.8467 %  |
+| 2 | 48.0643 %  |
+| 3 | 63.7313 %  |
+| 4 | 76.3296 %  |
+| 5 | 86.6694 %  |
 : El total de variables numéricas utilizadas en el análisis de componentes principales es 8 {#tbl:table5}
 
-Con solo dos componentes principales se explica una significativa variabilidad de los atributos numéricos, por lo que para el procesamiento posterior se utilizaran estas dos componentes buscando disminuir la complejidad de los modelos.
 
-Una vez reducida la dimensionalidad de las variables numéricas se hace importante analizar también la dimensionalidad de las variables categóricas pues es aquí donde está el grueso de variables del dataset. Para ello se ejecuta un análisis de correspondencia múltiple (MCA por sus siglas en inglés), que se define como una técnica multivariante que permite representar conjuntamente las categorías de las filas y columnas de una tabla de contingencia. Constituye el equivalente de análisis de componentes principales para variables cualitativas y no requiere el cumplimiento de ningún supuesto para poder aplicarla. Más específicamente, busca una representación en coordenadas de las filas y columnas de una tabla de contingencia, de modo tal que los patrones de asociación presentes en la tabla se reflejen en dichas coordenadas. Teniendo en cuenta que una tabla de contingencia es un arreglo matricial de números positivos donde en cada casilla se presenta la frecuencia absoluta observada para esa combinación de variables. [@ref:book2]
+De acuerdo a los resultados del PCA se puede observar que es necesario utilizar por lo menos cinco componentes principales para obtener una representación de los datos que sea significativa, esta cantidad es muy cercana a la cantidad de variables numéricas utilizadas para el análisis por lo que se decide no utilizarlas en los modelos regresores que se van a implementar ya que se pierde explicabilidad en los modelos (al utilizar variables "artificiales" que no pertenecen al dataset original) por una reducción dimensional que para este caso resulta ser muy baja. Los resultados también nos llevan a pensar que las variables utilizadas no están demasiado correlacionadas entre sí, lo cual es positivo para algunos modelos regresores tales como los derivados de regresiones lineales.
+
+
+Finalmente, y buscando comprender los resultadps del PCA en la [Figura @fig:figure3] se observan las correlaciones entre todas las variables numéricas del dataset, donde de manera gráfica se puede notar la poca correlación entre las variables con excepción de aquellas que miden tiempos (experiencia, años, etc).
+
+![Mapa de calor con el nivel de correlación bivariada entre las 8 variables numéricas utilizando el coeficiente de correlación de Pearson](correlation_heat_map.jpg){#fig:figure3}
+
+
+Una vez analizada la dimensionalidad de las variables numéricas se hace importante analizar también la dimensionalidad de las variables categóricas pues es aquí donde está el grueso de variables del dataset. Para ello se ejecuta un análisis de correspondencia múltiple (MCA por sus siglas en inglés), que se define como una técnica multivariante que permite representar conjuntamente las categorías de las filas y columnas de una tabla de contingencia. Constituye el equivalente de análisis de componentes principales para variables cualitativas y no requiere el cumplimiento de ningún supuesto para poder aplicarla. Más específicamente, busca una representación en coordenadas de las filas y columnas de una tabla de contingencia, de modo tal que los patrones de asociación presentes en la tabla se reflejen en dichas coordenadas. Teniendo en cuenta que una tabla de contingencia es un arreglo matricial de números positivos donde en cada casilla se presenta la frecuencia absoluta observada para esa combinación de variables. [@ref:book2]
 
 Tomando como entrada para el MCA las 11 variables categóricas que se listan a continuación:
 
@@ -268,10 +274,10 @@ Tomando como entrada para el MCA las 11 variables categóricas que se listan a c
 * violencia_laboral
 * genero
 
-Los resultados de porcentaje total de variabilidad explicada (suma de las inercias de todas las dimensiones resultante) luego de calcular 2, 3 4 y 5 dimensiones se observan en la [Tabla @tbl:table6]. 
+Los resultados de porcentaje total de variabilidad explicada (suma de las inercias de todas las dimensiones resultantes) luego de calcular 2, 3 4 y 5 dimensiones se observan en la [Tabla @tbl:table6]. 
 
 
-| Cantidad de componentes principales | Variabilidad total explicada |
+| Cantidad de dimensiones | Variabilidad total explicada |
 |:-------------|:--------------|
 | 2 | 20.0691 %  |
 | 3 | 23.9006 %  |
@@ -280,12 +286,11 @@ Los resultados de porcentaje total de variabilidad explicada (suma de las inerci
 : El total de variables categóricas utilizadas en el análisis correspondencia múltiple es 11 {#tbl:table6}
 
 
-Debido a la alta correlación existente entre numerosas variables del dataset, que se puede observar en el mapa de calor de la [Figura @fig:figure3], obtenemos una reducción de dimensionalidad muy efectiva en el caso de las variables numéricas continuas, pues a grandes rasgos con solo dos dimensiones se llega a cubrir el 90% de la variabilidad del dataset. 
+Siguiendo la misma metodología usada para el PCA, en este caso observamos que ni con cinco dimensiones logramos una variabilidad total aceptable, por lo que se decide tampoco utilizar las variables generadas por el MCA en los modelos regresores que se van a implementar.
 
-Resulta interesante entonces tener en cuenta las nuevas dimensiones encontradas para los modelos de predictores que se implementan en próximos capítulos, a pesar de que perdemos explicabilidad del modelo, al ser estas variables generadas artificialmente buscando únicamente aumentar la varianza de los datos sobre cada eje, podemos aumentar la efectividad predictora de los modelos al reducir la correlación y colinealidad entre las variables de entrada utilizadas en el modelado. 
+<!-- Resulta interesante entonces tener en cuenta las nuevas dimensiones encontradas para los modelos de predictores que se implementan en próximos capítulos, a pesar de que perdemos explicabilidad del modelo, al ser estas variables generadas artificialmente buscando únicamente aumentar la varianza de los datos sobre cada eje, podemos aumentar la efectividad predictora de los modelos al reducir la correlación y colinealidad entre las variables de entrada utilizadas en el modelado.  -->
 
 
-![Mapa de calor con el nivel de correlación bivariada entre las 8 variables numéricas utilizando el coeficiente de correlación de Pearson](correlation_heat_map.jpg){#fig:figure3}
 
 
 # Predicción de salarios {#sec:sec4}
