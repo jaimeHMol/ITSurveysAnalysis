@@ -34,12 +34,12 @@ cols_to_drop = [
     "¿Qué tanto sentís que te está apoyando tu empresa/organización en esta situación?", # Could be useful
     "¿Cómo se vio afectada tu empresa/organización?", # Could be useful
     "¿Instauraron algún beneficio nuevo?", # Could be useful
-    "Unnamed: 60",
-    "Unnamed: 61",
-    "Unnamed: 62",
-    "Unnamed: 63",
-    "Unnamed: 64",
-    "Unnamed: 65",
+    # "Unnamed: 60",
+    # "Unnamed: 61",
+    # "Unnamed: 62",
+    # "Unnamed: 63",
+    # "Unnamed: 64",
+    # "Unnamed: 65",
     "¿Qué tan conforme estás con tu sueldo?",
     "¿Cómo venís llevando la pandemia?",
 ]
