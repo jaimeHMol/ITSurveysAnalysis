@@ -205,22 +205,6 @@ Dado que no se tiene un número de muestras demasiado grande no se quiere descar
 En cuanto al manejo de valores extremos se realizó la eliminación de la fila completa cuando los valores estaban más allá del rango inter-cuartil, por debajo del cuantil 5% o por encima del cuantil 95% según el caso. Por ejemplo, la variable sueldo presenta valores detectados en el box-plot como extremos pero que en la realidad no lo son, pues son los sueldos de algunas personas que por su cargo y experiencia realmente ganan una cantidad de dinero que esta varios ordenes de magnitud por encima de la media. Así mismo cuando los valores del **sueldo mensual bruto expresado en pesos argentinos** (ARS) fue menor a 10000 se consideró un error en las respuestas dadas por los encuestados, asumiendo que en realidad no tuvieron en cuenta el enunciado completo de la pregunta e ingresaron el valor en dólares (USD), por lo que para estos casos se hizo la imputación utilizando la tasa de cambio correspondiente a la fecha en que se respondió la encuesta. 
 En otros casos como en la variable **edad**, los valores extremos detectados utilizando como base el rango inter-cuartil (básicamente edades menores a 18 y mayores a 80 años) produjeron la eliminación de la fila completa dado que eran muy pocos los casos y no se tenía ninguna manera medianamente confiable para imputar estos valores.
 
-## Transformaciones
-Ahora con el dataset libre de outliers, valores faltantes y alta cardinalidad se efectuaron algunas transformaciones sobre los datos en sí, con el objetivo de que sean más adecuados para los modelos de regresión que se aplicaran posteriormente. 
-En el presente trabajo se realizan dos transformaciones que tienen un gran impacto especialmente en el análisis de componentes principales y las regresiones lineales, sin  embargo, vale la pena aclarar que el proceso de exploración de datos (EDA por sus siglas en ingles) es iterativo y debe ser revisitado cada vez que se ajusten nuevos modelos, nuevos datos o nuevas transformaciones.
-
-### Escalado de variables continuas
-Dado que las variables numéricas pueden tener diferentes unidades según la pregunta de la encuesta a la que correspondan, por ejemplo, años, pesos, dolares, etc se realiza una standarización o escalado de los valores de estas variables. Con esto se evitan posibles impactos negativos en algunos modelos y algoritmos de analisis de datos que son sensibles a la magnitud de los valores.
-
-Existen múltiples maneras de escalar las variables continuas, por ejemplo, se puede realizar una normalización estándar, que resta la media muestral y luego la divide en la desviación estándar a cada valor de la muestra, o se puede utilizar un escalado en el que se aplica la función de escala de valores mínimos y máximos a cada columna. 
-
-En el presente estudio se realizó la estandarización utilizando la clase StandardScaler de la librería scikit learn, que se le aplica a todas las 7 variables numericas que tiene el dataset así como la variable que se busca predecir, teniendo en cuenta que las predicciones realizadas (con cualquier modelo que utilice las variables transformadas) se les deberá aplicar la transformación inversa para obtener los valores ajustados a sus unidades originales.
-
-
-### Tokenización de variables categóricas
-TODO: WIP
-Muchos modelos predictores y regresores de machine learning son sensibles a la cardinalidad de los datos cuando hablamos de variables categóricas, en algunos de ellos ni siquiera es posible utilizar este tipo de variables, por lo que se realiza una tokenización de las variables categóricas presente en el dataset analizado. La transformación implementada consiste en crear una variable numérica que puede tomar unicamente los valores de 0 o 1 por cada una de las categorías existentes en cada una de las variables categoricas, de esta manera todas las variables de entrada serán númericas, aunque con la desventaja que nuestro modelo ahora receibirá una mayor cantidad de variables, aumentando la complejidad y el tiempo de entrenamiento del mismo.
-
 
 ## Análisis de dimensionalidad de los datasets
 Luego de tener un entendimiento base de los datasets estudiados, el siguiente paso es realizar un análisis de componentes principales, comúnmente abreviado como PCA (por sus siglas en inglés), buscando conocer las implicaciones de una reducción de la dimensionalidad, que se observa necesaria pues el conjunto de datos original tiene una gran cantidad de atributos (64 preguntas en total) que no se quieren descartar arbitrariamente. Esta técnica aplica solo para variables numéricas, que luego del pre-proceso explicado en secciones previas terminaron siendo un total de 7:
@@ -291,8 +275,35 @@ Siguiendo la misma metodología usada para el PCA, en este caso observamos que n
 <!-- Resulta interesante entonces tener en cuenta las nuevas dimensiones encontradas para los modelos de predictores que se implementan en próximos capítulos, a pesar de que perdemos explicabilidad del modelo, al ser estas variables generadas artificialmente buscando únicamente aumentar la varianza de los datos sobre cada eje, podemos aumentar la efectividad predictora de los modelos al reducir la correlación y colinealidad entre las variables de entrada utilizadas en el modelado.  -->
 
 
+## Transformaciones
+Ahora con el dataset libre de outliers, valores faltantes y alta cardinalidad se efectuaron algunas transformaciones sobre los datos en sí, con el objetivo de que sean más adecuados para los modelos de regresión que se aplicaran posteriormente. 
+En el presente trabajo se realizan dos transformaciones que tienen un gran impacto especialmente en el análisis de componentes principales y las regresiones lineales, sin  embargo, vale la pena aclarar que el proceso de exploración de datos (EDA por sus siglas en ingles) es iterativo y debe ser revisitado cada vez que se ajusten nuevos modelos, nuevos datos o nuevas transformaciones.
 
+### Escalado de variables continuas
+Dado que las variables numéricas pueden tener diferentes unidades según la pregunta de la encuesta a la que correspondan, por ejemplo, años, pesos, dolares, etc se realiza una standarización o escalado de los valores de estas variables. Con esto se evitan posibles impactos negativos en algunos modelos y algoritmos de analisis de datos que son sensibles a la magnitud de los valores.
 
+Existen múltiples maneras de escalar las variables continuas, por ejemplo, se puede realizar una normalización estándar, que resta la media muestral y luego la divide en la desviación estándar a cada valor de la muestra, o se puede utilizar un escalado en el que se aplica la función de escala de valores mínimos y máximos a cada columna. 
+
+En el presente estudio se realizó la estandarización utilizando la clase StandardScaler de la librería scikit learn, que se le aplica a todas las 7 variables numericas que tiene el dataset así como la variable que se busca predecir, teniendo en cuenta que las predicciones realizadas (con cualquier modelo que utilice las variables transformadas) se les deberá aplicar la transformación inversa para obtener los valores ajustados a sus unidades originales.
+
+### Tokenización de variables categóricas
+Muchos modelos predictores y regresores de machine learning son sensibles a la cardinalidad de los datos cuando hablamos de variables categóricas, en algunos de ellos ni siquiera es posible utilizar este tipo de variables, por lo que se realiza una tokenización de las variables categóricas presente en el dataset analizado. 
+La transformación implementada conocida como one-hot-encoding, consiste en crear una variable numérica *dummy* que puede tomar unicamente los valores de 0 o 1 por cada una de las categorías existentes en cada una de las variables categoricas, tal que por cada variable solo una de las columnas *dummy* puede ser 1 y las demás tendrán el valor 0.
+
+La idea de variables *dummy* se entiende mejor con un ejemplo. Supóngase un modelo en el que la variable respuesta peso se predice en función de la altura y nacionalidad del sujeto. La variable nacionalidad es cualitativa con 3 niveles (americana, europea y asiática). A pesar de que el predictor inicial es nacionalidad, se crea una variable nueva por cada nivel, cuyo valor puede ser 0 o 1. De tal forma que la ecuación del modelo completo es:
+
+$$ peso = \beta_{0} + \beta_{1}altura + \beta_{2}americana + \beta_{3}europea + \beta_{4}asiatica $$
+ 
+Si el sujeto es europeo, las variables *dummy* americana y asiática se consideran 0, de forma que el modelo para este caso se queda en:
+
+$$ peso = \beta_{0} + \beta_{1}altura + \beta_{3}europea $$ [@ref:web3]
+
+Con esta técnica todas las variables de entrada serán númericas, aunque con la desventaja que nuestro modelo ahora recibirá una mayor cantidad de variables, aumentando la complejidad y el tiempo de entrenamiento del mismo.
+
+La implementación fue realizada utilizando la función *get_dummies* del módulo pandas (utilizado para cargar el dataset) sobre todas las variables categóricas del data set, pasando de 21 variables o columnas elegidas para ser utilizadas en el modelado a un total de 67, siendo todas ellas numéricas.
+    
+    
+    
 # Predicción de salarios {#sec:sec4}
 ## Predicción del salario mensual
 Buscando responder uno de los objetivos de este estudio, se entrenan y ajustan dos modelos para predecir el salario mensual en pesos argentinos (ARS) que es una variable numérica continua por lo que nos encontramos ante un problema de regresión. Dadas las características del conjunto de datos y buscando contrastar dos aproximaciones diferentes para abordar la regresión, se ajustará un modelo proveniente de la estadística como lo es la regresión lineal múltiple y un modelo de árboles aleatorios (random forests) del área de las ciencias de la computación.
