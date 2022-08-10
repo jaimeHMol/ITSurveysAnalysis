@@ -354,7 +354,7 @@ Este modelo puede ser utilizado tanto para problemas de clasificación así como
 
 Este modelo tiene muchos parámetros que se pueden ajustar, sin embargo los más relevantes son la _cantidad de árboles a construir_, que a mayor sea mejores resultados de predicción se obtendrán, sin embargo,  impactará también en el procesamiento total requerido en el entranamiento (más tiempo de computo entrenando el modelo), así como la _cantidad de variables_ (max features) a utilizar en cada árbol, empiricamente se conoce que un buen número de partida es log2(n_features) donde n_features es el total de variables del dataset, y la _cantidad de muestras_ (filas) a utilizar para generar cada arbol. Los últimos dos parámetros son los que a la postre definen el nivel de azar que se maneja al construir el bosque aleatorio.
 
-Con un R2 de 0.3561 se evidencia que no se está captando toda la variablidad de los datos por lo que un ajuste de los parámetros propios del modelo (externos a la data en sí) podría mejorar el desempeño.  Este proceso se conoce como optimización de hiperparámetros y es es una de las actividades propuestas como trabajo futuro para mejorar la performance de los modelos implementados.
+Con un **R2 de 0.3561** se evidencia que no se está captando toda la variablidad de los datos por lo que un ajuste de los parámetros propios del modelo (externos a la data en sí) podría mejorar el desempeño.  Este proceso se conoce como optimización de hiperparámetros y es es una de las actividades propuestas como trabajo futuro para mejorar la performance de los modelos implementados.
 
 
 ## Comparación de los modelos
@@ -365,19 +365,20 @@ $$ M S E =  \frac{1}{n} \sum_{i=1}^{n} (y_{i} - \hat{f}(x_{i}))^2 $$ {#eq:eq1}
 
 El MSE será pequeño si las respuestas pronosticadas están muy cerca de las respuestas verdaderas, y será grande si para algunas de las observaciones, las respuestas pronosticadas y verdaderas difieren sustancialmente. [@ref:book1]
 
-Se utilizará entonce el MSE para comparar los dos modelos regresores implementados anteriormente, haciendo énfasis que este se calcula utilizando el subconjuto de datos de test para cada modelo a comparar. El MSE obtenido a partir de los datos de training no tiene ningún significado real ya que su minimización llevará al overfiting de los modelos alejandonos de una predicción precisa para observaciones nuevas (que el modelo no haya visto antes). Los resultados obtenidos se pueden observar en la [Tabla @tbl:table7].
+Se utilizará entonces el MSE para comparar los dos modelos regresores implementados anteriormente, haciendo énfasis que este se calcula utilizando el subconjuto de datos de test para cada modelo a comparar. El MSE obtenido a partir de los datos de training no tiene ningún significado real ya que su minimización llevará al overfiting de los modelos alejandonos de una predicción precisa para observaciones nuevas (que el modelo no haya visto antes). Los resultados obtenidos se pueden observar en la [Tabla @tbl:table7].
 
-| Modelo | Número de predictores | MSE |
-|:-------------|:--------------|
-| Regresión lineal múltiple ridge | 66 |  0.6385  |
-| Random Forest | 66 | 0.6843  |
+| Modelo | Número de predictores | MSE | Desviación standard del MSE |
+|:-------------|:--------------|:--------------|
+| Regresión lineal múltiple ridge | 66 |  0.6385  | 0.0330 |
+| Random Forest | 66 | 0.6843  | 0.0345 |
 : Comparativa del rendimientode los dos modelos regresores utilizados {#tbl:table7}
 
-TODO: Usar esta referencia [@ref:book5] y finalizar comparación.
+La regresión lineal multiple ridge es marginalmente mejor que el modelo de random forest inclusive teniendo en cuenta la desviación standar obtenida durante el proceso de cross validation con un k-folds igual a 25. Para los objetivos de este estudio los modelos obtenidos tienen un desempeño simlar y aceptable pues lo que se busca es analizar la importancia e impacto de las variables medidas en las encuestas más que una alta precisión y exactitud en las predicciones, sin embargo, se debe tener en cuenta que ambos modelos pueden ser mejorados aplicando procesos tales como optimización de hiperparámetros y transformaciones que busquen la disminición de multicolinealidades, homocedasticidad, normalización de residuos y variables de entrada, etc.
+<!-- TODO: Usar esta referencia [@ref:book5] y finalizar comparación. -->
 
 
 ## Importancia de los features (feature engineering):
-A continuación, se compara la importancia de las variables también conocidas como features calculada en cada uno de los dos modelos implementados,  para cuantificar que tanto contribuyen las variables medidas en encuesta procesada, tal que nos provea argumentos sólidos para por ejemplo recomendar cuales son los aspectos más importantes que un trabajador en el mercado del desarrollo de software debe tener en cuenta dentro del contexto económico argentino.
+A continuación, se compara la importancia de las variables también conocidas como features calculada en cada uno de los dos modelos implementados,  para cuantificar que tanto contribuyen las variables medidas en encuesta procesada desde las dos diferentes perspectivas que nos proveen los dos modelos implementados, tal que nos provea argumentos sólidos para por ejemplo recomendar cuales son los aspectos más importantes que un trabajador en el mercado del desarrollo de software debe tener en cuenta (y que debería potenciar) dentro del contexto económico argentino.
 
 En el caso de la regresión lineal, la importancia de las variables esta determinada por el coeficiente que acompaña a cada variable en la ecuación resultante del modelo, de nuevo reafirmando la importancia de previamente haber escalado/estandarizado las variables númericos del dataset. Notese que el impacto de cada variable de entrada en la variable a predecir es relevante sin importar el signo positivo o negativo que el coeficiente tenga, por lo que es el valor absoluto de los coeficientes el que determina la importancia de cada variable. 
 
