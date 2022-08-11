@@ -382,7 +382,7 @@ A continuación, se compara la importancia de las variables también conocidas c
 
 En el caso de la regresión lineal, la importancia de las variables esta determinada por el coeficiente que acompaña a cada variable en la ecuación resultante del modelo, de nuevo reafirmando la importancia de previamente haber escalado/estandarizado las variables númericos del dataset. Notese que el impacto de cada variable de entrada en la variable a predecir es relevante sin importar el signo positivo o negativo que el coeficiente tenga, por lo que es el valor absoluto de los coeficientes el que determina la importancia de cada variable. 
 
-En la [Figura @fig:figure4] se observa la importancia de las 15 variables más relevantes de la regresión lineal, teniendo en cuenta que las variables categóricas fueron tokenizadas y que las variables numéricas fueron escaladas/estandarizadas tal y como se explicó en [@sec:sec3].
+En la [Figura @fig:figure4] se observa la importancia de las 15 variables más relevantes de la regresión lineal, teniendo en cuenta que las variables categóricas fueron tokenizadas y que las variables numéricas fueron escaladas/estandarizadas tal y como se explicó en la sección de [Análisis exploratorio de los datos (EDA)](#sec:sec3).
 
 ![Importancia de las variables en la regresión lineal entrenada](variable_importance_linear_regression.png){#fig:figure4}
 
@@ -394,6 +394,7 @@ En la [Figura @fig:figure5] se presenta la importancia del top 15 de las variabl
 ![Importancia de las variables en el random forest entrenado](variable_importance_random_forest.png){#fig:figure5}
 
 Si bien es cierto que la importancia de los variables varía según el modelo implementado, existen 6 que coinciden en dentro del top 15 de mayor relevancia en ambos modelos:
+
 * tipo_contrato_Remoto (empresa de otro país)
 * sueldo_bonos_3+ sueldos
 * sueldo_bonos_De uno a tres sueldos
@@ -404,15 +405,16 @@ En general las variables relacionadas a las condiciones de contratación como el
 
 
 # Conclusiones {#sec:sec5}
-* Tener la variable de interés (dependiente) que se quiere analizar/predecir dentro del análisis de reducción de dimensiones puede llevar a resultados donde esta sea la que en mayor medida explique la variabilidad total del conjunto de datos, produciendo resultados en los cuales solo la primera componente tiene más del 90% de la variabilidad total. Esto nos puede llevar a conclusiones triviales y erradas que se deben evitar. Un gráfico biplot (para el caso de dos componentes) en este escenario mostrará claramente la variable que está explicando la mayor variabilidad y que debería ser removida en caso de ser la variable a predecir.
  
 * Como era de esperarse las actividades de preprocesamiento fueron las que más tiempo requirieron (tomando un 84% del tiempo total utilizado en este estudio) debido a múltiples razones, entre las más importantes están que las respuestas a varias preguntas no fueron adecuadamente restringidas desde el mismo diseño de la encuesta, así como numerosas preguntas que no fueron respondidas, produciendo valores perdidos, que en principio no se quisieron descartar pues la cantidad de observaciones tampoco era muy grande. (Comentarios sobre los resultados obtenidos en la limpieza y exploración inicial de los conjuntos de datos).
 
 TODO: * (Conclusiones sobre la dimensionalidad de los conjuntos de datos, específicamente sobre las variables que parecen ser más relevantes, describiendo la mayor cantidad de la variabilidad en los datos).
 
-* El modelo de random forest presentó resultados marginalmente superiores que la regresión lineal múltiple, posiblemente debido a que está última no tenía ningún tipo de regularización. Como trabajo futuro podría implementarse y analizar una regresión Ridge y Lasso para confirmar que efectivamente el MSE (coeficiente utilizado para comparar los modelos) aumenta. (Conclusiones sobre el funcionamiento de los dos modelos utilizados.)
+<!-- * El modelo de random forest presentó resultados marginalmente superiores que la regresión lineal múltiple, posiblemente debido a que está última no tenía ningún tipo de regularización. Como trabajo futuro podría implementarse y analizar una regresión Ridge y Lasso para confirmar que efectivamente el MSE (coeficiente utilizado para comparar los modelos) aumenta. (Conclusiones sobre el funcionamiento de los dos modelos utilizados.) -->
 
-TODO: * (Conclusiones del desempeño de los modelos utilizados utilizando la dimensionalidad reducida, los valores estandarizados, la imputación de los valores perdidos y quizá también omitiendo el ajuste de outliers).
+* Gracias al desarrollo de un pipeline de datos en Python que permite limpiar, transformar, entrenar y aplicar los modelos regresores programáticamente fue poosible ejecutar una gran cantidad de combinaciones de variables, modelos y paramétros antes de llegar a los resultados expuestos en el presente estudio. Fue así como se pudo establecer que las regresiones utilizando  las variables resultantes de la reducción de dimensionalidad, las transformaciones para escalar los datos (entre 0 y 1 o entre -1 y 1), y la completa eliminación de las filas con outliers o valores nulos no produjeron buenas predicciones.
+
+* Tener la variable de interés (dependiente) que se quiere analizar/predecir dentro del análisis de reducción de dimensiones puede llevar a resultados donde esta sea la que en mayor medida explique la variabilidad total del conjunto de datos, produciendo resultados en los cuales solo la primera componente tiene más del 90% de la variabilidad total. Esto nos puede llevar a conclusiones triviales y erradas que se deben evitar. Un gráfico biplot (para el caso de dos componentes) en este escenario mostrará claramente la variable que está explicando la mayor variabilidad y que debería ser removida en caso de ser la variable a predecir.
 
 * Los resultados obtenidos en los análisis de reducción de dimensionalidad y de importancia de las variables en cada uno de los modelos implementado nos evidencian que las variables externas al trabajo en IT no tienen la influencia que mediáticamente se supone. Variables como el género, la localización, cantidad de hijos, etc no son las que más aportan en la predicción del salario mensual, mientras que los años de experiencia, las personas a cargo y algunas tecnologías son las que predominan en ambos modelos. Los modelos fueron entrenados excluyendo las variables género y localización, para posteriormente confirmar el mínimo impacto en la capacidad predictora de los modelos, utilizando para ello el RMSE como índice de comparación. (Conclusiones sobre el mercado laboral en desarrollo de software y tecnologías de la información en Argentina).
 
@@ -427,9 +429,8 @@ El presente trabajo es solo el preambulo de todo lo que se puede explorar y anal
 2. Existe una innumerable cantidad de modelos y técnicas estadísticas y de aprendizaje de máquina que podrían probarse y compararse buscando mejores resultados predictivos. Así mismo, incluir los datos recolectados de esta misma encuesta durante los últimos 7 años permitiría también realizar análisis de series temporales buscando encontrar patrones y conocimiento más profundo y valioso sobre estes tema.
 
 3. Existen más encuestas sobre el tema tratado en este estudio que podrían analizarse para comparar por ejemplo el mercado IT argentino con el mergado IT global, buscando responder preguntas y verificar hipótesis más allá del alcance del presente trabajo.
-(Mejoras en el código).
-(Construcción de un modelo predictivo que además pudiera ser utilizado de manera online).
-(Enriquecimiento de los datasets con datos económicos).
+
+4. Enriquecer el dataset con fuentes externas tales como indicadores sociales, políticos o económicos pueden proveer mayor contexto de la situación que están viviendo los trabajadores que responden la encuesta por lo que podría mejorar las predicciones de los modelos implementados en el presente estudio.
 
 
 # Bibliografía
