@@ -406,19 +406,15 @@ En general las variables relacionadas a las condiciones de contratación como el
 
 # Conclusiones {#sec:sec5}
  
-* Como era de esperarse las actividades de preprocesamiento fueron las que más tiempo requirieron (tomando un 84% del tiempo total utilizado en este estudio) debido a múltiples razones, entre las más importantes están que las respuestas a varias preguntas no fueron adecuadamente restringidas desde el mismo diseño de la encuesta, así como numerosas preguntas que no fueron respondidas, produciendo valores perdidos, que en principio no se quisieron descartar pues la cantidad de observaciones tampoco era muy grande. (Comentarios sobre los resultados obtenidos en la limpieza y exploración inicial de los conjuntos de datos).
+* Como era de esperarse las actividades de preprocesamiento fueron las que más tiempo requirieron (tomando un 84% del tiempo total utilizado en este estudio) debido a múltiples razones, entre las más importantes están que las respuestas a varias preguntas no fueron adecuadamente restringidas desde el mismo diseño de la encuesta, así como numerosas preguntas que no fueron respondidas, produciendo valores perdidos, que en principio no se quisieron descartar pues la cantidad de observaciones tampoco era muy grande. Tener un data pipeline implementado desde el comienzo hizo fácil testear el modelo luego de aplicar diferentes técnicas de tratamiento de outliers e imputación de valores faltantes para así elegir aquellas que dieron mejores resultados sobre el conjunto de datos analizado.
 
-TODO: * (Conclusiones sobre la dimensionalidad de los conjuntos de datos, específicamente sobre las variables que parecen ser más relevantes, describiendo la mayor cantidad de la variabilidad en los datos).
+* Siguiendo la línea propuesta por [@ref:article3], se evidencia que la encuesta analizada es suceptible a las falencias comunes en este tipo sondeos. Especialmente el no tener estandarizadas las diferentes posiciones o grados existentes en la industria IT impacta en la comparabilidad de los resultados. Lo que justifica también que los resultados de los modelos regresores implementados no sean especialmente sobresalientes. Básicamente la data tiene problemas que provenien directamente desde la construcción de la encuesta. Sin mencionar que las variables económicas, sociales y políticas del país, la muestra conseguida y el diseño de varias de las preguntas son factores que también afectan el presente estudio.
 
-<!-- * El modelo de random forest presentó resultados marginalmente superiores que la regresión lineal múltiple, posiblemente debido a que está última no tenía ningún tipo de regularización. Como trabajo futuro podría implementarse y analizar una regresión Ridge y Lasso para confirmar que efectivamente el MSE (coeficiente utilizado para comparar los modelos) aumenta. (Conclusiones sobre el funcionamiento de los dos modelos utilizados.) -->
-
-* Gracias al desarrollo de un pipeline de datos en Python que permite limpiar, transformar, entrenar y aplicar los modelos regresores programáticamente fue poosible ejecutar una gran cantidad de combinaciones de variables, modelos y paramétros antes de llegar a los resultados expuestos en el presente estudio. Fue así como se pudo establecer que las regresiones utilizando  las variables resultantes de la reducción de dimensionalidad, las transformaciones para escalar los datos (entre 0 y 1 o entre -1 y 1), y la completa eliminación de las filas con outliers o valores nulos no produjeron buenas predicciones.
+* El desarrollo de un pipeline de datos (en Python) que permite limpiar, transformar, entrenar y aplicar los modelos regresores programáticamente hizo posible ejecutar una gran cantidad de combinaciones de variables, modelos y paramétros antes de llegar a los resultados expuestos en el presente estudio. Fue así como se pudo establecer que las regresiones utilizando  las variables resultantes de la reducción de dimensionalidad, las transformaciones para escalar los datos (entre 0 y 1 o entre -1 y 1), y la completa eliminación de las filas con outliers o valores nulos no produjeron buenas predicciones. Adicionalmente, este pipeline es facilmente extensible al analisis de nuevas encuestas (sean de sysarmy o no), lo que facilita la implementación de varios de los puntos que se exponen en la sección de [Trabajo futuro](#sec:sec6).
 
 * Tener la variable de interés (dependiente) que se quiere analizar/predecir dentro del análisis de reducción de dimensiones puede llevar a resultados donde esta sea la que en mayor medida explique la variabilidad total del conjunto de datos, produciendo resultados en los cuales solo la primera componente tiene más del 90% de la variabilidad total. Esto nos puede llevar a conclusiones triviales y erradas que se deben evitar. Un gráfico biplot (para el caso de dos componentes) en este escenario mostrará claramente la variable que está explicando la mayor variabilidad y que debería ser removida en caso de ser la variable a predecir.
 
-* Los resultados obtenidos en los análisis de reducción de dimensionalidad y de importancia de las variables en cada uno de los modelos implementado nos evidencian que las variables externas al trabajo en IT no tienen la influencia que mediáticamente se supone. Variables como el género, la localización, cantidad de hijos, etc no son las que más aportan en la predicción del salario mensual, mientras que los años de experiencia, las personas a cargo y algunas tecnologías son las que predominan en ambos modelos. Los modelos fueron entrenados excluyendo las variables género y localización, para posteriormente confirmar el mínimo impacto en la capacidad predictora de los modelos, utilizando para ello el RMSE como índice de comparación. (Conclusiones sobre el mercado laboral en desarrollo de software y tecnologías de la información en Argentina).
-
-* Siguiendo la línea propuesta por [@ref:article3], se evidencia que la encuesta analizada es suceptible a las falencias comunes en este tipo sondeos. Especialmente el no tener estandarizadas las diferentes posiciones o grados existentes en la industria IT impacta en la comparabilidad de los resultados. Lo que justifica también que los resultados de los modelos regresores implementados no sean especialmente sobresalientes. Basicamente la data tiene problemas que provenien directamente desde la construcción de la encuesta. Sin mencionar que las variables económicas, sociales y políticas del país, la muestra conseguida y el diseño de varias de las preguntas son factores que también afectan el presente estudio.
+* Los resultados obtenidos en los análisis de reducción de dimensionalidad y de importancia de las variables en cada uno de los modelos implementado evidencian que las variables externas al trabajo en IT no tienen la influencia que mediáticamente se le otorgan. Variables como el género, la localización, cantidad de hijos, etc no son las que más aportan en la predicción del salario mensual, mientras que los años de experiencia, las personas a cargo y algunas tecnologías son las que predominan en ambos modelos. Los modelos fueron entrenados excluyendo las variables género y localización, para posteriormente confirmar el mínimo impacto en la capacidad predictora de los modelos, utilizando para ello el RMSE como índice de comparación.
 
 
 # Trabajo futuro {#sec:sec6}
@@ -426,145 +422,11 @@ El presente trabajo es solo el preambulo de todo lo que se puede explorar y anal
 
 1. El código implementado es suceptible a muchas mejoras, especialmente desde el punto de la ingeniería de software, que se hace relevante en el momento en que modelos como los que aquí se implementaron sean llevados a ambientes de producción, donde el rendimiento y la mantenibilidad del código es fundamental.
 
-2. Existe una innumerable cantidad de modelos y técnicas estadísticas y de aprendizaje de máquina que podrían probarse y compararse buscando mejores resultados predictivos. Así mismo, incluir los datos recolectados de esta misma encuesta durante los últimos 7 años permitiría también realizar análisis de series temporales buscando encontrar patrones y conocimiento más profundo y valioso sobre estes tema.
+2. Existe una innumerable cantidad de modelos y técnicas estadísticas y de aprendizaje de máquina que podrían probarse y compararse buscando mejores resultados predictivos. Así mismo, incluir los datos recolectados de esta misma encuesta durante los últimos 7 años permitiría también realizar análisis de series temporales buscando encontrar patrones y conocimiento más profundo y valioso sobre este tema.
 
 3. Existen más encuestas sobre el tema tratado en este estudio que podrían analizarse para comparar por ejemplo el mercado IT argentino con el mergado IT global, buscando responder preguntas y verificar hipótesis más allá del alcance del presente trabajo.
 
 4. Enriquecer el dataset con fuentes externas tales como indicadores sociales, políticos o económicos pueden proveer mayor contexto de la situación que están viviendo los trabajadores que responden la encuesta por lo que podría mejorar las predicciones de los modelos implementados en el presente estudio.
 
 
-# Bibliografía
-*  Papers como: https://www.researchgate.net/publication/289469100_Teachers_salary_data_analysis_using_data_mining_techniques
-
-* https://towardsdatascience.com/a-simple-guide-to-beautiful-visualizations-in-python-f564e6b9d392
-* https://towardsdatascience.com/a-straightforward-guide-to-cleaning-and-preparing-data-in-python-8c82f209ae33 
-(* https://www.youtube.com/watch?v=1uhPYIsJD3s)
-
-
 # Referencias
-
-
-
-
-
-
-
-<!-- This is a demo file for pandoc-crossref. With this filter, you can cross-reference figures (see [@fig:figure1;@fig:figure2;@fig:figure3]), display equations (see @eq:eqn1), tables (see [@tbl:table1]) and sections ([@sec:sec1; @sec:sec2; @sec:caption-attr; @sec:table-capts; @sec:wrapping-div])
-
-For immediate example, see @fig:figure0
-
-![A figure](img1.jpg){#fig:figure0}
-
-There is also support for code blocks, for example, [@lst:captionAttr; @lst:tableCaption; @lst:wrappingDiv]
-
-It's possible to capitalize reference prefixes, like this: [@Fig:figure1].
-
-In case of multiple references, capitalization is determined by first reference. [@Fig:figure1; @fig:figure2] is capitalized, while [@fig:figure2; @Fig:figure1] is not.
-
-It is also possible to mix different references, like [@fig:figure1; @tbl:table1; @lst:captionAttr; @lst:tableCaption; @fig:figure2; @fig:figure3], which will be grouped in order they are specified. You can even intermix this with regular citations, although it's not recommended: [@fig:figure1; @tbl:table1; @unprocessedCitation]
-
-You can also have custom chapter reference labels, like @sec:custlabs
-
-Subfigures are supported, see [@fig:subfigures; @fig:subfigureB]
-
-# Chapter 1. Figures {#sec:sec1}
-
-![First figure](img1.jpg){#fig:figure1}
-
-![Second figure](img2.jpg){#fig:figure2}
-
-![Third figure](img3.jpg){#fig:figure3}
-
-![Unlabelled image](img1.jpg)
-
-<div id="fig:subfigures">
-![Subfigure a](img1.jpg)
-
-![Subfigure b](img1.jpg){#fig:subfigureB}
-
-Subfigures caption
-</div>
-
-# Chapter 2. Equations {#sec:sec2}
-
-Display equations are labelled and numbered
-
-$$ P_i(x) = \sum_i a_i x^i $$ {#eq:eqn1}
-
-Since 0.1.6.0 those can also appear in the middle of paragraph
-$$a x^2 + b x^2 + c = 0$${#eq:quadr} like this.
-
-# Chapter 3. Tables
-
-| First Header | Second Header |
-|:-------------|:--------------|
-| Content Cell | Content Cell  |
-| Content Cell | Content Cell  |
-
-: Table example {#tbl:table1}
-
-Table without caption:
-
-| First Header | Second Header |
-|:-------------|:--------------|
-| Content Cell | Content Cell  |
-| Content Cell | Content Cell  |
-
-# Chapter 4. Code blocks
-
-There are a couple options for code block labels. Those work only if code block id starts with `lst:`, e.g. `{#lst:label}`
-
-## `caption` attribute {#sec:caption-attr}
-
-`caption` attribute will be treated as code block caption. If code block has both id and `caption` attributes, it will be treated as numbered code block.
-
-```{#lst:captionAttr .haskell caption="Listing caption"}
-main :: IO ()
-main = putStrLn "Hello World!"
-```
-
-\pagebreak
-
-## Table-style captions  {#sec:table-capts}
-
-Enabled with `codeBlockCaptions` metadata option. If code block is immediately
-adjacent to paragraph, starting with `Listing: ` or `: `, said paragraph will be
-treated as code block caption.
-
-Listing: Listing caption
-
-```{#lst:tableCaption .haskell}
-main :: IO ()
-main = putStrLn "Hello World!"
-```
-
-## Wrapping div
-
-Wrapping code block without label in a div with id `lst:...` and class, starting with `listing`, and adding paragraph before code block, but inside div, will treat said paragraph as code block caption.
-
-<div id="lst:wrappingDiv" class="listing">
-Listing caption
-```{.haskell}
-main :: IO ()
-main = putStrLn "Hello World!"
-```
-</div>
-
-# Unnumbered chapter. {-}
-
-This chapter doesn't change chapter prefix of referenced elements, instead keeping number of previous chapter, e.g.
-$$ S(x) = \int_{x_1}^{x_2} a x+b \  \mathrm{d}x $$ {#eq:eqn2}
-
-# Chapter 5. Reference lists
-
-It's also possible to show lists of figures and tables, like this:
-
-\listoffigures
-
-\listoftables
-
-\listoflistings
-
-# Appendix A. Custom labels {label=AppA}
-
-## This section will have custom label {#sec:custlabs label=CustLab} -->

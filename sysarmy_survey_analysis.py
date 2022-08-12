@@ -15,6 +15,7 @@ USD_ARS = 105
 
 # ----------------------------------------------------------------------------------
 # Data load
+# ----------------------------------------------------------------------------------
 sysarmy_survey = (
     project_path
     / "data/raw/2021.2 - sysarmy - Encuesta de remuneración salarial Argentina.csv"
@@ -81,11 +82,6 @@ col_fix_missings = "guardias"
 sysarmy_analysis.handle_missing([col_fix_missings], method="constant", constant="No")
 cols_check_missings.remove(col_fix_missings)
 
-# This variable doesn't seem relevant for salary prediction
-# col_fix_missings = "pandemia_percepcion"
-# sysarmy_analysis.handle_missing([col_fix_missings], method="median")
-# cols_check_missings.remove(col_fix_missings)
-
 col_fix_missings = "sueldo_mensual_bruto_ars"
 sysarmy_analysis.handle_missing([col_fix_missings], method="median")
 cols_check_missings.remove(col_fix_missings)
@@ -109,7 +105,6 @@ sysarmy_analysis.handle_missing(cols_check_missings, method="drop")
 # Handle outliers
 # Assume that a salary less than 10000 ARS is not possible (much less than the minimum wage in Argentina)
 # so it refers to a value in dollars
-# TODO: does it worth to be in data_process.py?
 col = "sueldo_mensual_bruto_ars"
 sysarmy_analysis.dataset[col] = np.where(
     sysarmy_analysis.dataset[col] <= 10000,
@@ -123,7 +118,6 @@ cols_numeric.remove(
 sysarmy_analysis.handle_outliers(cols_numeric, method="drop_iqr")
 sysarmy_analysis.handle_outliers(["personas_a_cargo"], method="drop_5_95")
 cols_numeric.append("personas_a_cargo")
-
 
 # Create dummy columns from categorical columns
 sysarmy_analysis.dummy_cols_from_category(
@@ -199,28 +193,6 @@ sysarmy_analysis.dummy_cols_from_text(col="technologies", sep=",", n_cols=15)
 # ----------------------------------------------------------------------------------
 # Data modelling
 # ----------------------------------------------------------------------------------
-# TODO: Remove this:
-print("""For this test, using only the "reducted" dims the original MSE 
-was: 85744.91345704456 and R2 0.12750968089899317""")
-# sysarmy_analysis.explore(name_postfix="processed2")
-
-# Salary prediction using linear regression with numeric and cleaned columns
-# linear_regression, cv_lr_models  = sysarmy_analysis.linear_regression(
-#     col_to_predict="sueldo_mensual_bruto_ars",
-#     cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
-#     + cols_categoric,
-#     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
-#     graph=True,
-#     num_vars_graph=15,
-# )
-# linear_regression2, cv_lr_models2  = sysarmy_analysis.linear_regression_only_num(
-#     col_to_predict="sueldo_mensual_bruto_ars",
-#     cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
-#     graph=True,
-#     num_vars_graph=15,
-# )
-
-
 linear_regression_ridge, cv_lrr_models  = sysarmy_analysis.linear_regression_ridge(
     col_to_predict="sueldo_mensual_bruto_ars",
     cols_to_remove=["technologies", "PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"]
@@ -229,13 +201,6 @@ linear_regression_ridge, cv_lrr_models  = sysarmy_analysis.linear_regression_rid
     graph=True,
     num_vars_graph=15,
 )
-# linear_regression_ridge2, cv_lrr_models2  = sysarmy_analysis.linear_regression_ridge_only_num(
-#     col_to_predict="sueldo_mensual_bruto_ars",
-#     cols_to_remove=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
-#     # cols=["PC1", "PC2", "MC1", "MC2", "MC3", "MC4", "MC5"],
-#     graph=True,
-#     num_vars_graph=15,
-# )
 
 # Salary prediction using random forest with cleaned columns.
 random_forest, cv_rf_models = sysarmy_analysis.random_forest(
@@ -250,6 +215,7 @@ random_forest, cv_rf_models = sysarmy_analysis.random_forest(
 
 # -----------------------------------------------------------------------------------
 # Common variables on the top 15 more important between the two models (66 total number of variables).
+# -----------------------------------------------------------------------------------
 common_vars_dict = {}
 top_vars_linear_regression_ridge = dict(linear_regression_ridge.top_vars_graph)
 top_vars_random_forest = dict(random_forest.top_vars_graph)
