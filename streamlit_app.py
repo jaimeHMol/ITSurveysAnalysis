@@ -132,9 +132,9 @@ desplegable de la izquierda.
 Los modelos regresores se realizaron tomando como base los datos de la encuesta de sueldos
 llevada a cabo por la comunidad de sysarmy en el segundo semestre del 2021.
 
-Para obtener más detalles del modelo implementado puedes entrar [aquí](https://www.jaimehmol.me).
+Para obtener más detalles del modelo implementado puedes entrar [aquí](https://github.com/jaimeHMol/ITSurveysAnalysis).
 
-@jaimehmol
+[@jaimehmol](https://jaimehmol.me)
 """
 st.write("###")
 

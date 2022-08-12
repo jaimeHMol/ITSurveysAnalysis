@@ -70,13 +70,13 @@ Las preguntas que se busca responder son:
 * **¿Cuáles son las variables más importantes a la hora de predecir el salario ideal? Variables no relacionadas a las habilidades técnicas en el área, como el género, la edad o la ubicación geográfica afectan los sueldos esperados ¿En qué medida?**
 
 
-Con los objetivos funcionales claros, a continuación, se presenta un diagrama de flujo a alto nivel del pipeline de procesamiento de datos a implementar, utilizando Python 3.82 y las librerías pandas, pandas_profiling, numpy, mathplotlib y sklearn.
+Con los objetivos funcionales claros, a continuación, se presenta un diagrama de flujo a alto nivel del pipeline de procesamiento de datos a implementar, utilizando Python 3.8.2 y las librerías pandas, pandas_profiling, numpy, mathplotlib y sklearn.
 
 ![Pipeline de datos a implementar](data_pipeline.jpg){#fig:figure1}
 
 En el desarrollo de este pipeline de datos se prioriza la reutilización y mantenibilidad del código implementado, para facilmente procesar en el futuro las nuevas versiones (semestralmente) de la encuesta estudiada, así como también otros datasets similares, tales como la encuesta de Stackoverflow y la de Jetbrains, por citar las más famosas. El código fuente implementado es público, abierto y esta alojado en GitHub: [https://github.com/jaimeHMol/ITSurveysAnalysis](https://github.com/jaimeHMol/ITSurveysAnalysis) [@ref:web5].
 
-Finalmente, y apuntando al usuario final que pueda estar interesado en consultar una prediccíon del salario que podría devengar, a modo de referencia según su situación actual, respondiendo las preguntas como parámetros de entrada de los modelos, se provee una aplicación web que puede ser utilizada en el enlace: [IT Salary Prediction in Argentina](https://share.streamlit.io/jaimehmol/itsurveysanalysis), donde como se observa en la [Figura @fig:figure7] las 18 variables de entrada se ingresan en el panel izquierdo para posteriormente, en el panel central seleccionar cual de los modelos regresores se quiere utilizar y calcular la predicción del salario.
+Finalmente, y apuntando al usuario final que pueda estar interesado en consultar una prediccíon del salario que podría devengar, a modo de referencia según su situación actual, respondiendo las preguntas como parámetros de entrada de los modelos, se provee una aplicación web que puede ser utilizada en el enlace: [https://share.streamlit.io/jaimehmol/itsurveysanalysis](https://share.streamlit.io/jaimehmol/itsurveysanalysis), donde como se observa en la [Figura @fig:figure7] las 18 variables de entrada se ingresan en el panel izquierdo para posteriormente, en el panel central seleccionar cual de los modelos regresores se quiere utilizar y calcular la predicción del salario.
 
 ![Applicación web para predecir sueldo mensual basado en los modelos implementados en el presente estudio](prediction_tool.jpg){#fig:figure7}
 
